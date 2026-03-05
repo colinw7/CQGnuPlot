@@ -29,12 +29,12 @@ class CGnuPlotKeyLabel {
   const std::string &text() const { return text_; }
   void setText(const std::string &v) { text_ = v; }
 
-  const COptRGBA &color() const { return color_; }
+  const std::optional<CRGBA> &color() const { return color_; }
   void setColor(const CRGBA &c) { color_ = c; }
 
  private:
-  std::string text_;
-  COptRGBA    color_;
+  std::string          text_;
+  std::optional<CRGBA> color_;
 };
 
 //---
@@ -79,9 +79,9 @@ class CGnuPlotKey {
 
   bool inMargin() const { return isLMargin() || isRMargin() || isTMargin() || isBMargin(); }
 
-  std::string title() const { return keyData_.title().getValue(""); }
+  std::string title() const { return keyData_.title().value_or(""); }
   void setTitle(const std::string &s) { return keyData_.setTitle(s); }
-  bool hasTitle() const { return keyData_.title().isValid(); }
+  bool hasTitle() const { return !!keyData_.title(); }
 
   //---
 
@@ -91,11 +91,11 @@ class CGnuPlotKey {
   bool getDrawBox() const { return keyData_.hasBox(); }
   void setDrawBox(bool b) { keyData_.setBox(b); }
 
-  const COptInt &boxLineType() const { return keyData_.boxLineType(); }
+  const std::optional<int> &boxLineType() const { return keyData_.boxLineType(); }
   void setBoxLineType(int lt) { keyData_.setBoxLineType(lt); }
   void resetBoxLineType() { keyData_.resetBoxLineType(); }
 
-  const COptInt &boxLineStyle() const { return keyData_.boxLineStyle(); }
+  const std::optional<int> &boxLineStyle() const { return keyData_.boxLineStyle(); }
   void setBoxLineStyle(int lt) { keyData_.setBoxLineStyle(lt); }
   void resetBoxLineStyle() { keyData_.resetBoxLineStyle(); }
 
@@ -107,8 +107,8 @@ class CGnuPlotKey {
 
   //---
 
-  bool hasLineType() const { return keyData_.boxLineType().isValid(); }
-  int getLineType() const { return keyData_.boxLineType().getValue(-1); }
+  bool hasLineType() const { return !!keyData_.boxLineType(); }
+  int getLineType() const { return keyData_.boxLineType().value_or(-1); }
 
   bool isReverse() const { return keyData_.reverse(); }
   void setReverse(bool b) { keyData_.setReverse(b); }
@@ -140,10 +140,10 @@ class CGnuPlotKey {
   const Columns &columns() const { return keyData_.columns(); }
   void setColumns(const Columns &c) { keyData_.setColumns(c); }
 
-  const COptReal &sampLen() const { return keyData_.sampLen(); }
+  const std::optional<double> &sampLen() const { return keyData_.sampLen(); }
   void setSampLen(double r) { keyData_.setSampLen(r); }
 
-  const COptReal &spacing() const { return keyData_.spacing(); }
+  const std::optional<double> &spacing() const { return keyData_.spacing(); }
   void setSpacing(double r) { keyData_.setSpacing(r); }
 
   void clearPlotRects() { prects_.clear(); }
@@ -178,6 +178,6 @@ class CGnuPlotKey {
   mutable CGnuPlotRenderer* renderer_ { nullptr };
 };
 
-typedef CRefPtr<CGnuPlotKey> CGnuPlotKeyP;
+typedef std::shared_ptr<CGnuPlotKey> CGnuPlotKeyP;
 
 #endif

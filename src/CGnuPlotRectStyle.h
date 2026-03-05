@@ -36,7 +36,7 @@ class CGnuPlotRectStyle {
     os << ", fill color " << fc_;
     os << ", lw " << lineWidth_;
     os << ", fillstyle " << fs_;
-    os << std::endl;
+    os << "\n";
   }
 
  private:

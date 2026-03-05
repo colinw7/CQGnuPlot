@@ -371,7 +371,7 @@ double
 CGnuPlotStyleRadar::
 getRange(CGnuPlotPlot *plot) const
 {
-  COptReal vmin, vmax;
+  std::optional<double> vmin, vmax;
 
   for (const auto &point : plot->getPoints2D()) {
     int np = point.getNumValues();
@@ -382,12 +382,12 @@ getRange(CGnuPlotPlot *plot) const
       if (! point.getValue(i + 1, v))
         continue;
 
-      vmin.updateMin(v);
-      vmax.updateMax(v);
+      CUtil::updateMin(vmin, v);
+      CUtil::updateMax(vmax, v);
     }
   }
 
-  return vmax.getValue(1);
+  return vmax.value_or(1);
 }
 
 void

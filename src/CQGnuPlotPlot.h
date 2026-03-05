@@ -117,7 +117,7 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
 
   bool isMatrix() const { return CGnuPlotPlot::matrixData().isMatrix(); }
 
-  int lineStyleId() const { return CGnuPlotPlot::lineStyleId().getValue(-1); }
+  int lineStyleId() const { return CGnuPlotPlot::lineStyleId().value_or(-1); }
 
   QString usingColsStr() const;
   void setUsingColsStr(const QString &str);
@@ -193,8 +193,8 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
   void animateSlot();
 
  public:
-  CQGnuPlotGroup*                 group_ { 0 };
-  COptValT<CPoint2D>              selectedPos_;
+  CQGnuPlotGroup*                 group_ { nullptr };
+  std::optional<CPoint2D>         selectedPos_;
   CQGnuPlotPlotArrowObjects*      arrowObjects_;
   CQGnuPlotPlotBoxBarObjects*     boxBarObjects_;
   CQGnuPlotPlotBoxObjects*        boxObjects_;
@@ -209,7 +209,7 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
   CQGnuPlotPlotPointObjects*      pointObjects_;
   CQGnuPlotPlotPolygonObjects*    polygonObjects_;
   CQGnuPlotPlotRectObjects*       rectObjects_;
-  QTimer*                         timer_ { 0 };
+  QTimer*                         timer_ { nullptr };
 };
 
 //----------

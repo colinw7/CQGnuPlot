@@ -246,7 +246,7 @@ class CGnuPlotPlot {
             style_ == PlotStyle::RGBALPHA);
   }
 
-  double imageAngle() const { return imageStyle_.angle().getValue(0.0); }
+  double imageAngle() const { return imageStyle_.angle().value_or(0.0); }
   void setImageAngle(double a) { imageStyle_.setAngle(a); }
 
   //---
@@ -275,7 +275,7 @@ class CGnuPlotPlot {
   const CGnuPlotLineStyle &lineStyle() const { return lineStyle_; }
   void setLineStyle(const CGnuPlotLineStyle &ls) { lineStyle_ = ls; }
 
-  const COptInt &lineStyleId() const { return lineStyle().ind(); }
+  const std::optional<int> &lineStyleId() const { return lineStyle().ind(); }
   void setLineStyleId(int ind);
 
   CRGBA lineColor(const CRGBA &c) const { return lineStyle().calcColor(this->group(), c); }
@@ -359,9 +359,9 @@ class CGnuPlotPlot {
   const CGnuPlotFilledCurve &filledCurve() const { return filledCurve_; }
   void setFilledCurve(const CGnuPlotFilledCurve &c) { filledCurve_ = c; }
 
-  const COptReal &whiskerBars() const { return whiskerBars_; }
+  const std::optional<double> &whiskerBars() const { return whiskerBars_; }
   void setWhiskerBars(double w) { whiskerBars_ = w; }
-  void resetWhiskerBars() { whiskerBars_.setInvalid(); }
+  void resetWhiskerBars() { whiskerBars_.reset(); }
 
   //---
 
@@ -449,23 +449,23 @@ class CGnuPlotPlot {
 
   //---
 
-  double getXMin() const { return xmin_.getValue(-10); }
-  double getXMax() const { return xmax_.getValue( 10); }
-  double getYMin() const { return ymin_.getValue(-10); }
-  double getYMax() const { return ymax_.getValue( 10); }
-  double getZMin() const { return zmin_.getValue(-10); }
-  double getZMax() const { return zmax_.getValue( 10); }
+  double getXMin() const { return xmin_.value_or(-10); }
+  double getXMax() const { return xmax_.value_or( 10); }
+  double getYMin() const { return ymin_.value_or(-10); }
+  double getYMax() const { return ymax_.value_or( 10); }
+  double getZMin() const { return zmin_.value_or(-10); }
+  double getZMax() const { return zmax_.value_or( 10); }
 
-  double getBYMin() const { return bymin_.getValue(-10); }
-  double getBYMax() const { return bymax_.getValue( 10); }
+  double getBYMin() const { return bymin_.value_or(-10); }
+  double getBYMax() const { return bymax_.value_or( 10); }
 
-  //void setXMin(const COptReal &x) { xmin_ = x; }
-  //void setXMax(const COptReal &x) { xmax_ = x; }
-  //void setYMin(const COptReal &y) { ymin_ = y; }
-  //void setYMax(const COptReal &y) { ymax_ = y; }
+  //void setXMin(const std::optional<double> &x) { xmin_ = x; }
+  //void setXMax(const std::optional<double> &x) { xmax_ = x; }
+  //void setYMin(const std::optional<double> &y) { ymin_ = y; }
+  //void setYMax(const std::optional<double> &y) { ymax_ = y; }
 
-  const COptReal &cbmin() const { return cbmin_; }
-  const COptReal &cbmax() const { return cbmax_; }
+  const std::optional<double> &cbmin() const { return cbmin_; }
+  const std::optional<double> &cbmax() const { return cbmax_; }
 
   //---
 
@@ -501,32 +501,32 @@ class CGnuPlotPlot {
 
   void getXRange(double *xmin, double *xmax) const {
     CGnuPlotPlot *th = const_cast<CGnuPlotPlot *>(this);
-    *xmin = th->axesData_.xaxis(1).min().getValue(-10);
-    *xmax = th->axesData_.xaxis(1).max().getValue( 10);
+    *xmin = th->axesData_.xaxis(1).min().value_or(-10);
+    *xmax = th->axesData_.xaxis(1).max().value_or( 10);
   }
   void getYRange(double *ymin, double *ymax) const {
     CGnuPlotPlot *th = const_cast<CGnuPlotPlot *>(this);
-    *ymin = th->axesData_.yaxis(1).min().getValue(-10);
-    *ymax = th->axesData_.yaxis(1).max().getValue( 10);
+    *ymin = th->axesData_.yaxis(1).min().value_or(-10);
+    *ymax = th->axesData_.yaxis(1).max().value_or( 10);
   }
   void getZRange(double *zmin, double *zmax) const {
     CGnuPlotPlot *th = const_cast<CGnuPlotPlot *>(this);
-    *zmin = th->axesData_.zaxis(1).min().getValue(-10);
-    *zmax = th->axesData_.zaxis(1).max().getValue( 10);
+    *zmin = th->axesData_.zaxis(1).min().value_or(-10);
+    *zmax = th->axesData_.zaxis(1).max().value_or( 10);
   }
   void getParametricTRange(double *tmin, double *tmax) const {
     CGnuPlotPlot *th = const_cast<CGnuPlotPlot *>(this);
-    *tmin = th->axesData_.taxis(1).min().getValue(-5);
-    *tmax = th->axesData_.taxis(1).max().getValue( 5);
+    *tmin = th->axesData_.taxis(1).min().value_or(-5);
+    *tmax = th->axesData_.taxis(1).max().value_or( 5);
   }
   void getPolarTRange(double *tmin, double *tmax) const {
     CGnuPlotPlot *th = const_cast<CGnuPlotPlot *>(this);
-    *tmin = th->axesData_.taxis(1).min().getValue(0);
+    *tmin = th->axesData_.taxis(1).min().value_or(0);
 
     if (isAngleDegrees())
-      *tmax = th->axesData_.taxis(1).max().getValue(360.0);
+      *tmax = th->axesData_.taxis(1).max().value_or(360.0);
     else
-      *tmax = th->axesData_.taxis(1).max().getValue(2*M_PI);
+      *tmax = th->axesData_.taxis(1).max().value_or(2*M_PI);
   }
 
   void setXRangeMin(double x) { axesData_.xaxis(1).setMin(x); }
@@ -697,7 +697,7 @@ class CGnuPlotPlot {
   bool isContourEnabled() const { return contourData_.isEnabled(); }
   void setContourEnabled(bool b) { contourData_.setEnabled(b); }
 
-  int getContourLevels() const { return contourData_.levels().getValue(10); }
+  int getContourLevels() const { return contourData_.levels().value_or(10); }
   void setContourLevels(int n);
 
   //------
@@ -728,8 +728,8 @@ class CGnuPlotPlot {
   const CGnuPlotRotate &rotate() const { return rotate_; }
   void setRotate(const CGnuPlotRotate &v) { rotate_ = v; }
 
-  const COptPoint3D &center() const { return center_; }
-  void setCenter(const COptPoint3D &v) { center_ = v; }
+  const std::optional<CPoint3D> &center() const { return center_; }
+  void setCenter(const std::optional<CPoint3D> &v) { center_ = v; }
 
   const Point3DArray &originArray() const { return originArray_; }
   void setOriginArray(const Point3DArray &o) { originArray_ = o; }
@@ -784,11 +784,11 @@ class CGnuPlotPlot {
   int                      xind_ { 1 };                       // xaxis index
   int                      yind_ { 1 };                       // yaxis index
   int                      zind_ { 1 };                       // yaxis index
-  COptReal                 xmin_, xmax_;                      // calculated points x range
-  COptReal                 ymin_, ymax_;                      // calculated points y range
-  COptReal                 zmin_, zmax_;                      // calculated points z range
-  COptReal                 bymin_, bymax_;                    // calculated points bounded y range
-  COptReal                 cbmin_, cbmax_;                    // color box range
+  std::optional<double>    xmin_, xmax_;                      // calculated points x range
+  std::optional<double>    ymin_, ymax_;                      // calculated points y range
+  std::optional<double>    zmin_, zmax_;                      // calculated points z range
+  std::optional<double>    bymin_, bymax_;                    // calculated points bounded y range
+  std::optional<double>    cbmin_, cbmax_;                    // color box range
   CGnuPlotAxesData         axesData_;
 
   CBBox2D                  bbox2D_ { 0, 0, 1, 1 };            // bounding box (2D)
@@ -801,7 +801,7 @@ class CGnuPlotPlot {
   bool                     surfaceSet_ { false };
 
   CGnuPlotHidden3DData     hidden3D_;
-  COptReal                 whiskerBars_;                      // whisker bar data
+  std::optional<double>    whiskerBars_;                      // whisker bar data
 
   // object caches
   bool                     cacheActive_ { true };
@@ -830,7 +830,7 @@ class CGnuPlotPlot {
   int                      newHistogramId_ { -1 };
   Delta                    delta_ { 1, 1, 1, 1 };
   CGnuPlotRotate           rotate_;
-  COptPoint3D              center_;
+  std::optional<CPoint3D>  center_;
   Point3DArray             originArray_;
 };
 

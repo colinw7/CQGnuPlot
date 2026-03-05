@@ -23,8 +23,8 @@ class CGnuPlotBBoxRenderer : public CGnuPlotRenderer {
 
   void setCBValue(double x) override;
 
-  const COptReal &cbMin() const { return cbmin_; }
-  const COptReal &cbMax() const { return cbmax_; }
+  const std::optional<double> &cbMin() const { return cbmin_; }
+  const std::optional<double> &cbMax() const { return cbmax_; }
 
   void clear(const CRGBA &c) override;
 
@@ -85,11 +85,11 @@ class CGnuPlotBBoxRenderer : public CGnuPlotRenderer {
   void addPoint(const CPoint2D &p);
 
  private:
-  CGnuPlotRenderer *renderer_;
-  CBBox2D           bbox_;
-  double            xmin_ { -std::numeric_limits<double>::max() };
-  double            xmax_ {  std::numeric_limits<double>::max() };
-  COptReal          cbmin_, cbmax_;
+  CGnuPlotRenderer*     renderer_;
+  CBBox2D               bbox_;
+  double                xmin_ { -std::numeric_limits<double>::max() };
+  double                xmax_ {  std::numeric_limits<double>::max() };
+  std::optional<double> cbmin_, cbmax_;
 };
 
 #endif

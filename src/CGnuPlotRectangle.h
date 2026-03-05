@@ -6,8 +6,8 @@
 
 class CGnuPlotRectangle : public CGnuPlotGroupAnnotation {
  public:
-  typedef COptValT<CGnuPlotPosition> Position;
-  typedef COptValT<CGnuPlotSize>     Size;
+  typedef std::optional<CGnuPlotPosition> Position;
+  typedef std::optional<CGnuPlotSize>     Size;
 
  public:
   static const char *getName() { return "rectangle"; }
@@ -42,7 +42,7 @@ class CGnuPlotRectangle : public CGnuPlotGroupAnnotation {
 
   void setLineType(int lt) { lt_ = lt; }
 
-  const COptReal &getLineWidth() const { return lw_; }
+  const std::optional<double> &getLineWidth() const { return lw_; }
   void setLineWidth(double w) { lw_ = w; }
 
   const CLineDash &getLineDash() const { return dash_; }
@@ -64,17 +64,17 @@ class CGnuPlotRectangle : public CGnuPlotGroupAnnotation {
   void print(std::ostream &os) const override;
 
  protected:
-  Position          from_;
-  Position          to_;
-  Position          rto_;
-  Position          center_;
-  Size              size_;
-  CGnuPlotFillStyle fs_;
-  COptInt           lt_;
-  COptReal          lw_;
-  CLineDash         dash_;
-  mutable CBBox2D   bbox_;
-  mutable CRGBA     lc_;
+  Position              from_;
+  Position              to_;
+  Position              rto_;
+  Position              center_;
+  Size                  size_;
+  CGnuPlotFillStyle     fs_;
+  std::optional<int>    lt_;
+  std::optional<double> lw_;
+  CLineDash             dash_;
+  mutable CBBox2D       bbox_;
+  mutable CRGBA         lc_;
 };
 
 typedef std::shared_ptr<CGnuPlotRectangle> CGnuPlotRectangleP;

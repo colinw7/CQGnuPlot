@@ -34,6 +34,6 @@ init(CGnuPlotPlot *plot)
   width_ = lineStyle.calcWidth();
   dash_  = lineStyle.calcDash();
 
-  if (fillStyle.borderColor().isValid())
-    color_ = fillStyle.borderColor().getValue().calcColor(plot->group());
+  if (fillStyle.borderColor())
+    color_ = fillStyle.borderColor().value().calcColor(plot->group());
 }

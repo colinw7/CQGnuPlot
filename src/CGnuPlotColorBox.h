@@ -41,10 +41,10 @@ class CGnuPlotColorBoxData {
   const CGnuPlotAxisData &axis() const { return axis_; }
   CGnuPlotAxisData &axis() { return axis_; }
 
-  const COptReal &min() const { return axis_.min(); }
+  const std::optional<double> &min() const { return axis_.min(); }
   void setMin(double r) { axis_.setMin(r); }
 
-  const COptReal &max() const { return axis_.max(); }
+  const std::optional<double> &max() const { return axis_.max(); }
   void setMax(double r) { axis_.setMax(r); }
 
   void show(std::ostream &os) const;
@@ -116,10 +116,10 @@ class CGnuPlotColorBox {
   const CGnuPlotAxisData &axis() const { return data_.axis(); }
   CGnuPlotAxisData &axis() { return data_.axis(); }
 
-  const COptReal &min() const { return data_.min(); }
+  const std::optional<double> &min() const { return data_.min(); }
   void setMin(double r) { data_.setMin(r); }
 
-  const COptReal &max() const { return data_.max(); }
+  const std::optional<double> &max() const { return data_.max(); }
   void setMax(double r) { data_.setMax(r); }
 
   const CBBox2D &bbox() const { return bbox_; }
@@ -134,6 +134,6 @@ class CGnuPlotColorBox {
   mutable CBBox2D      bbox_;
 };
 
-typedef CRefPtr<CGnuPlotColorBox> CGnuPlotColorBoxP;
+typedef std::shared_ptr<CGnuPlotColorBox> CGnuPlotColorBoxP;
 
 #endif

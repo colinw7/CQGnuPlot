@@ -84,7 +84,7 @@ calcColor(CGnuPlotGroup *group, double x) const
     else {
       CGnuPlotAxisData &zaxis = group->zaxis(1);
 
-      x1 = CGnuPlotUtil::map(x, zaxis.min().getValue(), zaxis.max().getValue(), 0, 1);
+      x1 = CGnuPlotUtil::map(x, zaxis.min().value(), zaxis.max().value(), 0, 1);
     }
 
     CColor c = group->palette()->getColor(x1);

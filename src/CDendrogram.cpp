@@ -35,7 +35,7 @@ CDendrogram::Node::
 setGap(double gap)
 {
   if (parent() && gap != gap_ && root()->debug())
-    std::cerr << "Set gap for " << name() << " Old: " << gap_ << " New: " << gap << std::endl;
+    std::cerr << "Set gap for " << name() << " Old: " << gap_ << " New: " << gap << "\n";
 
   gap_ = gap;
 }
@@ -63,7 +63,7 @@ CDendrogram::Node::
 moveNode(double d)
 {
   if (root()->debug())
-    std::cerr << "Move " << name() << " by " << d << std::endl;
+    std::cerr << "Move " << name() << " by " << d << "\n";
 
   setRow(row() - d);
 }
@@ -73,7 +73,7 @@ CDendrogram::Node::
 compressNode(double d)
 {
   if (root()->debug())
-    std::cerr << "Compress " << name() << " by " << d << std::endl;
+    std::cerr << "Compress " << name() << " by " << d << "\n";
 
   setRow(row() - d);
   setGap(gap() - d);
@@ -237,7 +237,7 @@ compressNode(double d)
   // reduce number of rows if multi-row item
   if (numRows() > 1) {
     if (root()->debug())
-      std::cerr << "Compress " << name() << " by " << d << std::endl;
+      std::cerr << "Compress " << name() << " by " << d << "\n";
 
     setNumRows(numRows() - 2*d);
 
@@ -371,7 +371,7 @@ setGaps()
     //double gap = max_rows_ - row;
 
     //if (gap > 0 && root()->debug())
-    //  std::cerr << "Gap "  << gap << " at " << i << "," << n << std::endl;
+    //  std::cerr << "Gap "  << gap << " at " << i << "," << n << "\n";
 
     // update max rows (ignore depth==0 which has a single root node)
     if (i > 0)
@@ -398,7 +398,7 @@ printGaps() const
 
       if (i > 0 && node->gap() > 0)
         std::cerr << "Gap " << node->gap() << " below " << node->name() <<
-                     " (" << i << "," << j << ")" << std::endl;
+                     " (" << i << "," << j << ")\n";
     }
   }
 }
@@ -621,7 +621,7 @@ compressNode1(Node *node, const Nodes &lowestChildren, double d)
       std::cerr << ")";
     }
 
-    std::cerr << std::endl;
+    std::cerr << "\n";
   }
 
   //---

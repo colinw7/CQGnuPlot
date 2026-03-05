@@ -1,7 +1,6 @@
 #ifndef CGnuPlotRectObject_H
 #define CGnuPlotRectObject_H
 
-#include <COptVal.h>
 #include <CPoint2D.h>
 #include <CRGBA.h>
 #include <string>

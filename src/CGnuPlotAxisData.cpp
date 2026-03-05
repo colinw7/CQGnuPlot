@@ -31,17 +31,17 @@ getZeroAxisColor(CGnuPlotGroup *group) const
 {
   CGnuPlot *plot = group->app();
 
-  if (zeroAxis_.lineStyle.isValid()) {
-    CGnuPlotLineStyleP lineStyle = plot->getLineStyleInd(zeroAxis_.lineStyle.getValue());
+  if (zeroAxis_.lineStyle) {
+    auto lineStyle = plot->getLineStyleInd(zeroAxis_.lineStyle.value());
 
-    if (lineStyle.isValid())
+    if (lineStyle)
       return lineStyle->calcColor(group, CRGBA(0,0,0));
   }
 
-  if (zeroAxis_.lineType.isValid()) {
-    CGnuPlotLineTypeP lineType = plot->getLineTypeInd(zeroAxis_.lineType.getValue());
+  if (zeroAxis_.lineType) {
+    auto lineType = plot->getLineTypeInd(zeroAxis_.lineType.value());
 
-    if (lineType.isValid())
+    if (lineType)
       return lineType->calcColor(group, CRGBA(0,0,0));
   }
 
@@ -52,8 +52,8 @@ double
 CGnuPlotAxisData::
 getZeroAxisWidth() const
 {
-  if (zeroAxis_.lineWidth.isValid())
-    return zeroAxis_.lineWidth.getValue();
+  if (zeroAxis_.lineWidth)
+    return zeroAxis_.lineWidth.value();
   else
     return CGnuPlotStyleInst->indexWidth(0);
 }
@@ -62,8 +62,8 @@ CLineDash
 CGnuPlotAxisData::
 getZeroAxisDash() const
 {
-  if (zeroAxis_.lineDash.isValid())
-    return zeroAxis_.lineDash.getValue();
+  if (zeroAxis_.lineDash)
+    return zeroAxis_.lineDash.value();
   else
     return CGnuPlotStyleInst->indexDash(0);
 }
@@ -137,8 +137,8 @@ void
 CGnuPlotAxisData::
 unsetRange()
 {
-  min_ = COptReal();
-  max_ = COptReal();
+  min_ = std::optional<double>();
+  max_ = std::optional<double>();
 
   reverse_   = false;
   writeback_ = false;
@@ -173,8 +173,8 @@ reset()
 
   dummyVar_ = "";
 
-  format_ .setInvalid();
-  timeFmt_.setInvalid();
+  format_ .reset();
+  timeFmt_.reset();
 
   geographic_ = false;
 }
@@ -207,12 +207,12 @@ formatAxisValue(double r) const
 
     struct tm *tm1 = localtime(&t);
 
-    (void) strftime(buffer, 512, timeFmt().getValue("%d/%m/%y,%H:%M").c_str(), tm1);
+    (void) strftime(buffer, 512, timeFmt().value_or("%d/%m/%y,%H:%M").c_str(), tm1);
 
     return buffer;
   }
-  else if (format().isValid()) {
-    std::string fmt = format().getValue();
+  else if (format()) {
+    std::string fmt = format().value();
 
     if (fmt != "") {
       if (isGeographic()) {
@@ -329,12 +329,12 @@ bool
 CGnuPlotAxisData::
 inside(double x) const
 {
-  if      (min_.isValid() && max_.isValid())
-    return (x >= min_.getValue() && x <= max_.getValue());
-  else if (min_.isValid())
-    return (x >= min_.getValue());
-  else if (max_.isValid())
-    return (x <= max_.getValue());
+  if      (min_ && max_)
+    return (x >= min_.value() && x <= max_.value());
+  else if (min_)
+    return (x >= min_.value());
+  else if (max_)
+    return (x <= max_.value());
   else
     return true;
 }
@@ -343,19 +343,19 @@ bool
 CGnuPlotAxisData::
 mappedInside(double x) const
 {
-  if      (min_.isValid() && max_.isValid()) {
-    double x1 = mapLogValue(min_.getValue());
-    double x2 = mapLogValue(max_.getValue());
+  if      (min_ && max_) {
+    double x1 = mapLogValue(min_.value());
+    double x2 = mapLogValue(max_.value());
 
     return (x >= x1 && x <= x2);
   }
-  else if (min_.isValid()) {
-    double x1 = mapLogValue(min_.getValue());
+  else if (min_) {
+    double x1 = mapLogValue(min_.value());
 
     return (x >= x1);
   }
-  else if (max_.isValid()) {
-    double x2 = mapLogValue(max_.getValue());
+  else if (max_) {
+    double x2 = mapLogValue(max_.value());
 
     return (x <= x2);
   }
@@ -368,7 +368,7 @@ CGnuPlotAxisData::
 show(std::ostream &os, const std::string &prefix, int n) const
 {
   os << "set " << prefix << "axis " << n;
-  os << " range [" << min_.getValue(0) << " : " << max_.getValue(10) << " ] ";
+  os << " range [" << min_.value_or(0) << " : " << max_.value_or(10) << " ] ";
   os << " " << (reverse_   ? "reverse"   : "noreverse" );
   os << " " << (writeback_ ? "writeback" : "nowriteback");
 
@@ -386,45 +386,45 @@ CGnuPlotAxisData::
 showRange(std::ostream &os, const std::string &prefix) const
 {
   os << "set " << prefix;
-  os << " [ "; min_.print(os, "*"); os << " : "; max_.print(os, "*"); os << " ]";
+  os << " [ "; CUtil::print(os, min_, "*"); os << " : "; CUtil::print(os, max_, "*"); os << " ]";
 
   os << " " << (reverse_   ? "reverse"   : "noreverse" );
   os << " " << (writeback_ ? "writeback" : "nowriteback");
 
-  if (! min_.isValid() || ! max_.isValid()) {
+  if (! min_ || ! max_) {
     os << " # (currently [";
-    if (! min_.isValid()) os << min_.getValue(-10);
+    if (! min_) os << min_.value_or(-10);
     os << ":";
-    if (! max_.isValid()) os << max_.getValue( 10);
+    if (! max_) os << max_.value_or( 10);
     os << "] )";
   }
 
-  os << std::endl;
+  os << "\n";
 }
 
 void
 CGnuPlotAxisData::
 showTics(std::ostream &os, const std::string &prefix) const
 {
-  os << prefix << " tics are in, major ticscale is 1 and minor ticscale is 0.5" << std::endl;
+  os << prefix << " tics are in, major ticscale is 1 and minor ticscale is 0.5\n";
 
   if (isShowTics()) {
-    os << prefix << " tics: on axis" << std::endl;
+    os << prefix << " tics: on axis\n";
     os << "  labels are justified automatically, format \"" <<
-          format().getValue("%g") << "\" and are not rotated," << std::endl;
+          format().value_or("%g") << "\" and are not rotated,\n";
     os << "  offset (character " << labelOffset_.x << ", " <<
-          labelOffset_.y << ", " << labelOffset_.z << ")" << std::endl;
-    os << "  intervals computed automatically" << std::endl;
+          labelOffset_.y << ", " << labelOffset_.z << ")\n";
+    os << "  intervals computed automatically\n";
   }
   else
-    os << prefix << " tics: off" << std::endl;
+    os << prefix << " tics: off\n";
 }
 
 void
 CGnuPlotAxisData::
 showFormat(std::ostream &os, const std::string &prefix) const
 {
-  os << "set format " << prefix << " \"" << format().getValue("%g") << "\"" << std::endl;
+  os << "set format " << prefix << " \"" << format().value_or("%g") << "\"\n";
 }
 
 void
@@ -432,14 +432,14 @@ CGnuPlotAxisData::
 showMinorTics(std::ostream &os, const std::string &str, const std::string &str1) const
 {
   if (isMinorTicsDisplayed()) {
-    if (getMinorTicsFreq().isValid())
-      os << "minor " << str << " are drawn with " << getMinorTicsFreq().getValue() <<
-            " subintervals between major " << str1 << " marks" << std::endl;
+    if (getMinorTicsFreq())
+      os << "minor " << str << " are drawn with " << getMinorTicsFreq().value() <<
+            " subintervals between major " << str1 << " marks\n";
     else
-      os << "minor " << str << " are computed automatically" << std::endl;
+      os << "minor " << str << " are computed automatically\n";
   }
   else
-    os << "minor " << str << " are off" << std::endl;
+    os << "minor " << str << " are off\n";
 }
 
 void
@@ -450,13 +450,13 @@ showZeroAxis(std::ostream &os, const std::string &str)
 
   if (zeroAxis_.displayed) {
     os << "drawn with";
-    os << " lt " << zeroAxis_.lineType;
-    os << " linewidth " << zeroAxis_.lineWidth;
+    os << " lt " << zeroAxis_.lineType.value();
+    os << " linewidth " << zeroAxis_.lineWidth.value();
   }
   else
     os << "OFF";
 
-  os << std::endl;
+  os << "\n";
 }
 
 void
@@ -465,5 +465,5 @@ printLabel(std::ostream &os, const std::string &prefix) const
 {
   os << prefix << "label is \"" << text_ << "\", " <<
         "offset at ((character units) " << labelOffset_.x << ", " <<
-        labelOffset_.y << ", " << labelOffset_.z << ")" << std::endl;
+        labelOffset_.y << ", " << labelOffset_.z << ")\n";
 }

@@ -76,7 +76,7 @@ class CGnuPlotEllipsesStyleValue : public CGnuPlotStyleValue {
 
     os << (clip_ ? " clip" : " noclip" );
 
-    os << std::endl;
+    os << "\n";
   }
 
  private:

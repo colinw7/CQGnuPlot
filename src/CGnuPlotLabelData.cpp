@@ -27,7 +27,7 @@ CGnuPlotLabelData(CGnuPlotPlot *plot) :
   if (! defFont_)
     defFont_ = CFontMgrInst->lookupFont("helvetica", CFONT_STYLE_NORMAL, 12);
 
-  boxFill_   = plot->createFill();
+  boxFill_   = plot->createFill  ();
   boxStroke_ = plot->createStroke();
 }
 
@@ -84,7 +84,7 @@ draw(CGnuPlotRenderer *renderer, CGnuPlotGroup *group, bool highlighted) const
 
   renderer->setFont(font1);
 
-  double a = angle_.getValue(0);
+  double a = angle_.value_or(0);
 
   CHAlignType halign = getAlign();
   CVAlignType valign = CVALIGN_TYPE_BOTTOM;
@@ -119,7 +119,7 @@ draw(CGnuPlotRenderer *renderer, CGnuPlotGroup *group, bool highlighted) const
 
   bbox_ = rbbox;
 
-  COptPoint2D o;
+  std::optional<CPoint2D> o;
 
   if (rbbox.isSet())
     o = rbbox.getCenter();

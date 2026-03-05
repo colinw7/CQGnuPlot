@@ -28,18 +28,18 @@ class CQGnuPlotBoxPlotStyleValue : public QObject, public CGnuPlotBoxPlotStyleVa
   CQGnuPlotEnum::BoxType boxType() const;
   void setBoxType(const CQGnuPlotEnum::BoxType &v);
 
-  double range() const { return CGnuPlotBoxPlotStyleValue::range().getValue(1.5); }
+  double range() const { return CGnuPlotBoxPlotStyleValue::range().value_or(1.5); }
   void setRange(double r);
 
-  double fraction() const { return CGnuPlotBoxPlotStyleValue::fraction().getValue(0.95); }
+  double fraction() const { return CGnuPlotBoxPlotStyleValue::fraction().value_or(0.95); }
   void setFraction(double r);
 
   void setOutliers(bool b);
 
-  double separation() const { return CGnuPlotBoxPlotStyleValue::separation().getValue(1.0); }
+  double separation() const { return CGnuPlotBoxPlotStyleValue::separation().value_or(1.0); }
   void setSeparation(double r);
 
-  int pointType() const { return CGnuPlotBoxPlotStyleValue::pointType().getValue(7); }
+  int pointType() const { return CGnuPlotBoxPlotStyleValue::pointType().value_or(7); }
   void setPointType(int t);
 
   CQGnuPlotEnum::BoxLabels boxLabels() const;

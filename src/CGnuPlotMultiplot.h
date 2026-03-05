@@ -128,6 +128,6 @@ class CGnuPlotMultiplot {
   CFontPtr    titleFont_;
 };
 
-typedef CRefPtr<CGnuPlotMultiplot> CGnuPlotMultiplotP;
+typedef std::shared_ptr<CGnuPlotMultiplot> CGnuPlotMultiplotP;
 
 #endif

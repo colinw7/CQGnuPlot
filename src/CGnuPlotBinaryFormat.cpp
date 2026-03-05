@@ -56,14 +56,14 @@ init(const std::string &fmt)
     while (line.isValid() && ! line.isChar('%'))
       s += line.getChar();
 
-    //std::cerr << skip << ":" << n << ":" << s << std::endl;
+    //std::cerr << skip << ":" << n << ":" << s << "\n";
 
     CGnuPlotBinaryFormat::Format fmt1 = CGnuPlotBinaryFormat::stringToFormat(s);
 
     if (fmt1 != Format::INVALID)
       addFormat(skip, n, fmt1);
     else
-      std::cerr << "Unsupported format '" << s << "'" << std::endl;
+      std::cerr << "Unsupported format '" << s << "'\n";
   }
 
   return true;

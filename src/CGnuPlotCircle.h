@@ -25,16 +25,16 @@ class CGnuPlotCircle : public CGnuPlotGroupAnnotation {
   const CGnuPlotCoordValue &getRadius() const { return r_; }
   void setRadius(const CGnuPlotCoordValue &r) { r_ = r; }
 
-  const COptReal &arcStart() const { return arcStart_; }
+  const std::optional<double> &arcStart() const { return arcStart_; }
   void setArcStart(double v) { arcStart_ = v; }
 
-  const COptReal &arcEnd() const { return arcEnd_; }
+  const std::optional<double> &arcEnd() const { return arcEnd_; }
   void setArcEnd(double v) { arcEnd_ = v; }
 
   const CGnuPlotFillStyle &getFillStyle() const { return fs_; }
   void setFillStyle(const CGnuPlotFillStyle &fs) { fs_ = fs; }
 
-  const COptReal &getLineWidth() const { return lw_; }
+  const std::optional<double> &getLineWidth() const { return lw_; }
   void setLineWidth(double w) { lw_ = w; }
 
   const CLineDash &getLineDash() const { return dash_; }
@@ -54,17 +54,17 @@ class CGnuPlotCircle : public CGnuPlotGroupAnnotation {
   void print(std::ostream &os) const override;
 
  protected:
-  CGnuPlotPosition   p_;
-  CGnuPlotCoordValue r_ { 1 };
-  COptReal           arcStart_;
-  COptReal           arcEnd_;
-  CGnuPlotFillStyle  fs_;
-  COptReal           lw_;
-  CLineDash          dash_;
-  mutable CPoint2D   center_;
-  mutable double     xr_, yr_;
-  mutable CRGBA      c_;
-  mutable CBBox2D    bbox_;
+  CGnuPlotPosition      p_;
+  CGnuPlotCoordValue    r_ { 1 };
+  std::optional<double> arcStart_;
+  std::optional<double> arcEnd_;
+  CGnuPlotFillStyle     fs_;
+  std::optional<double> lw_;
+  CLineDash             dash_;
+  mutable CPoint2D      center_;
+  mutable double        xr_, yr_;
+  mutable CRGBA         c_;
+  mutable CBBox2D       bbox_;
 };
 
 typedef std::shared_ptr<CGnuPlotCircle> CGnuPlotCircleP;

@@ -83,27 +83,27 @@ drawBinaryImage(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     nx = (ny > 0 ? int((*imageValues.begin()).second.size()) : 0);
   }
   else {
-    COptInt xmin, ymin, xmax, ymax;
+    std::optional<int> xmin, ymin, xmax, ymax;
 
     for (const auto &yxc : imageColors) {
       int py = yxc.first;
 
-      ymin.updateMin(py);
-      ymax.updateMax(py);
+      CUtil::updateMin(ymin, py);
+      CUtil::updateMax(ymax, py);
 
       for (const auto &xc : yxc.second) {
         int px = xc.first;
 
-        xmin.updateMin(px);
-        xmax.updateMax(px);
+        CUtil::updateMin(xmin, px);
+        CUtil::updateMax(xmax, px);
       }
     }
 
-    xo = xmin.getValue(0);
-    yo = ymin.getValue(0);
+    xo = xmin.value_or(0);
+    yo = ymin.value_or(0);
 
-    nx = xmax.getValue(1) - xmin.getValue(0) + 1;
-    ny = ymax.getValue(1) - ymin.getValue(0) + 1;
+    nx = xmax.value_or(1) - xmin.value_or(0) + 1;
+    ny = ymax.value_or(1) - ymin.value_or(0) + 1;
   }
 
   if (nx == 0 || ny == 0)
@@ -112,8 +112,8 @@ drawBinaryImage(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   //---
 
   // scale factor
-  double idx = imageStyle.dx().getValue(1);
-  double idy = imageStyle.dy().getValue(1);
+  double idx = imageStyle.dx().value_or(1);
+  double idy = imageStyle.dy().value_or(1);
 
   double ww = nx*idx;
   double hh = ny*idy;
@@ -130,26 +130,26 @@ drawBinaryImage(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   // get center and origin (rotation) point
   CPoint3D center, origin;
 
-  if      (imageStyle.center().isValid()) {
-    center = imageStyle.center().getValue();
+  if      (imageStyle.center()) {
+    center = imageStyle.center().value();
 
-    if (imageStyle.origin().isValid())
-      origin = imageStyle.origin().getValue();
+    if (imageStyle.origin())
+      origin = imageStyle.origin().value();
     else
       origin = center;
   }
-  else if (imageStyle.origin().isValid()) {
+  else if (imageStyle.origin()) {
     //double rw = plot->imageRange().getWidth ();
     //double rh = plot->imageRange().getHeight();
 
-    origin = imageStyle.origin().getValue();
+    origin = imageStyle.origin().value();
     center = CPoint3D(origin.x + ww/2.0, origin.y + hh/2.0, origin.z);
   }
   else {
     CPoint2D c = plot->imageRange().getCenter();
 
-    int iw = imageStyle.width ().getValue(1);
-    int ih = imageStyle.height().getValue(1);
+    int iw = imageStyle.width ().value_or(1);
+    int ih = imageStyle.height().value_or(1);
 
     center = CPoint3D(c.x, c.y, 0);
     origin = CPoint3D(iw/2.0, ih/2.0, 0);
@@ -177,13 +177,13 @@ drawBinaryImage(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   //---
 
   // image style uses rgb palette
-  COptReal pmin, pmax;
+  std::optional<double> pmin, pmax;
 
   if (style_ == CGnuPlotTypes::PlotStyle::IMAGE) {
     for (const auto &row : imageValues) {
       for (const auto &r : row.second) {
-        pmin.updateMin(r);
-        pmax.updateMax(r);
+        CUtil::updateMin(pmin, r);
+        CUtil::updateMax(pmax, r);
       }
     }
   }
@@ -209,7 +209,7 @@ drawBinaryImage(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     }
 
     if (! plot->is3D()) {
-      if (! image->image1().isValid()) {
+      if (! image->image1()) {
         int iy = 0;
 
         if (style_ == CGnuPlotTypes::PlotStyle::IMAGE) {
@@ -221,7 +221,7 @@ drawBinaryImage(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
             for (const auto &r : row.second) {
               int ix1 = ix;
 
-              double z = CGnuPlotUtil::map(r, pmin.getValue(0), pmax.getValue(1), 0, 1);
+              double z = CGnuPlotUtil::map(r, pmin.value_or(0), pmax.value_or(1), 0, 1);
 
               CRGBA c = group->palette()->getColor(z).rgba();
 
@@ -274,7 +274,7 @@ drawBinaryImage(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       if (style_ == CGnuPlotTypes::PlotStyle::IMAGE) {
         for (const auto &xcolor : imageValues) {
           for (const auto &r : xcolor.second) {
-            double z = CGnuPlotUtil::map(r, pmin.getValue(0), pmax.getValue(1), 0, 1);
+            double z = CGnuPlotUtil::map(r, pmin.value_or(0), pmax.value_or(1), 0, 1);
 
             CRGBA c = group->palette()->getColor(z).rgba();
 
@@ -318,7 +318,7 @@ drawBinaryImage(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
           CRGBA rgba;
 
           if (style_ == CGnuPlotTypes::PlotStyle::IMAGE) {
-            double z = CGnuPlotUtil::map(imageValues[i], pmin.getValue(0), pmax.getValue(1), 0, 1);
+            double z = CGnuPlotUtil::map(imageValues[i], pmin.value_or(0), pmax.value_or(1), 0, 1);
 
             rgba = group->palette()->getColor(z).rgba();
           }
@@ -364,19 +364,19 @@ drawImage2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   //---
 
   // image size
-  int iw = imageStyle.width ().getValue(1);
-  int ih = imageStyle.height().getValue(1);
+  int iw = imageStyle.width ().value_or(1);
+  int ih = imageStyle.height().value_or(1);
 
   //---
 
   double dx = 0, dy = 0;
 
-  if (imageStyle.center().isValid()) {
-    dx = imageStyle.center().getValue().x - iw/2.0;
-    dy = imageStyle.center().getValue().y - ih/2.0;
+  if (imageStyle.center()) {
+    dx = imageStyle.center().value().x - iw/2.0;
+    dy = imageStyle.center().value().y - ih/2.0;
   }
 
-  CPoint3D po = imageStyle.origin().getValue(CPoint3D(iw/2.0, ih/2.0, 0));
+  CPoint3D po = imageStyle.origin().value_or(CPoint3D(iw/2.0, ih/2.0, 0));
 
   double xo = po.x;
   double yo = po.y;
@@ -672,19 +672,19 @@ drawImage3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   //---
 
   // image size
-  int iw = imageStyle.width ().getValue(1);
-  int ih = imageStyle.height().getValue(1);
+  int iw = imageStyle.width ().value_or(1);
+  int ih = imageStyle.height().value_or(1);
 
   //---
 
   double dx = 0, dy = 0;
 
-  if (imageStyle.center().isValid()) {
-    dx = imageStyle.center().getValue().x - iw/2.0;
-    dy = imageStyle.center().getValue().y - ih/2.0;
+  if (imageStyle.center()) {
+    dx = imageStyle.center().value().x - iw/2.0;
+    dy = imageStyle.center().value().y - ih/2.0;
   }
 
-  CPoint3D po = imageStyle.origin().getValue(CPoint3D(iw/2.0, ih/2.0, 0));
+  CPoint3D po = imageStyle.origin().value_or(CPoint3D(iw/2.0, ih/2.0, 0));
 
   double xo = po.x;
   double yo = po.y;

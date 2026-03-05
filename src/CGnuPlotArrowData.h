@@ -41,9 +41,9 @@ class CGnuPlotArrowData {
   CGnuPlotVectorsStyleValue &style() { return style_; }
   void setStyle(const CGnuPlotVectorsStyleValue &s) { style_ = s; }
 
-  const COptRGBA &getLineColor() const { return lineColor_; }
-  void setLineColor(const CRGBA &c) { lineColor_.setValue(c); }
-  void resetLineColor() { lineColor_.setInvalid(); }
+  const std::optional<CRGBA> &getLineColor() const { return lineColor_; }
+  void setLineColor(const CRGBA &c) { lineColor_ = c; }
+  void resetLineColor() { lineColor_.reset(); }
 
   bool getFHead() const { return style().fhead(); }
   void setFHead(bool b) { style().setFHead(b); }
@@ -69,7 +69,7 @@ class CGnuPlotArrowData {
   double getLineWidth() const { return style().lineWidth(); }
   void setLineWidth(double w) { style().setLineWidth(w); }
 
-  int getLineStyle() const { return style().lineStyle().getValue(-1); }
+  int getLineStyle() const { return style().lineStyle().value_or(-1); }
   void setLineStyle(int t) { style().setLineStyle(t); }
 
   const CGnuPlotDash &getDash() const { return style().dash(); }
@@ -78,7 +78,7 @@ class CGnuPlotArrowData {
   bool isVariable() const { return style().isVariable(); }
   void setVariable(bool b) { style().setVariable(b); }
 
-  double getVarValue() const { return style().varValue().getValue(0); }
+  double getVarValue() const { return style().varValue().value_or(0); }
   void setVarValue(double r) { style().setVarValue(r); }
 
   CRGBA calcLineColor(CGnuPlotGroup *group) const;
@@ -109,7 +109,7 @@ class CGnuPlotArrowData {
   CGnuPlotCoordValue        length_;
   CAngle                    angle_;
   CGnuPlotVectorsStyleValue style_;
-  COptRGBA                  lineColor_;
+  std::optional<CRGBA>      lineColor_;
   mutable CLine2D           line_;
   mutable CLine2D           pline_;
   mutable double            tol_;

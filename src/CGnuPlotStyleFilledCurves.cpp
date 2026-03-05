@@ -10,18 +10,18 @@
 namespace {
 
 void getLimit(const CGnuPlotFilledCurve &filledCurve, const CBBox2D &bbox,
-              COptReal &x, COptReal &y, COptReal &r) {
+              std::optional<double> &x, std::optional<double> &y, std::optional<double> &r) {
   double xmin = bbox.getXMin();
   double ymin = bbox.getYMin();
   double xmax = bbox.getXMax();
   double ymax = bbox.getYMax();
 
-  if      (filledCurve.yval.isValid())
-    y = filledCurve.yval.getValue();
-  else if (filledCurve.xval.isValid())
-    x = filledCurve.xval.getValue();
-  else if (filledCurve.rval.isValid())
-    r = filledCurve.rval.getValue();
+  if      (filledCurve.yval)
+    y = filledCurve.yval.value();
+  else if (filledCurve.xval)
+    x = filledCurve.xval.value();
+  else if (filledCurve.rval)
+    r = filledCurve.rval.value();
   else if (filledCurve.xaxis == 1)
     y = ymin;
   else if (filledCurve.xaxis == 2)
@@ -32,26 +32,27 @@ void getLimit(const CGnuPlotFilledCurve &filledCurve, const CBBox2D &bbox,
     x = xmax;
 }
 
-bool isInside(const CGnuPlotFilledCurve &filledCurve,
-              const CPoint2D &p, const COptReal &x, const COptReal &y, const COptReal &r) {
+bool isInside(const CGnuPlotFilledCurve &filledCurve, const CPoint2D &p,
+              const std::optional<double> &x, const std::optional<double> &y,
+              const std::optional<double> &r) {
   if      (filledCurve.above) {
-    if (x.isValid()) return p.x >= x.getValue();
-    if (y.isValid()) return p.y >= y.getValue();
+    if (x) return p.x >= x.value();
+    if (y) return p.y >= y.value();
 
-    if (r.isValid()) {
+    if (r) {
       double r1 = hypot(p.x, p.y);
 
-      return (r1 >= r.getValue());
+      return (r1 >= r.value());
     }
   }
   else if (filledCurve.below) {
-    if (x.isValid()) return p.x <= x.getValue();
-    if (y.isValid()) return p.y <= y.getValue();
+    if (x) return p.x <= x.value();
+    if (y) return p.y <= y.value();
 
-    if (r.isValid()) {
+    if (r) {
       double r1 = hypot(p.x, p.y);
 
-      return (r1 < r.getValue());
+      return (r1 < r.value());
     }
   }
 
@@ -59,31 +60,32 @@ bool isInside(const CGnuPlotFilledCurve &filledCurve,
 }
 
 bool interpPoint(const CPoint2D &p1, const CPoint2D &p2,
-                 const COptReal &x, const COptReal &y, const COptReal &r, CPoint2D &pi) {
+                 const std::optional<double> &x, const std::optional<double> &y,
+                 const std::optional<double> &r, CPoint2D &pi) {
   double mi = 0;
 
-  if      (x.isValid()) {
+  if      (x) {
     if (fabs(p2.x - p1.x) > 1E-6)
-      mi = (x.getValue() - p1.x)/(p2.x - p1.x);
+      mi = (x.value() - p1.x)/(p2.x - p1.x);
 
     double yi = p1.y + mi*(p2.y - p1.y);
 
-    pi = CPoint2D(x.getValue(), yi);
+    pi = CPoint2D(x.value(), yi);
   }
-  else if (y.isValid()) {
+  else if (y) {
     if (fabs(p2.y - p1.y) > 1E-6)
-      mi = (y.getValue() - p1.y)/(p2.y - p1.y);
+      mi = (y.value() - p1.y)/(p2.y - p1.y);
 
     double xi = p1.x + mi*(p2.x - p1.x);
 
-    pi = CPoint2D(xi, y.getValue());
+    pi = CPoint2D(xi, y.value());
   }
-  else if (r.isValid()) {
+  else if (r) {
     double r1 = hypot(p1.x, p1.y);
     double r2 = hypot(p2.x, p2.y);
 
     if (fabs(r2 - r1) > 1E-6)
-      mi = (r.getValue() - r1)/(r2 - r1);
+      mi = (r.value() - r1)/(r2 - r1);
 
     double xi = p1.x + mi*(p2.x - p1.x);
     double yi = p1.y + mi*(p2.y - p1.y);
@@ -96,8 +98,8 @@ bool interpPoint(const CPoint2D &p1, const CPoint2D &p2,
   return true;
 }
 
-void closePoints(std::vector<CPoint2D> &points,
-                 const COptReal &x, const COptReal &y, const COptReal &r) {
+void closePoints(std::vector<CPoint2D> &points, const std::optional<double> &x,
+                 const std::optional<double> &y, const std::optional<double> &r) {
   if (points.size() < 3) return;
 
   const CPoint2D &p1 = points[points.size() - 1];
@@ -108,11 +110,11 @@ void closePoints(std::vector<CPoint2D> &points,
   if (p1 == p2)
     return;
 
-  if      (x.isValid() || y.isValid()) {
+  if      (x || y) {
     points.push_back(p3);
     points.push_back(p2);
   }
-  else if (r.isValid()) {
+  else if (r) {
     double r1 = hypot(p1.x, p1.y);
     double r3 = hypot(p3.x, p3.y);
     double a1 = atan2(p1.y, p1.x);
@@ -164,7 +166,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   const CGnuPlotFilledCurve &filledCurve = plot->filledCurve();
 
-  if (! filledCurve.xaxis && ! filledCurve.yaxis && ! filledCurve.xyval.isValid()) {
+  if (! filledCurve.xaxis && ! filledCurve.yaxis && ! filledCurve.xyval) {
     if (! plot->getPoints2D().empty() && plot->getPoints2D()[0].getNumValues() > 2)
       fillbetween = true;
   }
@@ -346,11 +348,11 @@ addPolygons(CGnuPlotPlot *plot, const Points &points, PointsArray &pointsArray)
 
   const CBBox2D &bbox = plot->bbox2D();
 
-  COptReal x, y, r;
+  std::optional<double> x, y, r;
 
   getLimit(filledCurve, bbox, x, y, r);
 
-  bool bxy = filledCurve.xyval.isValid();
+  bool bxy = !!filledCurve.xyval;
 
   bool inside = false;
 
@@ -409,7 +411,7 @@ addPolygons(CGnuPlotPlot *plot, const Points &points, PointsArray &pointsArray)
           points1.push_back(pi);
       }
       else
-        points1.push_back(filledCurve.xyval.getValue());
+        points1.push_back(filledCurve.xyval.value());
 
       closePoints(points1, x, y, r);
 

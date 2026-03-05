@@ -7,7 +7,7 @@ CRGBA
 CGnuPlotArrowData::
 calcLineColor(CGnuPlotGroup *group) const
 {
-  if (! getLineColor().isValid()) {
+  if (! getLineColor()) {
     if (group) {
       int ls = getLineStyle();
 
@@ -19,7 +19,7 @@ calcLineColor(CGnuPlotGroup *group) const
       return CRGBA(0,0,0);
   }
   else
-    return getLineColor().getValue();
+    return getLineColor().value();
 }
 
 double
@@ -40,7 +40,7 @@ draw(CGnuPlotRenderer *renderer, CGnuPlotGroup *group, bool highlighted) const
 
   lc_ = calcLineColor(group);
 
-  if (isVariable() && style().varValue().isValid())
+  if (isVariable() && style().varValue())
     lc_ = CGnuPlotStyleInst->indexColor(int(getVarValue()));
 
   CRGBA lc = lc_;
@@ -170,7 +170,7 @@ draw(CGnuPlotRenderer *renderer, CGnuPlotGroup *group, const CGnuPlotStroke &str
 
         CGnuPlotHiddenObjectP obj = renderer->strokeHiddenPath(points, zm, stroke);
 
-        if (obj.isValid())
+        if (obj)
           obj->setMapping(false);
       }
       else
@@ -202,7 +202,7 @@ draw(CGnuPlotRenderer *renderer, CGnuPlotGroup *group, const CGnuPlotStroke &str
 
           CGnuPlotHiddenObjectP obj = renderer->strokeHiddenPolygon(points, zm, stroke);
 
-          if (obj.isValid())
+          if (obj)
             obj->setMapping(false);
         }
         else
@@ -214,7 +214,7 @@ draw(CGnuPlotRenderer *renderer, CGnuPlotGroup *group, const CGnuPlotStroke &str
 
           CGnuPlotHiddenObjectP obj = renderer->fillHiddenPolygon(points, zm, fill);
 
-          if (obj.isValid())
+          if (obj)
             obj->setMapping(false);
         }
         else
@@ -245,7 +245,7 @@ draw(CGnuPlotRenderer *renderer, CGnuPlotGroup *group, const CGnuPlotStroke &str
 
         CGnuPlotHiddenObjectP obj = renderer->strokeHiddenPath(points, zm, stroke);
 
-        if (obj.isValid())
+        if (obj)
           obj->setMapping(false);
       }
       else
@@ -277,7 +277,7 @@ draw(CGnuPlotRenderer *renderer, CGnuPlotGroup *group, const CGnuPlotStroke &str
 
           CGnuPlotHiddenObjectP obj = renderer->strokeHiddenPolygon(points, zm, stroke);
 
-          if (obj.isValid())
+          if (obj)
             obj->setMapping(false);
         }
         else
@@ -289,7 +289,7 @@ draw(CGnuPlotRenderer *renderer, CGnuPlotGroup *group, const CGnuPlotStroke &str
 
           CGnuPlotHiddenObjectP obj = renderer->fillHiddenPolygon(points, zm, fill);
 
-          if (obj.isValid())
+          if (obj)
             obj->setMapping(false);
         }
         else
@@ -307,7 +307,7 @@ draw(CGnuPlotRenderer *renderer, CGnuPlotGroup *group, const CGnuPlotStroke &str
 
     CGnuPlotHiddenObjectP obj = renderer->strokeHiddenLine(points[0], points[1], zm, stroke);
 
-    if (obj.isValid())
+    if (obj)
       obj->setMapping(false);
   }
   else

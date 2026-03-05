@@ -83,12 +83,15 @@ class CGnuPlotGroup {
 
   void fit();
 
-  void fitHistograms(COptReal &xmin1, COptReal &xmax1, COptReal &ymin1, COptReal &ymax1);
+  void fitHistograms(std::optional<double> &xmin1, std::optional<double> &xmax1,
+                     std::optional<double> &ymin1, std::optional<double> &ymax1);
 
-  void fitSinglePlot(CGnuPlotPlot *singlePlot, COptReal &xmin1, COptReal &xmax1,
-                     COptReal &ymin1, COptReal &ymax1);
+  void fitSinglePlot(CGnuPlotPlot *singlePlot,
+                     std::optional<double> &xmin1, std::optional<double> &xmax1,
+                     std::optional<double> &ymin1, std::optional<double> &ymax1);
 
-  void fitParallelAxes(COptReal &xmin1, COptReal &xmax1, COptReal &ymin1, COptReal &ymax1);
+  void fitParallelAxes(std::optional<double> &xmin1, std::optional<double> &xmax1,
+                       std::optional<double> &ymin1, std::optional<double> &ymax1);
 
   //---
 
@@ -138,12 +141,12 @@ class CGnuPlotGroup {
 
   //---
 
-  double getXMin() const { return xaxis(1).min().getValue(-10); }
-  double getXMax() const { return xaxis(1).max().getValue( 10); }
-  double getYMin() const { return yaxis(1).min().getValue(-10); }
-  double getYMax() const { return yaxis(1).max().getValue( 10); }
-  double getZMin() const { return zaxis(1).min().getValue(-10); }
-  double getZMax() const { return zaxis(1).max().getValue( 10); }
+  double getXMin() const { return xaxis(1).min().value_or(-10); }
+  double getXMax() const { return xaxis(1).max().value_or( 10); }
+  double getYMin() const { return yaxis(1).min().value_or(-10); }
+  double getYMax() const { return yaxis(1).max().value_or( 10); }
+  double getZMin() const { return zaxis(1).min().value_or(-10); }
+  double getZMax() const { return zaxis(1).max().value_or( 10); }
 
   void setXMin(double x) { xaxis(1).setMin(x); }
   void setXMax(double x) { xaxis(1).setMax(x); }
@@ -236,8 +239,8 @@ class CGnuPlotGroup {
 
   //---
 
-  const COptBBox2D &clearRect() const { return clearRect_; }
-  void setClearRect(const COptBBox2D &r) { clearRect_ = r; }
+  const std::optional<CBBox2D> &clearRect() const { return clearRect_; }
+  void setClearRect(const std::optional<CBBox2D> &r) { clearRect_ = r; }
 
   //---
 
@@ -324,7 +327,7 @@ class CGnuPlotGroup {
   void setHistogramDatas(const CGnuPlotHistogramData &data,
                          const CGnuPlotNewHistogramDatas &newDatas);
 
-  double histogramGap() const { return getHistogramData().gap().getValue(0); }
+  double histogramGap() const { return getHistogramData().gap().value_or(0); }
   void setHistogramGap(double g) { histogramData_.setGap(g); }
 
   //-----
@@ -485,7 +488,7 @@ class CGnuPlotGroup {
   CBBox2D                   keyBBox_    { 0, 0, 1, 1 };       // key bounding box
   CBBox2D                   marginBBox_ { 0, 0, 1, 1 };       // margin bounding box
   CGnuPlotClip              clip_;                            // clip
-  COptBBox2D                clearRect_;                       // optional clear rectangle
+  std::optional<CBBox2D>    clearRect_;                       // optional clear rectangle
   CGnuPlotPlotSize          plotSize_;                        // plot size
   CGnuPlotHistogramData     histogramData_;                   // histogram data
   CGnuPlotNewHistogramDatas newHistogramDatas_;               // new histogram datas

@@ -52,7 +52,7 @@ class CQGnuPlotLabel : public CQGnuPlotAnnotation, public CGnuPlotLabel {
   QPointF getOffset() const;
   void setOffset(const QPointF &p);
 
-  double getAngle() const { return CGnuPlotLabel::getAngle().getValue(0); }
+  double getAngle() const { return CGnuPlotLabel::getAngle().value_or(0); }
 
   QColor color() const;
   void setColor(const QColor &c);

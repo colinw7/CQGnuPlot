@@ -56,7 +56,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       break;
     }
 
-    COptPoint2D op;
+    std::optional<CPoint2D> op;
 
     if (pointsArray.size() < originArray.size()) {
       CPoint3D o = originArray[pointsArray.size()];
@@ -76,8 +76,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     else {
       p1 = rotate.apply(p1);
 
-      if (op.isValid())
-        p1 += op.getValue();
+      if (op)
+        p1 += op.value();
     }
 
     p1 = group->mapLogPoint(plot->xind(), plot->yind(), 1, p1);
@@ -112,8 +112,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       else {
         p2 = rotate.apply(p2);
 
-        if (op.isValid())
-          p2 += op.getValue();
+        if (op)
+          p2 += op.value();
       }
 
       p2 = group->mapLogPoint(plot->xind(), plot->yind(), 1, p2);

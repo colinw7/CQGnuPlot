@@ -32,7 +32,7 @@ class CGnuPlotLabel : public CGnuPlotGroupAnnotation {
   const CGnuPlotColorSpec &textColor() const { return data_->textColor(); }
   void setTextColor(const CGnuPlotColorSpec &c) { data_->setTextColor(c); }
 
-  const COptReal &getAngle() const { return data_->getAngle(); }
+  const std::optional<double> &getAngle() const { return data_->getAngle(); }
   void setAngle(double a) { data_->setAngle(a); }
   void resetAngle() { data_->resetAngle(); }
 
@@ -47,7 +47,7 @@ class CGnuPlotLabel : public CGnuPlotGroupAnnotation {
   const CFontPtr &getFont() const { return data_->getFont(); }
   void setFont(const CFontPtr &f) { data_->setFont(f); }
 
-  const COptPoint2D &getOffset() const { return data_->getOffset(); }
+  const std::optional<CPoint2D> &getOffset() const { return data_->getOffset(); }
   void setOffset(const CPoint2D &o) { data_->setOffset(o); }
 
   int lineType() const { return data_->lineType(); }
@@ -95,7 +95,7 @@ class CGnuPlotLabel : public CGnuPlotGroupAnnotation {
   void print(std::ostream &os) const override;
 
  protected:
-  CGnuPlotLabelData *data_;
+  CGnuPlotLabelData *data_ { nullptr };
 };
 
 typedef std::shared_ptr<CGnuPlotLabel> CGnuPlotLabelP;

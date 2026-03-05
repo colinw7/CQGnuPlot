@@ -40,8 +40,8 @@ void
 CGnuPlotBBoxRenderer::
 setCBValue(double x)
 {
-  cbmin_.updateMin(x);
-  cbmax_.updateMax(x);
+  CUtil::updateMin(cbmin_, x);
+  CUtil::updateMax(cbmax_, x);
 }
 
 bool

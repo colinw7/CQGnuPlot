@@ -77,7 +77,7 @@ class CQGnuPlotAxis : public CQGnuPlotObject, public CGnuPlotAxis {
   void setStart(double r);
   void setEnd  (double r);
 
-  bool isLog() const { return CGnuPlotAxis::logBase().isValid(); }
+  bool isLog() const { return !! CGnuPlotAxis::logBase(); }
 
   void setLog(bool b) {
     if (b)
@@ -86,7 +86,7 @@ class CQGnuPlotAxis : public CQGnuPlotObject, public CGnuPlotAxis {
       CGnuPlotAxis::resetLogBase();
   }
 
-  int logBase() const { return CGnuPlotAxis::logBase().getValue(-1); }
+  int logBase() const { return CGnuPlotAxis::logBase().value_or(-1); }
 
   void setLogBase(int b) { CGnuPlotAxis::setLogBase(b); }
 
@@ -102,7 +102,7 @@ class CQGnuPlotAxis : public CQGnuPlotObject, public CGnuPlotAxis {
   QColor getTicColor() const;
   void setTicColor(const QColor &c);
 
-  double labelRotate() const { return CGnuPlotAxis::labelRotate().getValue(0); }
+  double labelRotate() const { return CGnuPlotAxis::labelRotate().value_or(0); }
 
   QColor getLabelColor() const;
   void setLabelColor(const QColor &c);

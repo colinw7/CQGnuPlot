@@ -79,7 +79,7 @@ QPointF
 CQGnuPlotLabel::
 getOffset() const
 {
-  return CQUtil::toQPoint(CGnuPlotLabel::getOffset().getValue(CPoint2D(0, 0)));
+  return CQUtil::toQPoint(CGnuPlotLabel::getOffset().value_or(CPoint2D(0, 0)));
 }
 
 void

@@ -122,7 +122,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       a = reals[4];
     }
     else {
-      std::cerr << "Bad ellipse points" << std::endl;
+      std::cerr << "Bad ellipse points\n";
       continue;
     }
 

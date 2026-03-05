@@ -140,8 +140,8 @@ init()
   setFilledCurve(plot->filledCurve());
   setHidden3D(plot->hidden3D());
 
-  if (plot->whiskerBars().isValid())
-    setWhiskerBars(plot->whiskerBars().getValue());
+  if (plot->whiskerBars())
+    setWhiskerBars(plot->whiskerBars().value());
   else
     resetWhiskerBars();
 
@@ -169,20 +169,20 @@ init()
 
   const CGnuPlotImageStyle &imageStyle = plot->imageStyle();
 
-  double idx = imageStyle.dx().getValue(1);
-  double idy = imageStyle.dy().getValue(1);
+  double idx = imageStyle.dx().value_or(1);
+  double idy = imageStyle.dy().value_or(1);
   double idz = 1;
-  double idt = imageStyle.dt().getValue(1);
+  double idt = imageStyle.dt().value_or(1);
 
   setDelta(Delta(idx, idy, idz, idt));
 
-  if (imageStyle.origin().isValid() || imageStyle.angle().isValid()) {
-    CPoint3D o = imageStyle.origin().getValue(CPoint3D(0,0,0));
+  if (imageStyle.origin() || imageStyle.angle()) {
+    CPoint3D o = imageStyle.origin().value_or(CPoint3D(0,0,0));
 
-    setRotate(CGnuPlotRotate(o.toPoint2D(), imageStyle.angle().getValue(0)));
+    setRotate(CGnuPlotRotate(o.toPoint2D(), imageStyle.angle().value_or(0)));
   }
 
-  if (imageStyle.center().isValid())
+  if (imageStyle.center())
     setCenter(imageStyle.center());
 
   setOriginArray(imageStyle.originArray());
@@ -201,8 +201,8 @@ setStyle(PlotStyle style)
 {
   style_ = style;
 
-  bymin_.setInvalid();
-  bymax_.setInvalid();
+  bymin_.reset();
+  bymax_.reset();
 
   clearCaches();
 }
@@ -248,7 +248,7 @@ CGnuPlotPlot::
 clearPoints()
 {
   if (app()->isDebug())
-    std::cerr << "Clear Points" << std::endl;
+    std::cerr << "Clear Points\n";
 
   points2D_.clear();
   points3D_.clear();
@@ -300,7 +300,7 @@ addPoint2D(const Values &values, bool discontinuity, bool bad, const Params &par
   assert(! is3D());
 
   if (app()->isDebug()) {
-    std::cerr << "Add Point [" << points2D_.size() << "] " << "(";
+    std::cerr << "Add Point [" << points2D_.size() << "] (";
 
     for (uint i = 0; i < values.size(); ++i) {
       if (i > 0) std::cerr << ",";
@@ -308,7 +308,7 @@ addPoint2D(const Values &values, bool discontinuity, bool bad, const Params &par
       std::cerr << values[i];
     }
 
-    std::cerr << ")" << std::endl;
+    std::cerr << ")\n";
   }
 
   points2D_.push_back(CGnuPlotPoint(values, discontinuity, bad, params));
@@ -374,7 +374,7 @@ addPoint3D(int iy, const Values &values, bool discontinuity, bool bad, const Par
   assert(is3D());
 
   if (app()->isDebug()) {
-    std::cerr << "Add Point [" << points3D_.size() << "] " << "(";
+    std::cerr << "Add Point [" << points3D_.size() << "] (";
 
     for (uint i = 0; i < values.size(); ++i) {
       if (i > 0) std::cerr << ",";
@@ -382,7 +382,7 @@ addPoint3D(int iy, const Values &values, bool discontinuity, bool bad, const Par
       std::cerr << values[i];
     }
 
-    std::cerr << ")" << std::endl;
+    std::cerr << ")\n";
   }
 
   points3D_[iy].push_back(CGnuPlotPoint(values, discontinuity, bad));
@@ -547,7 +547,7 @@ printPoints()
         std::cout << "?";
     }
 
-    std::cout << std::endl;
+    std::cout << "\n";
   }
 }
 
@@ -563,10 +563,10 @@ draw()
     const CGnuPlotAxisData &xaxis = group_->xaxis(xind());
     const CGnuPlotAxisData &yaxis = group_->yaxis(yind());
 
-    double xmin = xaxis.min().getValue(0.0);
-    double ymin = yaxis.min().getValue(0.0);
-    double xmax = xaxis.max().getValue(1.0);
-    double ymax = yaxis.max().getValue(1.0);
+    double xmin = xaxis.min().value_or(0.0);
+    double ymin = yaxis.min().value_or(0.0);
+    double xmax = xaxis.max().value_or(1.0);
+    double ymax = yaxis.max().value_or(1.0);
 
     CPoint2D p1 = group_->mapLogPoint(xind(), yind(), zind(), CPoint2D(xmin, ymin));
     CPoint2D p2 = group_->mapLogPoint(xind(), yind(), zind(), CPoint2D(xmax, ymax));
@@ -578,12 +578,12 @@ draw()
     const CGnuPlotAxisData &yaxis = group_->yaxis(yind());
     const CGnuPlotAxisData &zaxis = group_->zaxis(zind());
 
-    double xmin = xaxis.min().getValue(0.0);
-    double ymin = yaxis.min().getValue(0.0);
-    double zmin = zaxis.min().getValue(0.0);
-    double xmax = xaxis.max().getValue(1.0);
-    double ymax = yaxis.max().getValue(1.0);
-    double zmax = zaxis.max().getValue(1.0);
+    double xmin = xaxis.min().value_or(0.0);
+    double ymin = yaxis.min().value_or(0.0);
+    double zmin = zaxis.min().value_or(0.0);
+    double xmax = xaxis.max().value_or(1.0);
+    double ymax = yaxis.max().value_or(1.0);
+    double zmax = zaxis.max().value_or(1.0);
 
     CPoint3D p1 = group_->mapLogPoint(xind(), yind(), zind(), CPoint3D(xmin, ymin, zmin));
     CPoint3D p2 = group_->mapLogPoint(xind(), yind(), zind(), CPoint3D(xmax, ymax, zmax));
@@ -621,7 +621,7 @@ printValues() const
 
       if (point.isDiscontinuity()) {
         std::stringstream ss;
-        ss << std::endl;
+        ss << "\n";
         tableFile_.print(ss.str());
       }
 
@@ -632,7 +632,7 @@ printValues() const
 
       // TODO: inside/outside test
       std::stringstream ss;
-      ss << reals[0] << " " << reals[1] << " i" << std::endl;
+      ss << reals[0] << " " << reals[1] << " i\n";
       tableFile_.print(ss.str());
     }
   }
@@ -666,9 +666,9 @@ printSurfaceValues() const
 
   for (const auto &ip : getPoints3D()) {
     std::stringstream ss;
-    ss << std::endl;
-    ss << "# IsoCurve " << iy << ", " << ip.second.size() << " points" << std::endl;
-    ss << "# x y z type" << std::endl;
+    ss << "\n";
+    ss << "# IsoCurve " << iy << ", " << ip.second.size() << " points\n";
+    ss << "# x y z type\n";
     tableFile_.print(ss.str());
 
     //---
@@ -683,7 +683,7 @@ printSurfaceValues() const
 
       // TODO: inside/outside test
       std::stringstream ss1;
-      ss1 << reals[0] << " " << reals[1] << " " << reals[2] << " i" << std::endl;
+      ss1 << reals[0] << " " << reals[1] << " " << reals[2] << " i\n";
       tableFile_.print(ss1.str());
     }
 
@@ -704,8 +704,8 @@ printContourValues() const
 
   for (int j = 0; j < ny - 1; ++j) {
     std::stringstream ss;
-    ss << std::endl;
-    ss << "# Contour " << j << std::endl;
+    ss << "\n";
+    ss << "# Contour " << j << "\n";
     tableFile_.print(ss.str());
 
     double y = contour_.y(j);
@@ -715,7 +715,7 @@ printContourValues() const
       double z = contour_.z(i, j);
 
       std::stringstream ss1;
-      ss1 << x << " " << y << " " << z << std::endl;
+      ss1 << x << " " << y << " " << z << "\n";
       tableFile_.print(ss1.str());
     }
   }
@@ -728,8 +728,8 @@ printContourValues() const
     const CGnuPlotContour::Lines &lines = ll.second;
 
     std::stringstream ss;
-    ss << std::endl;
-    ss << "# Contour " << l << std::endl;
+    ss << "\n";
+    ss << "# Contour " << l << "\n";
     tableFile_.print(ss.str());
 
     double z = contour_.levelValue(l);
@@ -740,9 +740,9 @@ printContourValues() const
       std::stringstream ss1;
 
       if (il == 0)
-        ss1 << line.start().x << " " << line.start().y << " " << z << std::endl;
+        ss1 << line.start().x << " " << line.start().y << " " << z << "\n";
 
-      ss1 << line.end().x << " " << line.end().y << " " << z << std::endl;
+      ss1 << line.end().x << " " << line.end().y << " " << z << "\n";
 
       tableFile_.print(ss1.str());
 
@@ -1092,7 +1092,7 @@ initSurface() const
 
     CGnuPlotColorBoxP cb = group()->colorBox();
 
-    const COptPoint3D &center = this->center();
+    const auto &center = this->center();
 
     //---
 
@@ -1101,7 +1101,7 @@ initSurface() const
     bool isCalcColor = lineStyle.isCalcColor();
     bool isDataColor = false;
 
-    COptReal cmin, cmax;
+    std::optional<double> cmin, cmax;
 
     if (! isCalcColor) {
       for (int iy = 0; iy < np.second; ++iy) {
@@ -1111,17 +1111,17 @@ initSurface() const
           if (ppoint.getNumValues() >= 4) {
             double c = ppoint.getReal(4);
 
-            cmin.updateMin(c);
-            cmax.updateMax(c);
+            CUtil::updateMin(cmin, c);
+            CUtil::updateMax(cmax, c);
           }
         }
       }
 
-      isDataColor = cmin.isValid();
+      isDataColor = !!cmin;
 
       if (isDataColor) {
-        cb->axis().setMin(cmin.getValue());
-        cb->axis().setMax(cmax.getValue());
+        cb->axis().setMin(cmin.value());
+        cb->axis().setMax(cmax.value());
       }
     }
 
@@ -1132,7 +1132,7 @@ initSurface() const
 
     CGnuPlotSurface::ZPolygons zpolygons;
     CGnuPlotSurface::IJPoints  ijpoints;
-    COptReal                   zmin, zmax;
+    std::optional<double>      zmin, zmax;
 
     int ind = 0;
 
@@ -1151,11 +1151,11 @@ initSurface() const
         ppoint3.getPoint(p3);
         ppoint4.getPoint(p4);
 
-        if (center.isValid()) {
-          p1 += center.getValue();
-          p2 += center.getValue();
-          p3 += center.getValue();
-          p4 += center.getValue();
+        if (center) {
+          p1 += center.value();
+          p2 += center.value();
+          p3 += center.value();
+          p4 += center.value();
         }
 
         p1 = group_->mapLogPoint(xind(), yind(), 1, p1);
@@ -1175,8 +1175,8 @@ initSurface() const
 
           za = CGnuPlotUtil::avg({z1, z2, z3, z4});
 
-          zmin.updateMin(za);
-          zmax.updateMax(za);
+          CUtil::updateMin(zmin, za);
+          CUtil::updateMax(zmax, za);
 
           int nc = ppoint1.getNumValues();
 
@@ -1190,8 +1190,8 @@ initSurface() const
         else if (th->surface_.isDataColor()) {
           za = CGnuPlotUtil::avg({p1.z, p2.z, p3.z, p4.z});
 
-          zmin.updateMin(za);
-          zmax.updateMax(za);
+          CUtil::updateMin(zmin, za);
+          CUtil::updateMax(zmax, za);
 
           CRGBA rgba1 = cb->valueToColor(ppoint1.getReal(4)).rgba();
           CRGBA rgba2 = cb->valueToColor(ppoint2.getReal(4)).rgba();
@@ -1203,8 +1203,8 @@ initSurface() const
         else {
           za = CGnuPlotUtil::avg({p1.z, p2.z, p3.z, p4.z});
 
-          zmin.updateMin(za);
-          zmax.updateMax(za);
+          CUtil::updateMin(zmin, za);
+          CUtil::updateMax(zmax, za);
         }
 
         //---
@@ -1323,7 +1323,7 @@ drawClusteredHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &draw
       x = i;
     }
 
-    COptRGBA fc;
+    std::optional<CRGBA> fc;
 
     if (point.hasParam("fillcolor"))
       fc = point.getParamColor("fillcolor");
@@ -1358,8 +1358,8 @@ drawClusteredHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &draw
         CGnuPlotFillP   fill1  (bar->fill  ()->dup());
         CGnuPlotStrokeP stroke1(bar->stroke()->dup());
 
-        if (fc.isValid())
-          fill1->setColor(fc.getValue());
+        if (fc)
+          fill1->setColor(fc.value());
 
         bar->setFill  (fill1);
         bar->setStroke(stroke1);
@@ -1420,7 +1420,7 @@ drawErrorBarsHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &draw
       yh = reals[2];
     }
 
-    COptRGBA fc;
+    std::optional<CRGBA> fc;
 
     if (point.hasParam("fillcolor"))
       fc = point.getParamColor("fillcolor");
@@ -1442,8 +1442,8 @@ drawErrorBarsHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &draw
         CGnuPlotFillP   fill1   = bar->fill  ();
         CGnuPlotStrokeP stroke1 = bar->stroke();
 
-        if (fc.isValid())
-          fill1->setColor(fc.getValue());
+        if (fc)
+          fill1->setColor(fc.value());
 
         bar->setFill  (fill1  );
         bar->setStroke(stroke1);
@@ -1478,7 +1478,7 @@ drawStackedHistogram(CGnuPlotRenderer *renderer, int i, const CBBox2D &bbox, boo
 
   //---
 
-  COptRGBA fc, lc;
+  std::optional<CRGBA> fc, lc;
 
   if (isColumn) {
     fc = CGnuPlotStyleInst->indexColor(i + 1);
@@ -1506,11 +1506,11 @@ drawStackedHistogram(CGnuPlotRenderer *renderer, int i, const CBBox2D &bbox, boo
       CGnuPlotFillP   fill   = bar->fill();
       CGnuPlotStrokeP stroke = bar->stroke();
 
-      if (fc.isValid())
-        fill->setColor(fc.getValue());
+      if (fc)
+        fill->setColor(fc.value());
 
-      if (lc.isValid())
-        stroke->setColor(lc.getValue());
+      if (lc)
+        stroke->setColor(lc.value());
 
       bar->setFill  (fill  );
       bar->setStroke(stroke);
@@ -1537,7 +1537,7 @@ double
 CGnuPlotPlot::
 getXSpacing() const
 {
-  COptReal dx;
+  std::optional<double> dx;
 
   uint np = numPoints2D();
 
@@ -1550,11 +1550,11 @@ getXSpacing() const
     if (point1.getPoint(p1) && point2.getPoint(p2)) {
       double dx1 = std::abs(p2.x - p1.x);
 
-      dx.updateMin(dx1);
+      CUtil::updateMin(dx, dx1);
     }
   }
 
-  return dx.getValue(1);
+  return dx.value_or(1);
 }
 
 void
@@ -1563,7 +1563,7 @@ setLineStyleId(int ind)
 {
   CGnuPlotLineStyleP ls = app()->lineStyle(ind);
 
-  if (ls.isValid())
+  if (ls)
     setLineStyle(*ls);
 }
 
@@ -1702,7 +1702,7 @@ CGnuPlotPlot::
 calcXRange(double *xmin, double *xmax) const
 {
   // calc range for all x values
-  if (! xmin_.isValid() || ! xmax_.isValid()) {
+  if (! xmin_ || ! xmax_) {
     CGnuPlotPlot *th = const_cast<CGnuPlotPlot *>(this);
 
     if (is3D() && ! isImageStyle()) {
@@ -1717,8 +1717,8 @@ calcXRange(double *xmin, double *xmax) const
           if (COSNaN::is_nan(p1.x))
             continue;
 
-          th->xmin_.updateMin(p1.x);
-          th->xmax_.updateMax(p1.x);
+          CUtil::updateMin(th->xmin_, p1.x);
+          CUtil::updateMax(th->xmax_, p1.x);
         }
       }
     }
@@ -1729,12 +1729,12 @@ calcXRange(double *xmin, double *xmax) const
         CBBox2D bbox = brenderer.bbox();
 
         if (bbox.isSet()) {
-          th->xmin_.updateMin(bbox.getLeft ());
-          th->xmax_.updateMax(bbox.getRight());
+          CUtil::updateMin(th->xmin_, bbox.getLeft ());
+          CUtil::updateMax(th->xmax_, bbox.getRight());
         }
 
-        th->cbmin_.updateMin(brenderer.cbMin());
-        th->cbmax_.updateMin(brenderer.cbMax());
+        CUtil::updateMin(th->cbmin_, brenderer.cbMin());
+        CUtil::updateMax(th->cbmax_, brenderer.cbMax());
       }
       else {
         for (const auto &p : getPoints2D()) {
@@ -1746,15 +1746,15 @@ calcXRange(double *xmin, double *xmax) const
           if (COSNaN::is_nan(x))
             continue;
 
-          th->xmin_.updateMin(x);
-          th->xmax_.updateMax(x);
+          CUtil::updateMin(th->xmin_, x);
+          CUtil::updateMax(th->xmax_, x);
         }
       }
     }
   }
 
-  *xmin = xmin_.getValue(-10);
-  *xmax = xmax_.getValue( 10);
+  *xmin = xmin_.value_or(-10);
+  *xmax = xmax_.value_or( 10);
 }
 
 void
@@ -1762,7 +1762,7 @@ CGnuPlotPlot::
 calcYRange(double *ymin, double *ymax) const
 {
   // calc range for all y values
-  if (! ymin_.isValid() || ! ymax_.isValid()) {
+  if (! ymin_ || ! ymax_) {
     CGnuPlotPlot *th = const_cast<CGnuPlotPlot *>(this);
 
     if (is3D() && ! isImageStyle()) {
@@ -1777,8 +1777,8 @@ calcYRange(double *ymin, double *ymax) const
           if (COSNaN::is_nan(p1.y))
             continue;
 
-          th->ymin_.updateMin(p1.y);
-          th->ymax_.updateMax(p1.y);
+          CUtil::updateMin(th->ymin_, p1.y);
+          CUtil::updateMax(th->ymax_, p1.y);
         }
       }
     }
@@ -1789,8 +1789,8 @@ calcYRange(double *ymin, double *ymax) const
         CBBox2D bbox = brenderer.bbox();
 
         if (bbox.isSet()) {
-          th->ymin_.updateMin(bbox.getBottom());
-          th->ymax_.updateMax(bbox.getTop   ());
+          CUtil::updateMin(th->ymin_, bbox.getBottom());
+          CUtil::updateMax(th->ymax_, bbox.getTop   ());
         }
       }
       else {
@@ -1803,15 +1803,15 @@ calcYRange(double *ymin, double *ymax) const
           if (COSNaN::is_nan(y))
             continue;
 
-          th->ymin_.updateMin(y);
-          th->ymax_.updateMax(y);
+          CUtil::updateMin(th->ymin_, y);
+          CUtil::updateMax(th->ymax_, y);
         }
       }
     }
   }
 
-  *ymin = ymin_.getValue(-10);
-  *ymax = ymax_.getValue( 10);
+  *ymin = ymin_.value_or(-10);
+  *ymax = ymax_.value_or( 10);
 }
 
 void
@@ -1821,7 +1821,7 @@ calcZRange(double *zmin, double *zmax) const
   assert(is3D());
 
   // calc range for all z values
-  if (! zmin_.isValid() || ! zmax_.isValid()) {
+  if (! zmin_ || ! zmax_) {
     CGnuPlotPlot *th = const_cast<CGnuPlotPlot *>(this);
 
     for (const auto &ip : getPoints3D()) {
@@ -1834,14 +1834,14 @@ calcZRange(double *zmin, double *zmax) const
 
         p1 = group_->mapLogPoint(xind(), yind(), 1, p1);
 
-        th->zmin_.updateMin(p1.z);
-        th->zmax_.updateMax(p1.z);
+        CUtil::updateMin(th->zmin_, p1.z);
+        CUtil::updateMax(th->zmax_, p1.z);
       }
     }
   }
 
-  *zmin = zmin_.getValue(-10);
-  *zmax = zmax_.getValue( 10);
+  *zmin = zmin_.value_or(-10);
+  *zmax = zmax_.value_or( 10);
 }
 
 bool
@@ -1851,7 +1851,7 @@ calcBoundedYRange(double *ymin, double *ymax) const
   // TODO: use dummy renderer which updates bbox
 
   // get y range constrained by parent group x range
-  if (! bymin_.isValid() || ! bymax_.isValid()) {
+  if (! bymin_ || ! bymax_) {
     double xmin, xmax;
 
     getGroupXRange(&xmin, &xmax);
@@ -1875,8 +1875,8 @@ calcBoundedYRange(double *ymin, double *ymax) const
           if (COSNaN::is_nan(p1.y))
             continue;
 
-          th->bymin_.updateMin(p1.y);
-          th->bymax_.updateMax(p1.y);
+          CUtil::updateMin(th->bymin_, p1.y);
+          CUtil::updateMax(th->bymax_, p1.y);
         }
       }
     }
@@ -1895,8 +1895,8 @@ calcBoundedYRange(double *ymin, double *ymax) const
           CPoint2D pl1 = group_->unmapLogPoint(xind(), yind(), 1, bbox1.getLL());
           CPoint2D pl2 = group_->unmapLogPoint(xind(), yind(), 1, bbox1.getUR());
 
-          th->bymin_.updateMin(pl1.y);
-          th->bymax_.updateMax(pl2.y);
+          CUtil::updateMin(th->bymin_, pl1.y);
+          CUtil::updateMax(th->bymax_, pl2.y);
         }
       }
       else {
@@ -1912,23 +1912,23 @@ calcBoundedYRange(double *ymin, double *ymax) const
           if (COSNaN::is_nan(y))
             continue;
 
-          th->bymin_.updateMin(y);
-          th->bymax_.updateMax(y);
+          CUtil::updateMin(th->bymin_, y);
+          CUtil::updateMax(th->bymax_, y);
         }
       }
     }
   }
 
   if (! group_->yaxis(yind()).isLogValue()) {
-    *ymin = bymin_.getValue(-10);
-    *ymax = bymax_.getValue( 10);
+    *ymin = bymin_.value_or(-10);
+    *ymax = bymax_.value_or( 10);
   }
   else {
-    *ymin = bymin_.getValue(1);
-    *ymax = bymax_.getValue(10);
+    *ymin = bymin_.value_or(1);
+    *ymax = bymax_.value_or(10);
   }
 
-  return (bymin_.isValid() && bymax_.isValid());
+  return (bymin_ && bymax_);
 }
 
 bool
@@ -2003,8 +2003,8 @@ recalcBoundedYRange(double *ymin, double *ymax) const
 {
   CGnuPlotPlot *th = const_cast<CGnuPlotPlot *>(this);
 
-  th->bymin_.setInvalid();
-  th->bymax_.setInvalid();
+  th->bymin_.reset();
+  th->bymax_.reset();
 
   calcBoundedYRange(ymin, ymax);
 }
@@ -2017,22 +2017,22 @@ getGroupXRange(double *xmin, double *xmax) const
 
   CGnuPlotAxisData &xaxis = group_->xaxis(xind());
 
-  if (xaxis.min().isValid())
-    *xmin = xaxis.min().getValue();
-  if (xaxis.max().isValid())
-    *xmax = xaxis.max().getValue();
+  if (xaxis.min())
+    *xmin = xaxis.min().value();
+  if (xaxis.max())
+    *xmax = xaxis.max().value();
 
   //CGnuPlotAxisData &yaxis = group_->yaxis(yind());
 
-  //if (yaxis.min().isValid()) ymin_ = yaxis.min().getValue();
-  //if (yaxis.max().isValid()) ymax_ = yaxis.max().getValue();
+  //if (yaxis.min()) ymin_ = yaxis.min().value();
+  //if (yaxis.max()) ymax_ = yaxis.max().value();
 }
 
 void
 CGnuPlotPlot::
 getPointsRange(CBBox2D &bbox) const
 {
-  COptReal xmin, ymin, xmax, ymax;
+  std::optional<double> xmin, ymin, xmax, ymax;
 
   if (is3D() && ! isImageStyle()) {
     for (const auto &ip : getPoints3D()) {
@@ -2044,13 +2044,13 @@ getPointsRange(CBBox2D &bbox) const
           continue;
 
         if (! COSNaN::is_nan(p1.x)) {
-          xmin.updateMin(p1.x);
-          xmax.updateMax(p1.x);
+          CUtil::updateMin(xmin, p1.x);
+          CUtil::updateMax(xmax, p1.x);
         }
 
         if (! COSNaN::is_nan(p1.y)) {
-          ymin.updateMin(p1.y);
-          ymax.updateMax(p1.y);
+          CUtil::updateMin(ymin, p1.y);
+          CUtil::updateMax(ymax, p1.y);
         }
       }
     }
@@ -2063,19 +2063,19 @@ getPointsRange(CBBox2D &bbox) const
         continue;
 
       if (! COSNaN::is_nan(x)) {
-        xmin.updateMin(x);
-        xmax.updateMax(x);
+        CUtil::updateMin(xmin, x);
+        CUtil::updateMax(xmax, x);
       }
 
       if (! COSNaN::is_nan(y)) {
-        ymin.updateMin(y);
-        ymax.updateMax(y);
+        CUtil::updateMin(ymin, y);
+        CUtil::updateMax(ymax, y);
       }
     }
   }
 
-  bbox = CBBox2D(xmin.getValue(-10), ymin.getValue(-10),
-                 xmax.getValue( 10), ymax.getValue( 10));
+  bbox = CBBox2D(xmin.value_or(-10), ymin.value_or(-10),
+                 xmax.value_or( 10), ymax.value_or( 10));
 }
 
 bool
@@ -2166,7 +2166,7 @@ convertPolarAxisPoint(const CPoint2D &p, bool &inside) const
 
   inside = plotTAxis->mappedInside(p1.x) && plotRAxis->mappedInside(p1.y);
 
-  if (! plotRAxis->logBase().isValid()) {
+  if (! plotRAxis->logBase()) {
     double rmin = plotRAxis->getStart();
     double rmax = plotRAxis->getEnd  ();
     double s    = rmax - rmin;

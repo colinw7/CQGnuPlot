@@ -65,7 +65,7 @@ namespace CGnuPlotUtil {
       value = CExprValuePtr();
 
     if (! value && ! quiet)
-      std::cerr << "Eval failed: " << str << std::endl;
+      std::cerr << "Eval failed: " << str << "\n";
 
     return true;
   }

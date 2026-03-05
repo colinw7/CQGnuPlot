@@ -30,30 +30,30 @@ show(std::ostream &os) const
   if (border_) {
     os << " with border";
 
-    if      (borderLineType_.isValid())
-      os << " " << borderLineType_.getValue();
-    else if (borderColor_.isValid())
-      os << " " << borderColor_.getValue();
+    if      (borderLineType_)
+      os << " " << borderLineType_.value();
+    else if (borderColor_)
+      os << " " << borderColor_.value();
   }
   else
     os << " with no border";
 
-  os << std::endl;
+  os << "\n";
 }
 
 bool
 CGnuPlotFillStyle::
 calcColor(CGnuPlotGroup *group, CRGBA &c) const
 {
-  if      (borderColor_.isValid())
-    c = borderColor_.getValue().calcColor(group);
-  else if (borderLineType_.isValid()) {
+  if      (borderColor_)
+    c = borderColor_.value().calcColor(group);
+  else if (borderLineType_) {
     CGnuPlotLineTypeP lineType;
 
     if (group)
-      lineType = group->app()->getLineTypeInd(borderLineType_.getValue());
+      lineType = group->app()->getLineTypeInd(borderLineType_.value());
 
-    if (lineType.isValid())
+    if (lineType)
       c = lineType->calcColor(group, c);
     else
       return false;
@@ -80,7 +80,7 @@ print(std::ostream &os) const
   if (border_) {
     os << " border";
 
-    if (borderLineType_.isValid())
-      os << " " << borderLineType_.getValue();
+    if (borderLineType_)
+      os << " " << borderLineType_.value();
   }
 }

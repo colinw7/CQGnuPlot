@@ -13,9 +13,9 @@ class CGnuPlotHistogramData {
   HistogramStyle style() const { return style_; }
   void setStyle(HistogramStyle s) { style_ = s; }
 
-  const COptReal &gap() const { return gap_; }
+  const std::optional<double> &gap() const { return gap_; }
   void setGap(double g) { gap_ = g; }
-  void resetGap() { gap_.setInvalid(); }
+  void resetGap() { gap_.reset(); }
 
   double lineWidth() const { return lineWidth_; }
   void setLineWidth(double w) { lineWidth_ = w; }
@@ -33,13 +33,13 @@ class CGnuPlotHistogramData {
   void setHorizontal(bool b) { horizontal_ = b; }
 
  private:
-  HistogramStyle style_       { HistogramStyle::CLUSTERED };
-  COptReal       gap_;
-  double         lineWidth_   { 0 };
-  bool           boxed_       { false };
-  CPoint2D       titleOffset_ { 0, 0 };
-  CFontPtr       titleFont_;
-  bool           horizontal_  { false };
+  HistogramStyle        style_       { HistogramStyle::CLUSTERED };
+  std::optional<double> gap_;
+  double                lineWidth_   { 0 };
+  bool                  boxed_       { false };
+  CPoint2D              titleOffset_ { 0, 0 };
+  CFontPtr              titleFont_;
+  bool                  horizontal_  { false };
 };
 
 class CGnuPlotNewHistogramData {
@@ -58,16 +58,16 @@ class CGnuPlotNewHistogramData {
   const CGnuPlotFillStyle &fillStyle() const { return fillStyle_; }
   void setFillStyle(const CGnuPlotFillStyle &v) { fillStyle_ = v; }
 
-  const COptReal &x() const { return x_; }
+  const std::optional<double> &x() const { return x_; }
   void setX(double r) { x_ = r; }
-  void resetX() { x_.setInvalid(); }
+  void resetX() { x_.reset(); }
 
  private:
-  int               ind_      { 0 };
-  std::string       title_;
-  int               lineType_ { -1 };
-  CGnuPlotFillStyle fillStyle_;
-  COptReal          x_;
+  int                   ind_      { 0 };
+  std::string           title_;
+  int                   lineType_ { -1 };
+  CGnuPlotFillStyle     fillStyle_;
+  std::optional<double> x_;
 };
 
 typedef std::vector<CGnuPlotNewHistogramData> CGnuPlotNewHistogramDatas;

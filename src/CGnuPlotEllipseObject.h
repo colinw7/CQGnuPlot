@@ -1,7 +1,6 @@
 #ifndef CGnuPlotEllipseObject_H
 #define CGnuPlotEllipseObject_H
 
-#include <COptVal.h>
 #include <CPoint2D.h>
 #include <CRGBA.h>
 #include <string>

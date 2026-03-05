@@ -51,6 +51,6 @@ class CGnuPlotEndBar {
   CGnuPlotStrokeP       stroke_;
 };
 
-typedef CRefPtr<CGnuPlotEndBar> CGnuPlotEndBarP;
+typedef std::shared_ptr<CGnuPlotEndBar> CGnuPlotEndBarP;
 
 #endif

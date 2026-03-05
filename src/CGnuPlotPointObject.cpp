@@ -28,8 +28,8 @@ tip() const
 
   tip.setXStr(CStrUtil::strprintf("%g", point().x));
 
-  if (size().isValid())
-    tip.setYStr(CStrUtil::strprintf("%g, %g", point().y, size().getValue()));
+  if (size())
+    tip.setYStr(CStrUtil::strprintf("%g, %g", point().y, size().value()));
   else
     tip.setYStr(CStrUtil::strprintf("%g", point().y));
 
@@ -51,7 +51,7 @@ draw(CGnuPlotRenderer *renderer) const
 
   bool highlighted = (isHighlighted() || isSelected());
 
-  double size = this->size().getValue(1);
+  double size = this->size().value_or(1);
 
   if (size <= 0)
     size = 1;
@@ -95,7 +95,7 @@ draw(CGnuPlotRenderer *renderer) const
 
   //---
 
-  if (renderer->clip().isValid() && ! renderer->clip().getValue().inside(bbox_))
+  if (renderer->clip() && ! renderer->clip().value().inside(bbox_))
     return;
 
   //---
@@ -114,7 +114,7 @@ draw(CGnuPlotRenderer *renderer) const
     renderer->drawHAlignedText(point(), HAlignPos(CHALIGN_TYPE_CENTER, 0),
                                VAlignPos(CVALIGN_TYPE_CENTER, 0), pointString(), c);
   else if (pointType() == CGnuPlotTypes::SymbolType::BIVARIATE)
-    renderer->drawLine(point(), point() + CPoint2D(0, this->size().getValue(0)), c, lineWidth());
+    renderer->drawLine(point(), point() + CPoint2D(0, this->size().value_or(0)), c, lineWidth());
   else
     renderer->drawSymbol(point(), pointType(), scale*pw_/8.0, c, lineWidth(), true);
 

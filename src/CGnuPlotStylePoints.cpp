@@ -77,8 +77,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     CRGBA tc = c1;
 
-    if (labelStyle.textColor().isValid())
-      tc = labelStyle.textColor().getValue().calcColor(group);
+    if (labelStyle.textColor())
+      tc = labelStyle.textColor().value().calcColor(group);
 
     CGnuPlotPointData data;
 
@@ -123,7 +123,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       }
     }
     else {
-      double s = data.size().getValue(1);
+      double s = data.size().value_or(1);
 
       if (data.pointType() == CGnuPlotTypes::SymbolType::STRING)
         renderer->drawHAlignedText(data.point(), HAlignPos(CHALIGN_TYPE_CENTER, 0),
@@ -169,7 +169,7 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   int k = 0;
 
   for (const auto &ip : plot->getPoints3D()) {
-    COptPoint3D op;
+    std::optional<CPoint3D> op;
 
     if (k < int(originArray.size()))
       op = originArray[k];
@@ -180,8 +180,8 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
       (void) plot->mapPoint3D(point, p, ind);
 
-      if (op.isValid())
-        p += op.getValue();
+      if (op)
+        p += op.value();
 
       if (! pm3D) {
         if (! group->isHidden3D())
@@ -218,8 +218,8 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
 
     CRGBA tc = lc;
 
-    if (labelStyle.textColor().isValid())
-      tc = labelStyle.textColor().getValue().calcColor(plot->group());
+    if (labelStyle.textColor())
+      tc = labelStyle.textColor().value().calcColor(plot->group());
 
     renderer->drawHAlignedText(pm, HAlignPos(CHALIGN_TYPE_CENTER, 0),
                                VAlignPos(CVALIGN_TYPE_CENTER, 0),

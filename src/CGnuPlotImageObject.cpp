@@ -103,13 +103,13 @@ void
 CGnuPlotImageObject::
 init() const
 {
-  if (! image1_.isValid()) {
+  if (! image1_) {
     image1_ = CImageMgrInst->createImage();
 
     image1_->setDataSize(size_);
   }
 
-  if (! image2_.isValid()) {
+  if (! image2_) {
     double ra = CAngle::Deg2Rad(angle_);
 
     double w = size_.getWidth ()*delta_.getWidth ();

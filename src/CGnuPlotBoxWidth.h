@@ -36,18 +36,18 @@ class CGnuPlotBoxWidth {
 
   void show(std::ostream &os) const {
     if (type() == BoxWidthType::AUTO)
-      os << "boxwidth is auto" << std::endl;
+      os << "boxwidth is auto\n";
     else
       os << "boxwidth is " << width() << " " <<
-            (type() == BoxWidthType::ABSOLUTE ? "absolute" : "relative") << std::endl;
+            (type() == BoxWidthType::ABSOLUTE ? "absolute" : "relative") << "\n";
   }
 
   void save(std::ostream &os) const {
     if (type() == BoxWidthType::AUTO)
-      os << "set boxwidth" << std::endl;
+      os << "set boxwidth\n";
     else
       os << "set boxwidth " << width() << " " <<
-            (type() == BoxWidthType::ABSOLUTE ? "absolute" : "relative") << std::endl;
+            (type() == BoxWidthType::ABSOLUTE ? "absolute" : "relative") << "\n";
   }
 
  private:

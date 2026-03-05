@@ -50,7 +50,7 @@ class CGnuPlotCirclesStyleValue : public CGnuPlotStyleValue {
     os << (wedge() ? " wedge" : " nowedge");
     os << (clip()  ? " clip"  : " noclip" );
 
-    os << std::endl;
+    os << "\n";
   }
 
  private:

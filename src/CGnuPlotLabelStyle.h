@@ -7,13 +7,13 @@
 
 class CGnuPlotLabelStyle {
  public:
-  typedef CGnuPlotTypes::SymbolType   SymbolType;
-  typedef COptValT<CGnuPlotColorSpec> OptColorSpec;
+  typedef CGnuPlotTypes::SymbolType        SymbolType;
+  typedef std::optional<CGnuPlotColorSpec> OptColorSpec;
 
  public:
   CGnuPlotLabelStyle() { }
 
-  const COptPoint2D &offset() const { return offset_; }
+  const std::optional<CPoint2D> &offset() const { return offset_; }
   void setOffset(const CPoint2D &o) { offset_ = o; }
 
   const CHAlignType &align() const { return align_; }
@@ -51,7 +51,7 @@ class CGnuPlotLabelStyle {
 
   const OptColorSpec &textColor() const { return textColor_; }
   void setTextColor(const CGnuPlotColorSpec &c) { textColor_ = c; }
-  void unsetTextColor() { textColor_.setInvalid(); }
+  void unsetTextColor() { textColor_.reset(); }
 
   //---
 
@@ -59,15 +59,15 @@ class CGnuPlotLabelStyle {
   void setHypertext(bool b) { hypertext_ = b; }
 
  protected:
-  COptPoint2D  offset_;
-  CHAlignType  align_     { CHALIGN_TYPE_CENTER };
-  CFontPtr     font_;
-  bool         showPoint_ { false };
-  int          pointType_ { -1 };
-  double       pointSize_ { -1 };
-  double       lineWidth_ { 1 };
-  OptColorSpec textColor_;
-  bool         hypertext_ { false };
+  std::optional<CPoint2D> offset_;
+  CHAlignType             align_     { CHALIGN_TYPE_CENTER };
+  CFontPtr                font_;
+  bool                    showPoint_ { false };
+  int                     pointType_ { -1 };
+  double                  pointSize_ { -1 };
+  double                  lineWidth_ { 1 };
+  OptColorSpec            textColor_;
+  bool                    hypertext_ { false };
 };
 
 #endif

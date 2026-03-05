@@ -2,7 +2,6 @@
 #define CGnuPlotMark_H
 
 #include <CRGBA.h>
-#include <CRefPtr.h>
 #include <CGnuPlotTypes.h>
 
 class CGnuPlotPlot;
@@ -44,7 +43,7 @@ class CGnuPlotMark {
   bool          pixelSize_ { true };
 };
 
-typedef CRefPtr<CGnuPlotMark> CGnuPlotMarkP;
+typedef std::shared_ptr<CGnuPlotMark> CGnuPlotMarkP;
 
 #endif
 

@@ -7,13 +7,13 @@ double
 CGnuPlotVectorsStyleValue::
 lineWidth(CGnuPlot *plot) const
 {
-  if (lineWidth_.isValid())
-   return lineWidth_.getValue();
+  if (lineWidth_)
+   return lineWidth_.value();
 
-  if (plot && lineStyle_.isValid()) {
-    CGnuPlotLineStyleP ls = plot->lineStyle(lineStyle_.getValue());
+  if (plot && lineStyle_) {
+    CGnuPlotLineStyleP ls = plot->lineStyle(lineStyle_.value());
 
-    return (ls.isValid() ? ls->calcWidth() : 1);
+    return (ls ? ls->calcWidth() : 1);
   }
   else
     return 1;
@@ -28,8 +28,8 @@ print(CGnuPlot *plot, std::ostream &os) const
   if (! border_) os << " noborder";
   os << " " << frontStr();
 
-  if (lineStyle_.isValid())
-    os <<" lt " << lineStyle_;
+  if (lineStyle_)
+    os <<" lt " << lineStyle_.value();
   else
     os <<" lt black";
 

@@ -11,11 +11,11 @@ class CGnuPlotISOSamples {
   void unset() { set(10, 10); }
 
   void save(std::ostream &os) const {
-    os << "set isosamples " << samples1_ << ", " << samples2_ << std::endl;
+    os << "set isosamples " << samples1_ << ", " << samples2_ << "\n";
   }
 
   void show(std::ostream &os) const {
-    os << "iso sampling rate is " << samples1_ << ", " << samples2_ << std::endl;
+    os << "iso sampling rate is " << samples1_ << ", " << samples2_ << "\n";
   }
 
  private:

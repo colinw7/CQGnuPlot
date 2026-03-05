@@ -2,7 +2,6 @@
 #define CGnuPlotContour_H
 
 #include <CRGBA.h>
-#include <COptVal.h>
 #include <CLine3D.h>
 #include <CAlignType.h>
 #include <vector>
@@ -88,16 +87,16 @@ class CGnuPlotContour {
   static void getPaths(const Lines &lines, Paths &path);
 
  private:
-  CGnuPlotPlot* plot_  { 0 };
-  bool          solid_ { false };
-  Reals         x_, y_, z_, c_;
-  Reals         levels_;
-  COptReal      xmin_, ymin_, zmin_, cmin_;
-  COptReal      xmax_, ymax_, zmax_, cmax_;
-  double        min_x_ { 0 }, min_y_ { 0 }, min_z_ { 0 };
-  DrawPos       pos_ { DrawPos::BASE };
-  LevelLines    llines_;
-  std::string   palette_ { "subtle" };
+  CGnuPlotPlot*         plot_  { nullptr };
+  bool                  solid_ { false };
+  Reals                 x_, y_, z_, c_;
+  Reals                 levels_;
+  std::optional<double> xmin_, ymin_, zmin_, cmin_;
+  std::optional<double> xmax_, ymax_, zmax_, cmax_;
+  double                min_x_ { 0 }, min_y_ { 0 }, min_z_ { 0 };
+  DrawPos               pos_ { DrawPos::BASE };
+  LevelLines            llines_;
+  std::string           palette_ { "subtle" };
 };
 
 #endif

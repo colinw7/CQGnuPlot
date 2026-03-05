@@ -145,7 +145,7 @@ calc()
 {
   reverse_ = (start_ > end_);
 
-  if (logBase().isValid()) {
+  if (logBase()) {
     start1_ = CMathRound::RoundDown(start_);
     end1_   = CMathRound::RoundUp  (end_);
 
@@ -778,7 +778,7 @@ drawAxisLabel()
 
   double m = 0.0;
 
-  if (logBase().isValid())
+  if (logBase())
     m = (getStart () + getEnd ())/2;
   else
     m = (getStart1() + getEnd1())/2;
@@ -830,8 +830,7 @@ drawAxisTick(double pos, bool first, bool large)
   //  mirror draw up/down
   CPoint3D p = valueToPoint(reverse_ ? end_ - (pos - start_) : pos, first, ! isBorderTics());
 
-  if (clip() && renderer_->clip().isValid() &&
-      ! renderer_->clip().getValue().inside(CPoint2D(p.x, p.y)))
+  if (clip() && renderer_->clip() && ! renderer_->clip().value().inside(CPoint2D(p.x, p.y)))
     return;
 
   double psize = 6*(large ? getTicMajorScale() : getTicMinorScale());
@@ -916,8 +915,7 @@ drawTickLabel(double pos, const std::string &str, bool first)
 
   CPoint3D p = valueToPoint(reverse_ ? end_ - (pos - start_) : pos, first, ! isBorderTics());
 
-  if (clip() && renderer_->clip().isValid() &&
-      ! renderer_->clip().getValue().inside(CPoint2D(p.x, p.y)))
+  if (clip() && renderer_->clip() && ! renderer_->clip().value().inside(CPoint2D(p.x, p.y)))
     return;
 
   CRGBA c = ticColor().color();
@@ -1026,7 +1024,7 @@ drawAxisLabelStr(double pos, const std::string &str, int maxSize, bool first)
     }
 
     drawHAlignedText(p1, HAlignPos(CHALIGN_TYPE_CENTER, 0), VAlignPos(valign, 0),
-                     str, c, labelRotate().getValue(0));
+                     str, c, labelRotate().value_or(0));
   }
   else if (direction_ == AxisDirection::Y) {
     CPoint3D p1;
@@ -1060,7 +1058,7 @@ drawAxisLabelStr(double pos, const std::string &str, int maxSize, bool first)
         valign = (! isLabelInside() ? CVALIGN_TYPE_BOTTOM : CVALIGN_TYPE_TOP);
 
       drawHAlignedText(p1, HAlignPos(CHALIGN_TYPE_CENTER, 0), VAlignPos(valign, 0),
-                       str, c, labelRotate().getValue(90));
+                       str, c, labelRotate().value_or(90));
     }
     else {
       CHAlignType halign;
@@ -1071,7 +1069,7 @@ drawAxisLabelStr(double pos, const std::string &str, int maxSize, bool first)
         halign = (! isLabelInside() ? CHALIGN_TYPE_LEFT : CHALIGN_TYPE_RIGHT);
 
       drawVAlignedText(p1, HAlignPos(halign, 0), VAlignPos(CVALIGN_TYPE_CENTER, 0),
-                       str, c, labelRotate().getValue(90));
+                       str, c, labelRotate().value_or(90));
     }
   }
   else {
@@ -1088,7 +1086,7 @@ drawAxisLabelStr(double pos, const std::string &str, int maxSize, bool first)
     }
 
     drawVAlignedText(p1, HAlignPos(halign, 0), VAlignPos(CVALIGN_TYPE_CENTER, 0),
-                     str, c, labelRotate().getValue(0));
+                     str, c, labelRotate().value_or(0));
   }
 }
 
@@ -1195,7 +1193,7 @@ drawRadialGrid(CGnuPlotRenderer *renderer)
 
   double r1, r2;
 
-  if (! logBase().isValid()) {
+  if (! logBase()) {
     r1 = getStart();
     r2 = getEnd  ();
     //r1 = getStart1();
@@ -1413,7 +1411,7 @@ valueToPoint(double v, bool first, bool zero) const
   CBBox3D bbox = group_->getPlotBorderBox(1, 1, 1);
 
   if (type() == AxisType::R) {
-    if (! logBase().isValid()) {
+    if (! logBase()) {
       double s = getEnd() - getStart();
 
       p.x = CGnuPlotUtil::map(v, getStart(), getEnd(), 0, s);

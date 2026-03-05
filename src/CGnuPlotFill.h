@@ -2,7 +2,6 @@
 #define CGnuPlotFill_H
 
 #include <CGnuPlotTypes.h>
-#include <CRefPtr.h>
 
 class CGnuPlotPlot;
 
@@ -40,6 +39,6 @@ class CGnuPlotFill {
   FillPattern   pattern_ { FillPattern::NONE };
 };
 
-typedef CRefPtr<CGnuPlotFill> CGnuPlotFillP;
+typedef std::shared_ptr<CGnuPlotFill> CGnuPlotFillP;
 
 #endif

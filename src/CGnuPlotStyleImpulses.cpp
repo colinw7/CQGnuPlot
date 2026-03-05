@@ -31,7 +31,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   double ymin = 0.0;
 
   if (plot->isPolar())
-    ymin = group->raxis().min().getValue(0);
+    ymin = group->raxis().min().value_or(0);
   else
     ymin = plot->bbox2D().getYMin();
 

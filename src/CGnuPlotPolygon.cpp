@@ -109,10 +109,10 @@ draw(CGnuPlotRenderer *renderer) const
 
   //---
 
-  lc_ = this->getStrokeColor().getValue(CRGBA(0,0,0));
+  lc_ = this->getStrokeColor().value_or(CRGBA(0,0,0));
 
   CRGBA  lc = lc_;
-  double lw = getLineWidth().getValue(0);
+  double lw = getLineWidth().value_or(0);
 
   if (highlighted) {
     lc = CRGBA(1,0,0);
@@ -229,11 +229,11 @@ print(std::ostream &os) const
 
   // clip
 
-  os << " lw " << lw_.getValue(1.0);
+  os << " lw " << lw_.value_or(1.0);
 
   // dashtype solid fc border"
 
-  os << " lt " << lt_.getValue(-1);
+  os << " lt " << lt_.value_or(-1);
 
   os << " fillstyle " << fs_;
 }

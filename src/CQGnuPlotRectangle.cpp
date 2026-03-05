@@ -52,7 +52,7 @@ double
 CQGnuPlotRectangle::
 getLineWidth() const
 {
-  return CGnuPlotRectangle::getLineWidth().getValue(0);
+  return CGnuPlotRectangle::getLineWidth().value_or(0);
 }
 
 CLineDash

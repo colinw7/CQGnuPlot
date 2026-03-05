@@ -40,7 +40,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     double yl = y;
     double yh = y;
 
-    COptRGBA fc;
+    std::optional<CRGBA> fc;
 
     // x y xlow xhigh ylow yhigh
     if      ((! isCalcColor && reals.size() == 6) || (isCalcColor && reals.size() == 7)) {
@@ -95,8 +95,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         CGnuPlotFillP   fill1  (bar->fill  ()->dup());
         CGnuPlotStrokeP stroke1(bar->stroke()->dup());
 
-        if (fc.isValid())
-          fill1->setColor(fc.getValue());
+        if (fc)
+          fill1->setColor(fc.value());
 
         bar->setFill  (fill1  );
         bar->setStroke(stroke1);

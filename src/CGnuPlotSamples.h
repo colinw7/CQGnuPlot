@@ -11,11 +11,11 @@ class CGnuPlotSamples {
   void unset() { set(100, 100); }
 
   void save(std::ostream &os) const {
-    os << "set samples " << samples1_ << ", " << samples2_ << std::endl;
+    os << "set samples " << samples1_ << ", " << samples2_ << "\n";
   }
 
   void show(std::ostream &os) {
-    os << "sampling rate is " << samples1_ << ", " << samples2_ << std::endl;
+    os << "sampling rate is " << samples1_ << ", " << samples2_ << "\n";
   }
 
  private:

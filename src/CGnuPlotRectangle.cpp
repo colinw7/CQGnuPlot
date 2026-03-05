@@ -50,38 +50,38 @@ calcBBox() const
 
   bbox_ = CBBox2D(0,0,1,1);
 
-  if      (from_.isValid()) {
-    if      (to_.isValid()) {
-      CPoint2D from = from_.getValue().getPoint2D(renderer);
-      CPoint2D to   = to_  .getValue().getPoint2D(renderer);
+  if      (from_) {
+    if      (to_) {
+      CPoint2D from = from_.value().getPoint2D(renderer);
+      CPoint2D to   = to_  .value().getPoint2D(renderer);
 
       bbox_ = CBBox2D(from, to);
     }
-    else if (rto_.isValid()) {
-      const CPoint3D &p1 = from_.getValue().point();
-      CPoint3D        p2 = p1 + rto_.getValue().point();
+    else if (rto_) {
+      const CPoint3D &p1 = from_.value().point();
+      CPoint3D        p2 = p1 + rto_.value().point();
 
       bbox_ = CBBox2D(CPoint2D(p1.x, p1.y), CPoint2D(p2.x, p2.y));
     }
-    else if (size_.isValid()) {
-      CSize2D size = size_.getValue().getSize(renderer);
+    else if (size_) {
+      CSize2D size = size_.value().getSize(renderer);
 
       CPoint3D s(size.getWidth(), size.getHeight(), 0);
 
-      const CPoint3D &p1 = from_.getValue().point();
+      const CPoint3D &p1 = from_.value().point();
       CPoint3D        p2 = p1 + s;
 
       bbox_ = CBBox2D(CPoint2D(p1.x, p1.y), CPoint2D(p2.x, p2.y));
     }
   }
-  else if (center_.isValid()) {
-    if (size_.isValid()) {
-      CSize2D size = size_.getValue().getSize(renderer);
+  else if (center_) {
+    if (size_) {
+      CSize2D size = size_.value().getSize(renderer);
 
       CPoint3D s(size.getWidth(), size.getHeight(), 0);
 
-      CPoint3D p1 = center_.getValue().point() - s/2;
-      CPoint3D p2 = center_.getValue().point() + s/2;
+      CPoint3D p1 = center_.value().point() - s/2;
+      CPoint3D p2 = center_.value().point() + s/2;
 
       bbox_ = CBBox2D(CPoint2D(p1.x, p1.y), CPoint2D(p2.x, p2.y));
     }
@@ -111,8 +111,8 @@ void
 CGnuPlotRectangle::
 initClip()
 {
-  if (getFrom().isValid())
-    clip_ = ! getFrom().getValue().isScreen();
+  if (getFrom())
+    clip_ = ! getFrom().value().isScreen();
 }
 
 void
@@ -129,10 +129,10 @@ draw(CGnuPlotRenderer *renderer) const
   else
     renderer->resetClip();
 
-  lc_ = getStrokeColor().getValue(CRGBA(0,0,0));
+  lc_ = getStrokeColor().value_or(CRGBA(0,0,0));
 
   CRGBA  lc = lc_;
-  double lw = getLineWidth().getValue(0);
+  double lw = getLineWidth().value_or(0);
 
   if (highlighted) {
     lc = CRGBA(1,0,0);
@@ -179,24 +179,24 @@ setBBox(const CBBox2D &bbox)
   CPoint2D p1 = bbox.getMin();
   CPoint2D p2 = bbox.getMax();
 
-  if      (from_.isValid()) {
-    if      (to_.isValid()) {
+  if      (from_) {
+    if      (to_) {
       from_ = CGnuPlotPosition(CPoint3D(p1.x, p1.y, 0));
       to_   = CGnuPlotPosition(CPoint3D(p2.x, p2.y, 0));
     }
-    else if (rto_.isValid()) {
+    else if (rto_) {
       from_ = CGnuPlotPosition(CPoint3D(p1.x, p1.y, 0));
       rto_  = CGnuPlotPosition(CPoint3D(p2.x - p1.x, p2.y - p1.y, 0));
     }
-    else if (size_.isValid()) {
+    else if (size_) {
       from_ = CGnuPlotPosition(CPoint3D(p1.x, p1.y, 0));
       size_ = CSize2D(p2.x - p1.x, p2.y - p1.y);
     }
   }
-  else if (center_.isValid()) {
+  else if (center_) {
     CPoint2D c = bbox.getCenter();
 
-    if (size_.isValid()) {
+    if (size_) {
       size_   = CSize2D(p2.x - p1.x, p2.y - p1.y);
       center_ = CGnuPlotPosition(CPoint3D(c.x, c.y, 0));
     }
@@ -209,20 +209,20 @@ print(std::ostream &os) const
 {
   os << " rect";
 
-  if      (from_.isValid()) {
-    if (to_.isValid()) {
-      os << " from " << from_.getValue() << " to " << to_.getValue();
+  if      (from_) {
+    if (to_) {
+      os << " from " << from_.value() << " to " << to_.value();
     }
-    else if (rto_.isValid()) {
-      os << " from " << from_.getValue() << " rto " << rto_.getValue();
+    else if (rto_) {
+      os << " from " << from_.value() << " rto " << rto_.value();
     }
-    else if (size_.isValid()) {
-      os << " from " << from_.getValue() << " size " << size_.getValue();
+    else if (size_) {
+      os << " from " << from_.value() << " size " << size_.value();
     }
   }
-  else if (center_.isValid()) {
-    if (size_.isValid()) {
-      os << " center " << center_.getValue() << " size " << size_.getValue();
+  else if (center_) {
+    if (size_) {
+      os << " center " << center_.value() << " size " << size_.value();
     }
   }
 
@@ -230,11 +230,11 @@ print(std::ostream &os) const
 
   // clip
 
-  os << " lw " << lw_.getValue(1.0);
+  os << " lw " << lw_.value_or(1.0);
 
   // dashtype solid fc bgnd "
 
   os << " fillstyle " << fs_;
 
-  os << " lt " << lt_.getValue(-1);
+  os << " lt " << lt_.value_or(-1);
 }

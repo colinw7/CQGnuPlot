@@ -1,6 +1,7 @@
 #include <CGnuPlotUsingCols.h>
 #include <CGnuPlot.h>
 #include <CParseLine.h>
+#include <CUtil.h>
 #include <CStrUtil.h>
 
 class CGnuPlotUsingColsFnObj : public CExprFunctionObj {
@@ -128,7 +129,7 @@ class CGnuPlotTimeColumnFn : public CGnuPlotUsingColsFnObj {
       CGnuPlot *plot = cols_->plot();
 
       if (plot)
-        fmt = plot->timeFmt().getValue("%d/%m/%y,%H:%M");
+        fmt = plot->timeFmt().value_or("%d/%m/%y,%H:%M");
       else
         fmt = "%d/%m/%y,%H:%M";
 
@@ -198,8 +199,8 @@ parse(const std::string &str)
 
   cols_.clear();
 
-  colMin_.setInvalid();
-  colMax_.setInvalid();
+  colMin_.reset();
+  colMax_.reset();
 
   axisTicLabel_.clear();
 
@@ -693,8 +694,8 @@ addCol(const std::string &str)
   cols_.push_back(col);
 
   if (col.isInt()) {
-    colMin_.updateMin(col.ival());
-    colMax_.updateMax(col.ival());
+    CUtil::updateMin(colMin_, col.ival());
+    CUtil::updateMax(colMax_, col.ival());
   }
 }
 
@@ -705,7 +706,7 @@ getColumnIndex(const std::string &str) const
   if (plot_)
     return plot_->getColumnIndex(str);
 
-  std::cerr << "No plot for CGnuPlotUsingCol::getColumnIndex" << std::endl;
+  std::cerr << "No plot for CGnuPlotUsingCol::getColumnIndex\n";
 
   return -1;
 }
@@ -717,7 +718,7 @@ isParsePlotTitle() const
   if (plot_)
     return plot_->isParsePlotTitle();
 
-  std::cerr << "No plot for CGnuPlotUsingCol::isParsePlotTitle" << std::endl;
+  std::cerr << "No plot for CGnuPlotUsingCol::isParsePlotTitle\n";
 
   return false;
 }
@@ -729,7 +730,7 @@ setKeyColumnHeadNum(int icol)
   if (plot_)
     plot_->setKeyColumnHeadNum(icol);
   else
-    std::cerr << "No plot for CGnuPlotUsingCol::setKeyColumnHeadNum" << std::endl;
+    std::cerr << "No plot for CGnuPlotUsingCol::setKeyColumnHeadNum\n";
 }
 
 std::string
@@ -762,7 +763,7 @@ print(std::ostream &os) const
     ++i;
   }
 
-  os << std::endl;
+  os << "\n";
 }
 
 //-----

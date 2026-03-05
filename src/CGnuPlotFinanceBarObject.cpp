@@ -7,7 +7,7 @@ CGnuPlotFinanceBarObject::
 CGnuPlotFinanceBarObject(CGnuPlotPlot *plot) :
  CGnuPlotPlotObject(plot)
 {
-  stroke_ = plot->createStroke();
+  stroke_ = CGnuPlotStrokeP(plot->createStroke());
 }
 
 bool
@@ -48,7 +48,7 @@ draw(CGnuPlotRenderer *renderer) const
   CGnuPlotStrokeP stroke = stroke_;
 
   if (highlighted) {
-    stroke = stroke_->dup();
+    stroke = CGnuPlotStrokeP(stroke_->dup());
 
     stroke->setEnabled(true);
     stroke->setColor(CRGBA(1,0,0));

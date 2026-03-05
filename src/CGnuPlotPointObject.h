@@ -1,13 +1,13 @@
 #ifndef CGnuPlotPointObject_H
 #define CGnuPlotPointObject_H
 
-#include <COptVal.h>
+#include <CGnuPlotCache.h>
+#include <CGnuPlotObject.h>
+
 #include <CPoint2D.h>
 #include <CRGBA.h>
 #include <string>
-
-#include <CGnuPlotCache.h>
-#include <CGnuPlotObject.h>
+#include <optional>
 
 class CGnuPlotPlot;
 
@@ -24,9 +24,9 @@ class CGnuPlotPointData {
   const PointType &pointType() const { return pointType_; }
   void setPointType(const PointType &t) { pointType_ = t; }
 
-  const COptReal &size() const { return size_; }
+  const std::optional<double> &size() const { return size_; }
   void setSize(double r) { size_ = r; }
-  void resetSize() { size_.setInvalid(); }
+  void resetSize() { size_.reset(); }
 
   const CRGBA &color() const { return color_; }
   void setColor(const CRGBA &c) { color_ = c; }
@@ -47,15 +47,15 @@ class CGnuPlotPointData {
   void setVisible(bool b) { visible_ = b; }
 
  private:
-  CPoint2D    point_       { 0, 0 };
-  PointType   pointType_   { CGnuPlotTypes::SymbolType::PLUS };
-  COptReal    size_;
-  CRGBA       color_;
-  double      lineWidth_   { 1 };
-  std::string pointString_ { "" };
-  bool        pixelSize_   { true };
-  bool        erasePoint_  { false };
-  bool        visible_     { true };
+  CPoint2D              point_       { 0, 0 };
+  PointType             pointType_   { CGnuPlotTypes::SymbolType::PLUS };
+  std::optional<double> size_;
+  CRGBA                 color_;
+  double                lineWidth_   { 1 };
+  std::string           pointString_ { "" };
+  bool                  pixelSize_   { true };
+  bool                  erasePoint_  { false };
+  bool                  visible_     { true };
 };
 
 //---
@@ -79,7 +79,7 @@ class CGnuPlotPointObject : public CGnuPlotPlotObject {
   const PointType &pointType() const { return data_.pointType(); }
   void setPointType(const PointType &t) { data_.setPointType(t); }
 
-  const COptReal &size() const { return data_.size(); }
+  const std::optional<double> &size() const { return data_.size(); }
   void setSize(double r) { data_.setSize(r); }
   void resetSize() { data_.resetSize(); }
 

@@ -142,14 +142,14 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         CGnuPlotEndBarP endBar1 = bar->addEndBar(p1, p2);
         CGnuPlotEndBarP endBar2 = bar->addEndBar(p3, p4);
 
-        bool hasBars = plot->whiskerBars().isValid();
+        bool hasBars = !!plot->whiskerBars();
 
         endBar1->setStartLine(hasBars); endBar1->setEndLine(false  );
         endBar2->setStartLine(false  ); endBar2->setEndLine(hasBars);
 
         if (hasBars) {
-          endBar1->setEndWidth(bw1*plot->whiskerBars().getValue());
-          endBar2->setEndWidth(bw1*plot->whiskerBars().getValue());
+          endBar1->setEndWidth(bw1*plot->whiskerBars().value());
+          endBar2->setEndWidth(bw1*plot->whiskerBars().value());
         }
 
         CGnuPlotStrokeP endStroke1(bar->stroke()->dup());

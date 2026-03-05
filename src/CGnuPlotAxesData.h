@@ -70,7 +70,7 @@ class CGnuPlotAxesData {
 
   //---
 
-  int getBorderSides(int defSides=31) const { return border_.sides().getValue(defSides); }
+  int getBorderSides(int defSides=31) const { return border_.sides().value_or(defSides); }
   void setBorderSides(int s) { border_.setSides(s); }
   void resetBorderSides() { border_.resetSides(); }
 
@@ -80,10 +80,10 @@ class CGnuPlotAxesData {
   double getBorderWidth() const { return border_.lineWidth(); }
   void setBorderWidth(double w) { border_.setLineWidth(w); }
 
-  int getBorderStyle() const { return border_.lineStyle().getValue(-1); }
+  int getBorderStyle() const { return border_.lineStyle().value_or(-1); }
   void setBorderStyle(int ls) { border_.setLineStyle(ls); }
 
-  int getBorderType() const { return border_.lineType().getValue(-1); }
+  int getBorderType() const { return border_.lineType().value_or(-1); }
   void setBorderType(int lt) { border_.setLineType(lt); }
 
   void unsetBorder() { border_.unset(); }

@@ -62,8 +62,8 @@ draw(CGnuPlotRenderer *renderer) const
   CRGBA  c;
   double lw = 1;
 
-  if      (this->getStrokeColor().isValid()) {
-    c_ = this->getStrokeColor().getValue();
+  if      (this->getStrokeColor()) {
+    c_ = this->getStrokeColor().value();
 
     c = c_;
 

@@ -32,17 +32,17 @@ class CGnuPlotClip {
   }
 
   void show(std::ostream &os) const {
-    os << "point clip is " << (isOn() ? "ON" : "OFF") << std::endl;
+    os << "point clip is " << (isOn() ? "ON" : "OFF") << "\n";
 
     if (points_)
-      os << "drawing and clipping lines between inrange and outrange points" << std::endl;
+      os << "drawing and clipping lines between inrange and outrange points\n";
     else
-      os << "not drawing lines between inrange and outrange points" << std::endl;
+      os << "not drawing lines between inrange and outrange points\n";
 
     if (one_ || two_)
-      os << "drawing and clipping lines between two outrange points" << std::endl;
+      os << "drawing and clipping lines between two outrange points\n";
     else
-      os << "not drawing lines between two outrange points" << std::endl;
+      os << "not drawing lines between two outrange points\n";
   }
 
  private:

@@ -47,7 +47,7 @@ double
 CQGnuPlotGroup::
 getRatio() const
 {
-  return plotSize_.xratio.getValue(1);
+  return plotSize_.xratio.value_or(1);
 }
 
 void

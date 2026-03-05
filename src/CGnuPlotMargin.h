@@ -19,11 +19,11 @@ class CGnuPlotMarginValue {
   bool isLow() const { return low_; }
   void setLow(bool b) { low_ = b; }
 
-  const COptReal &value() const { return value_; }
+  const std::optional<double> &value() const { return value_; }
   void setValue(double v, bool b) { value_ = v; screen_ = b; }
-  void resetValue() { value_.setInvalid(); screen_ = false; }
+  void resetValue() { value_.reset(); screen_ = false; }
 
-  double realValue() const { return value_.getValue(defValue_); }
+  double realValue() const { return value_.value_or(defValue_); }
 
   bool isScreen() const { return screen_; }
   void setScreen(bool b) { screen_ = b; }
@@ -37,23 +37,23 @@ class CGnuPlotMarginValue {
   void show(std::ostream &os, const std::string &id) {
     os << id << " is ";
 
-    if (! value_.isValid())
-      os << "computed automatically" << std::endl;
+    if (! value_)
+      os << "computed automatically\n";
     else {
       os << "set to";
 
       if (screen_)
         os << " screen";
 
-      os << " " << value_.getValue() << std::endl;
+      os << " " << value_.value() << "\n";
     }
   }
 
  private:
-  bool     low_      { true };
-  COptReal value_;
-  double   defValue_ { 0 };
-  bool     screen_   { false };
+  bool                  low_      { true };
+  std::optional<double> value_;
+  double                defValue_ { 0 };
+  bool                  screen_   { false };
 };
 
 //---
@@ -93,10 +93,10 @@ class CGnuPlotMargin {
   const CGnuPlotMarginValue &right () const { return rmargin_; }
   const CGnuPlotMarginValue &top   () const { return tmargin_; }
 
-  const COptReal &leftValue  () const { return left  ().value(); }
-  const COptReal &bottomValue() const { return bottom().value(); }
-  const COptReal &rightValue () const { return right ().value(); }
-  const COptReal &topValue   () const { return top   ().value(); }
+  const std::optional<double> &leftValue  () const { return left  ().value(); }
+  const std::optional<double> &bottomValue() const { return bottom().value(); }
+  const std::optional<double> &rightValue () const { return right ().value(); }
+  const std::optional<double> &topValue   () const { return top   ().value(); }
 
   void setLeft  (double l, bool s=false) { lmargin_.setValue(l, s); }
   void setBottom(double b, bool s=false) { bmargin_.setValue(b, s); }
@@ -112,7 +112,7 @@ class CGnuPlotMargin {
 
   void updateDefaultValues(CGnuPlotRenderer *renderer, double lm, double bm, double rm, double tm);
 
-  bool hasFontSize() const { return fw_.isValid(); }
+  bool hasFontSize() const { return !!fw_; }
 
   void updateFontSize(CGnuPlotRenderer *renderer) const;
 
@@ -121,16 +121,16 @@ class CGnuPlotMargin {
   void showRight (std::ostream &os) { rmargin_.show(os, "rmargin"); }
   void showTop   (std::ostream &os) { tmargin_.show(os, "tmargin"); }
 
-  double fontWidth () const { return fw_.getValue(1); }
-  double fontHeight() const { return fw_.getValue(1); }
+  double fontWidth () const { return fw_.value_or(1); }
+  double fontHeight() const { return fw_.value_or(1); }
 
  private:
-  CGnuPlotMarginLValue lmargin_;
-  CGnuPlotMarginLValue bmargin_;
-  CGnuPlotMarginHValue rmargin_;
-  CGnuPlotMarginHValue tmargin_;
-  COptReal             fw_;
-  COptReal             fh_;
+  CGnuPlotMarginLValue  lmargin_;
+  CGnuPlotMarginLValue  bmargin_;
+  CGnuPlotMarginHValue  rmargin_;
+  CGnuPlotMarginHValue  tmargin_;
+  std::optional<double> fw_;
+  std::optional<double> fh_;
 };
 
 #endif

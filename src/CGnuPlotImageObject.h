@@ -1,7 +1,6 @@
 #ifndef CGnuPlotImageObject_H
 #define CGnuPlotImageObject_H
 
-#include <COptVal.h>
 #include <CPoint2D.h>
 #include <CRGBA.h>
 #include <CImageLib.h>

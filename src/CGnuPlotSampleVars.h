@@ -2,9 +2,9 @@
 #define CGnuPlotSampleVars_H
 
 struct CGnuPlotSampleVar {
-  std::string var;
-  COptReal    min;
-  COptReal    max;
+  std::string           var;
+  std::optional<double> min;
+  std::optional<double> max;
 };
 
 struct CGnuPlotSampleVars {

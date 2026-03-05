@@ -36,7 +36,7 @@ class CGnuPlotEllipse : public CGnuPlotGroupAnnotation {
   const CGnuPlotFillStyle &getFillStyle() const { return fs_; }
   void setFillStyle(const CGnuPlotFillStyle &fs) { fs_ = fs; }
 
-  const COptReal &getLineWidth() const { return lw_; }
+  const std::optional<double> &getLineWidth() const { return lw_; }
   void setLineWidth(double w) { lw_ = w; }
 
   const CLineDash &getLineDash() const { return dash_; }
@@ -56,17 +56,17 @@ class CGnuPlotEllipse : public CGnuPlotGroupAnnotation {
   void print(std::ostream &os) const override;
 
  protected:
-  CGnuPlotPosition  p_;
-  double            angle_ { 0 };
-  CGnuPlotSize      size_ { CSize2D(1, 1) };
-  EllipseUnits      units_ { EllipseUnits::XY };
-  CGnuPlotFillStyle fs_;
-  COptReal          lw_;
-  CLineDash         dash_;
-  mutable CPoint2D  center_;
-  mutable double    xr_, yr_;
-  mutable CRGBA     c_;
-  mutable CBBox2D   bbox_;
+  CGnuPlotPosition      p_;
+  double                angle_ { 0 };
+  CGnuPlotSize          size_ { CSize2D(1, 1) };
+  EllipseUnits          units_ { EllipseUnits::XY };
+  CGnuPlotFillStyle     fs_;
+  std::optional<double> lw_;
+  CLineDash             dash_;
+  mutable CPoint2D      center_;
+  mutable double        xr_, yr_;
+  mutable CRGBA         c_;
+  mutable CBBox2D       bbox_;
 };
 
 typedef std::shared_ptr<CGnuPlotEllipse> CGnuPlotEllipseP;

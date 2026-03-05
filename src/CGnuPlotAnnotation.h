@@ -2,6 +2,7 @@
 #define CGnuPlotAnnotation_H
 
 #include <CGnuPlotObject.h>
+#include <optional>
 
 class CGnuPlotGroupAnnotation : public CGnuPlotGroupObject {
  public:
@@ -24,7 +25,7 @@ class CGnuPlotGroupAnnotation : public CGnuPlotGroupObject {
   int getInd() const { return ind_; }
   void setInd(int t) { ind_ = t; }
 
-  const COptRGBA &getStrokeColor() const { return strokeColor_; }
+  const std::optional<CRGBA> &getStrokeColor() const { return strokeColor_; }
   void setStrokeColor(const CRGBA &c) { strokeColor_ = c; }
 
   const CGnuPlotColorSpec &getFillColor() const { return fillColor_; }
@@ -45,11 +46,11 @@ class CGnuPlotGroupAnnotation : public CGnuPlotGroupObject {
   virtual void print(std::ostream &os) const = 0;
 
  protected:
-  int               ind_   { -1 };
-  COptRGBA          strokeColor_;
-  CGnuPlotColorSpec fillColor_;
-  DrawLayer         layer_ { CGnuPlotTypes::DrawLayer::BACK };
-  bool              clip_ { true };
+  int                  ind_   { -1 };
+  std::optional<CRGBA> strokeColor_;
+  CGnuPlotColorSpec    fillColor_;
+  DrawLayer            layer_ { CGnuPlotTypes::DrawLayer::BACK };
+  bool                 clip_ { true };
 };
 
 typedef std::shared_ptr<CGnuPlotGroupAnnotation> CGnuPlotGroupAnnotationP;

@@ -43,10 +43,10 @@ class CGnuPlotTimeStampData {
     if (font_)
       os << ", using font " << font_;
 
-    os << std::endl;
+    os << "\n";
 
-    os << "written in " << (top_ ? "top" : "bottom") << " corner" << std::endl;
-    os << (rotated_ ? "rotated" : "not rotated") << std::endl;
+    os << "written in " << (top_ ? "top" : "bottom") << " corner\n";
+    os << (rotated_ ? "rotated" : "not rotated") << "\n";
   }
 
  private:

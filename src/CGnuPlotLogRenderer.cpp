@@ -228,5 +228,5 @@ void
 CGnuPlotLogRenderer::
 log(const std::string &str)
 {
-  os() << str << std::endl;
+  os() << str << "\n";
 }

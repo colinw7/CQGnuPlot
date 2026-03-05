@@ -6,18 +6,13 @@
 #include <CGnuPlotUtil.h>
 #include <CGnuPlotRenderer.h>
 #include <CGnuPlotPathObject.h>
+#include <CUtil.h>
 #include <CRGBName.h>
 
 static int contour_flags[] = {
   0, 4, // bottom edge to diagonals
   0, 5,
-  6, 1, // top edge to diagonals
-  7, 1,
-
-  2, 4, // left edge to diagonals
-  2, 6,
-  5, 3, // right edge to diagonals
-  7, 3,
+  6, 1, // top edge to diagonals 7, 1, 2, 4, // left edge to diagonals 2, 6, 5, 3, // right edge to diagonals 7, 3,
 
   4, 5, // diagonal to diagonal
   4, 6,
@@ -68,13 +63,13 @@ setData(double *x, double *y, double *z, double *c, int no_x, int no_y, bool has
   if (has_c)
     c_ = std::vector<double>(&c[0], &c[no_z]);
 
-  xmin_.setInvalid(); ymin_.setInvalid(); zmin_.setInvalid();
-  xmax_.setInvalid(); ymax_.setInvalid(); zmax_.setInvalid();
+  xmin_.reset(); ymin_.reset(); zmin_.reset();
+  xmax_.reset(); ymax_.reset(); zmax_.reset();
 
-  for (auto x1 : x_) { xmin_.updateMin(x1); xmax_.updateMax(x1); }
-  for (auto y1 : y_) { ymin_.updateMin(y1); ymax_.updateMax(y1); }
-  for (auto z1 : z_) { zmin_.updateMin(z1); zmax_.updateMax(z1); }
-  for (auto c1 : c_) { cmin_.updateMin(c1); cmax_.updateMax(c1); }
+  for (auto x1 : x_) { CUtil::updateMin(xmin_, x1); CUtil::updateMax(xmax_, x1); }
+  for (auto y1 : y_) { CUtil::updateMin(ymin_, y1); CUtil::updateMax(ymax_, y1); }
+  for (auto z1 : z_) { CUtil::updateMin(zmin_, z1); CUtil::updateMax(zmax_, z1); }
+  for (auto c1 : c_) { CUtil::updateMin(cmin_, c1); CUtil::updateMax(cmax_, c1); }
 
   auto *group = plot_->group();
 
@@ -206,14 +201,14 @@ drawContourLines(CGnuPlotRenderer *renderer)
 
         //---
 
-        if (contourData.labelStart().isValid()) {
+        if (contourData.labelStart()) {
           CFontPtr oldFont = renderer->getFont();
 
           CFontPtr font = contourData.labelFont();
 
           renderer->setFont(font);
 
-          int li = contourData.labelStart().getValue(-1);
+          int li = contourData.labelStart().value_or(-1);
 
           CPoint3D p1;
 
@@ -236,8 +231,8 @@ drawContourLines(CGnuPlotRenderer *renderer)
               renderer->drawHAlignedText(lp, HAlignPos(CHALIGN_TYPE_CENTER, 0),
                                          VAlignPos(CVALIGN_TYPE_CENTER, 0), str, fg);
 
-              if (contourData.labelInterval().getValue(-1) > 0)
-                li += contourData.labelInterval().getValue();
+              if (contourData.labelInterval().value_or(-1) > 0)
+                li += contourData.labelInterval().value();
             }
 
             ++j;
@@ -519,7 +514,7 @@ initLevels() const
   if (levels_.empty()) {
     auto *th = const_cast<CGnuPlotContour *>(this);
 
-    COptReal z1, z2;
+    std::optional<double> z1, z2;
 
     for (uint i = 0; i < x_.size(); ++i) {
       for (uint j = 0; j < y_.size(); ++j) {
@@ -530,12 +525,12 @@ initLevels() const
           zm = c_[i*y_.size() + j];
 #endif
 
-        z1.updateMin(zm);
-        z2.updateMax(zm);
+        CUtil::updateMin(z1, zm);
+        CUtil::updateMax(z2, zm);
       }
     }
 
-    th->levels_ = contourData.getLevelValues(z1.getValue(0.0), z2.getValue(0.0));
+    th->levels_ = contourData.getLevelValues(z1.value_or(0.0), z2.value_or(0.0));
   }
 }
 

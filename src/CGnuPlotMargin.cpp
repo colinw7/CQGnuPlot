@@ -5,8 +5,7 @@ void
 CGnuPlotMargin::
 updateDefaultValues(CGnuPlotRenderer *renderer, double lm, double bm, double rm, double tm)
 {
-  if (! lmargin_.value().isValid() || ! bmargin_.value().isValid() ||
-      ! rmargin_.value().isValid() || ! tmargin_.value().isValid()) {
+  if (! lmargin_.value() || ! bmargin_.value() || ! rmargin_.value() || ! tmargin_.value()) {
     CFontPtr font = renderer->getFont();
 
     double pw = font->getStringWidth("X");
@@ -15,16 +14,16 @@ updateDefaultValues(CGnuPlotRenderer *renderer, double lm, double bm, double rm,
     double ph = font->getCharHeight();
     double h  = renderer->pixelHeightToWindowHeightNoMargin(ph);
 
-    if (! lmargin_.value().isValid()) {
+    if (! lmargin_.value()) {
       lmargin_.setDefValue(lm/w + 1); lmargin_.setScreen(false);
     }
-    if (! bmargin_.value().isValid()) {
+    if (! bmargin_.value()) {
       bmargin_.setDefValue(bm/h + 1); bmargin_.setScreen(false);
     }
-    if (! rmargin_.value().isValid()) {
+    if (! rmargin_.value()) {
       rmargin_.setDefValue(rm/w + 1); rmargin_.setScreen(false);
     }
-    if (! tmargin_.value().isValid()) {
+    if (! tmargin_.value()) {
       tmargin_.setDefValue(tm/h + 1); tmargin_.setScreen(false);
     }
   }
@@ -54,7 +53,7 @@ xValue(CGnuPlotRenderer *renderer, const CGnuPlotMargin &margin) const
     if (! margin.hasFontSize())
       margin.updateFontSize(renderer);
 
-    return value().getValue(defValue())*margin.fontWidth();
+    return value().value_or(defValue())*margin.fontWidth();
   }
   else {
     //double px1, py1, px2, py2;
@@ -64,9 +63,9 @@ xValue(CGnuPlotRenderer *renderer, const CGnuPlotMargin &margin) const
 
     //return CGnuPlotUtil::map(value().getValue(0.1), 0, 1, px1, px2);
     if (low_)
-      return value().getValue(0.1)*renderer->width();
+      return value().value_or(0.1)*renderer->width();
     else
-      return (1.0 - value().getValue(0.1))*renderer->width();
+      return (1.0 - value().value_or(0.1))*renderer->width();
   }
 }
 
@@ -78,7 +77,7 @@ yValue(CGnuPlotRenderer *renderer, const CGnuPlotMargin &margin) const
     if (! margin.hasFontSize())
       margin.updateFontSize(renderer);
 
-    return value().getValue(defValue())*margin.fontHeight();
+    return value().value_or(defValue())*margin.fontHeight();
   }
   else {
     //double px1, py1, px2, py2;
@@ -88,8 +87,8 @@ yValue(CGnuPlotRenderer *renderer, const CGnuPlotMargin &margin) const
 
     //return CGnuPlotUtil::map(value().getValue(0.1), 0, 1, py1, py2);
     if (low_)
-      return value().getValue(0.1)*renderer->height();
+      return value().value_or(0.1)*renderer->height();
     else
-      return (1.0 - value().getValue(0.1))*renderer->height();
+      return (1.0 - value().value_or(0.1))*renderer->height();
   }
 }

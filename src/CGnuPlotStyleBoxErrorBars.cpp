@@ -59,7 +59,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     (void) point.getReals(reals);
 
-    COptReal colorVal;
+    std::optional<double> colorVal;
 
     if (isCalcColor && ! reals.empty()) {
       colorVal = reals.back();
@@ -108,13 +108,13 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     //---
 
-    COptRGBA lc;
+    std::optional<CRGBA> lc;
 
-    if (colorVal.isValid()) {
+    if (colorVal) {
       if (renderer->isPseudo())
-        renderer->setCBValue(colorVal.getValue());
+        renderer->setCBValue(colorVal.value());
       else
-        lc = lineStyle.calcColor(plot, colorVal.getValue());
+        lc = lineStyle.calcColor(plot, colorVal.value());
     }
 
     //---

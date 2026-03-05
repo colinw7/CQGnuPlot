@@ -5,20 +5,19 @@
 #include <CGnuPlotColorSpec.h>
 #include <CGnuPlotDash.h>
 
-#include <CRefPtr.h>
 #include <CRGBA.h>
-#include <COptVal.h>
 #include <CStrUtil.h>
 
 #include <sstream>
+#include <optional>
 
 class CGnuPlot;
 
 class CGnuPlotLineStyle {
  public:
-  typedef CGnuPlotTypes::SymbolType   SymbolType;
-  typedef COptValT<SymbolType>        OptSymbolType;
-  typedef COptValT<CGnuPlotColorSpec> OptColorSpec;
+  typedef CGnuPlotTypes::SymbolType        SymbolType;
+  typedef std::optional<SymbolType>        OptSymbolType;
+  typedef std::optional<CGnuPlotColorSpec> OptColorSpec;
 
  public:
   CGnuPlotLineStyle(CGnuPlot *plot);
@@ -29,17 +28,17 @@ class CGnuPlotLineStyle {
     return new CGnuPlotLineStyle(*this);
   }
 
-  const COptInt &ind() const { return ind_; }
+  const std::optional<int> &ind() const { return ind_; }
   void setInd(int i) { ind_ = i; }
-  void resetInd() { ind_.setInvalid(); }
+  void resetInd() { ind_.reset(); }
 
-  const COptInt &lineType() const { return lineType_; }
+  const std::optional<int> &lineType() const { return lineType_; }
   void setLineType(int type);
-  void unsetLineType() { lineType_.setInvalid(); }
+  void unsetLineType() { lineType_.reset(); }
 
-  const COptReal &lineWidth() const { return lineWidth_; }
+  const std::optional<double> &lineWidth() const { return lineWidth_; }
   void setLineWidth(double width) { lineWidth_ = width; }
-  void unsetLineWidth() { lineWidth_.setInvalid(); }
+  void unsetLineWidth() { lineWidth_.reset(); }
 
   const CGnuPlotDash &lineDash() const { return lineDash_; }
   void setLineDash(const CGnuPlotDash &dash) { lineDash_ = dash; }
@@ -47,22 +46,22 @@ class CGnuPlotLineStyle {
 
   const OptColorSpec &lineColor() const { return lineColor_; }
   void setLineColor(const CGnuPlotColorSpec &c) { lineColor_ = c; }
-  void unsetLineColor() { lineColor_.setInvalid(); }
+  void unsetLineColor() { lineColor_.reset(); }
 
-  const COptInt &pointType() const { return pointType_; }
+  const std::optional<int> &pointType() const { return pointType_; }
   void setPointType(int type) { pointTypeStr_ = ""; pointType_ = type; }
-  void resetPointType() { pointType_.setInvalid(); pointTypeStr_ = ""; }
+  void resetPointType() { pointType_.reset(); pointTypeStr_ = ""; }
 
-  void setPointTypeStr(const std::string &str) {pointType_.setInvalid(); pointTypeStr_ = str; }
+  void setPointTypeStr(const std::string &str) {pointType_.reset(); pointTypeStr_ = str; }
   const std::string &pointTypeStr() const { return pointTypeStr_; }
 
-  const COptReal &pointSize() const { return pointSize_; }
+  const std::optional<double> &pointSize() const { return pointSize_; }
   void setPointSize(double s) { pointSize_ = s; }
-  void resetPointSize() { pointSize_.setInvalid(); }
+  void resetPointSize() { pointSize_.reset(); }
 
-  const COptInt &pointInterval() const { return pointInterval_; }
+  const std::optional<int> &pointInterval() const { return pointInterval_; }
   void setPointInterval(int pi) { pointInterval_ = pi; }
-  void resetPointInterval() { pointInterval_.setInvalid(); }
+  void resetPointInterval() { pointInterval_.reset(); }
 
   bool palette() const { return palette_; }
   void setPalette(bool b) { palette_ = b; }
@@ -99,20 +98,20 @@ class CGnuPlotLineStyle {
   void show(std::ostream &os) const;
 
  protected:
-  CGnuPlot*    plot_ { 0 };
-  COptInt      ind_;
-  COptInt      lineType_;
-  COptReal     lineWidth_;
-  CGnuPlotDash lineDash_;
-  OptColorSpec lineColor_;
-  COptInt      pointType_;
-  std::string  pointTypeStr_;
-  COptReal     pointSize_;
-  COptInt      pointInterval_;
-  bool         palette_ { false };
-  bool         tippoints_ { true };
+  CGnuPlot*             plot_ { nullptr };
+  std::optional<int>    ind_;
+  std::optional<int>    lineType_;
+  std::optional<double> lineWidth_;
+  CGnuPlotDash          lineDash_;
+  OptColorSpec          lineColor_;
+  std::optional<int>    pointType_;
+  std::string           pointTypeStr_;
+  std::optional<double> pointSize_;
+  std::optional<int>    pointInterval_;
+  bool                  palette_ { false };
+  bool                  tippoints_ { true };
 };
 
-typedef CRefPtr<CGnuPlotLineStyle> CGnuPlotLineStyleP;
+typedef std::shared_ptr<CGnuPlotLineStyle> CGnuPlotLineStyleP;
 
 #endif

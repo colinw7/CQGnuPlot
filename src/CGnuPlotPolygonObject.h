@@ -1,7 +1,6 @@
 #ifndef CGnuPlotPolygonObject_H
 #define CGnuPlotPolygonObject_H
 
-#include <COptVal.h>
 #include <CPoint2D.h>
 #include <CRGBA.h>
 #include <string>

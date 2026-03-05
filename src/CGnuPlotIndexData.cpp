@@ -23,6 +23,12 @@ bool evaluateExpression(CExpr *expr, const std::string &exprStr, CExprValuePtr &
 //---
 
 CGnuPlotIndexData::
+CGnuPlotIndexData(int start, int end, int step) :
+ start_(start), end_(end), step_(step)
+{
+}
+
+CGnuPlotIndexData::
 CGnuPlotIndexData(CExpr *expr, const std::string &str)
 {
   if (str != "")

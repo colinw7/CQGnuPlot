@@ -10,9 +10,9 @@ class CGnuPlotBorderData {
  public:
   CGnuPlotBorderData() { }
 
-  const COptInt &sides() const { return sides_; }
+  const std::optional<int> &sides() const { return sides_; }
   void setSides(int i) { sides_ = i; }
-  void resetSides() { sides_.setInvalid(); }
+  void resetSides() { sides_.reset(); }
 
   const DrawLayer &layer() const { return layer_; }
   void setLayer(const DrawLayer &v) { layer_ = v; }
@@ -20,10 +20,10 @@ class CGnuPlotBorderData {
   double lineWidth() const { return lineWidth_; }
   void setLineWidth(double r) { lineWidth_ = r; }
 
-  const COptInt &lineStyle() const { return lineStyle_; }
+  const std::optional<int> &lineStyle() const { return lineStyle_; }
   void setLineStyle(int s) { lineStyle_ = s; }
 
-  const COptInt &lineType() const { return lineType_; }
+  const std::optional<int> &lineType() const { return lineType_; }
   void setLineType(int t) { lineType_ = t; }
 
   void unset() {
@@ -35,11 +35,11 @@ class CGnuPlotBorderData {
   void save(std::ostream &os) const;
 
  private:
-  COptInt   sides_;
-  DrawLayer layer_     { DrawLayer::FRONT };
-  double    lineWidth_ { 1.0 };
-  COptInt   lineStyle_;
-  COptInt   lineType_;
+  std::optional<int> sides_;
+  DrawLayer          layer_     { DrawLayer::FRONT };
+  double             lineWidth_ { 1.0 };
+  std::optional<int> lineStyle_;
+  std::optional<int> lineType_;
 };
 
 #endif

@@ -101,10 +101,10 @@ transform(const CPoint3D &p) const
   CGnuPlotAxisData &yaxis = group_->yaxis(1);
   CGnuPlotAxisData &zaxis = group_->zaxis(1);
 
-  double xmin = xaxis.min().getValue(0.0);
-  double xmax = xaxis.max().getValue(1.0);
-  double ymin = yaxis.min().getValue(0.0);
-  double ymax = yaxis.max().getValue(1.0);
+  double xmin = xaxis.min().value_or(0.0);
+  double xmax = xaxis.max().value_or(1.0);
+  double ymin = yaxis.min().value_or(0.0);
+  double ymax = yaxis.max().value_or(1.0);
 
   double zmin, zmax;
 
@@ -129,7 +129,7 @@ transform(const CPoint3D &p) const
 
   double z2 = 0.0;
 
-  if (zaxis.min().isValid() && zaxis.max().isValid())
+  if (zaxis.min() && zaxis.max())
     z2 = CGnuPlotUtil::map(p3.z, -1, 1, zmin, zmax);
 
   return CPoint3D(x2, y2, z2);
@@ -141,8 +141,8 @@ planeZRange(double &zmin, double &zmax) const
 {
   CGnuPlotAxisData &zaxis = group_->zaxis(1);
 
-  zmin = zaxis.min().getValue(0.0);
-  zmax = zaxis.max().getValue(1.0);
+  zmin = zaxis.min().value_or(0.0);
+  zmax = zaxis.max().value_or(1.0);
 
   if (xyPlane_.isRelative()) {
     zmin -= xyPlane_.z()*(zmax - zmin);
@@ -154,14 +154,14 @@ CGnuPlotCamera::
 showView(std::ostream &os) const
 {
   os << "view is " << rotateX_ << ", " << rotateZ_ << " rot_z";
-  os << ", " << scaleX_ << ", " << scaleZ_ << " scale_z" << std::endl;
+  os << ", " << scaleX_ << ", " << scaleZ_ << " scale_z\n";
 
   if      (axesScale_ == AxesScale::NONE)
-    os << " axes are independently scaled" << std::endl;
+    os << " axes are independently scaled\n";
   else if (axesScale_ == AxesScale::XY)
-    os << " x/y axes are on the same scale" << std::endl;
+    os << " x/y axes are on the same scale\n";
   else if (axesScale_ == AxesScale::XYZ)
-    os << " x/y/z axes are on the same scale" << std::endl;
+    os << " x/y/z axes are on the same scale\n";
 }
 
 void

@@ -9,8 +9,8 @@
 
 class CGnuPlotLabelsStyleValue : public CGnuPlotStyleValue {
  public:
-  typedef CGnuPlotTypes::SymbolType   SymbolType;
-  typedef COptValT<CGnuPlotColorSpec> OptColorSpec;
+  typedef CGnuPlotTypes::SymbolType        SymbolType;
+  typedef std::optional<CGnuPlotColorSpec> OptColorSpec;
 
  public:
   CGnuPlotLabelsStyleValue(CGnuPlotPlot *plot) :

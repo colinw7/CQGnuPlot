@@ -48,8 +48,8 @@ draw(CGnuPlotRenderer *renderer) const
   xr_ = this->getRadius().getXDistance(renderer);
   yr_ = this->getRadius().getYDistance(renderer);
 
-  double a1 = arcStart_.getValue(0);
-  double a2 = arcEnd_  .getValue(360);
+  double a1 = arcStart_.value_or(0);
+  double a2 = arcEnd_  .value_or(360);
 
   if (this->getFillColor().isRGB()) {
     CRGBA fc = this->getFillColor().color();
@@ -58,23 +58,23 @@ draw(CGnuPlotRenderer *renderer) const
       fc = fc.getLightRGBA();
     }
 
-    if (arcStart_.isValid() || arcEnd_.isValid())
+    if (arcStart_ || arcEnd_)
       renderer->fillPieSlice(center_, 0, xr_, a1, a2, fc);
     else
       renderer->fillClippedEllipse(center_, xr_, yr_, 0, fc);
   }
 
-  c_ = this->getStrokeColor().getValue(CRGBA(0,0,0));
+  c_ = this->getStrokeColor().value_or(CRGBA(0, 0, 0));
 
   CRGBA  c  = c_;
-  double lw = this->getLineWidth().getValue(1);
+  double lw = this->getLineWidth().value_or(1);
 
   if (highlighted) {
     c  = CRGBA(1,0,0);
     lw = 2;
   }
 
-  if (arcStart_.isValid() || arcEnd_.isValid())
+  if (arcStart_ || arcEnd_)
     renderer->drawPieSlice(center_, 0, xr_, a1, a2, true, c, lw, dash_);
   else
     renderer->drawClippedEllipse(center_, xr_, yr_, 0, c, lw, dash_);
@@ -102,12 +102,12 @@ inside(const CGnuPlotMouseEvent &mouseEvent) const
   if (f > 0)
     return false;
 
-  if (arcStart_.isValid() || arcEnd_.isValid()) {
+  if (arcStart_ || arcEnd_) {
     // check angle
     double a = CAngle::Rad2Deg(atan2(y, x)); while (a < 0) a += 360.0;
 
-    double angle1 = arcStart_.getValue(  0); while (angle1 < 0) angle1 += 360.0;
-    double angle2 = arcEnd_  .getValue(360); while (angle2 < 0) angle2 += 360.0;
+    double angle1 = arcStart_.value_or(  0); while (angle1 < 0) angle1 += 360.0;
+    double angle2 = arcEnd_  .value_or(360); while (angle2 < 0) angle2 += 360.0;
 
     if (angle1 > angle2) {
       // crosses zero

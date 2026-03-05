@@ -46,14 +46,14 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     int          i     = ir.first;
     const Reals &reals = ir.second;
 
-    COptReal rmin, rmax;
+    std::optional<double> rmin, rmax;
 
     for (const auto &r : reals) {
-      rmin.updateMin(r);
-      rmax.updateMax(r);
+      CUtil::updateMin(rmin, r);
+      CUtil::updateMax(rmax, r);
     }
 
-    irange[i] = MinMax(rmin.getValue(0), rmax.getValue(0));
+    irange[i] = MinMax(rmin.value_or(0), rmax.value_or(0));
   }
 
   int nr = int(irange.size());
@@ -83,8 +83,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
       const CGnuPlotAxisData &paxis = group->paxis(j + 1);
 
-      if (paxis.min().isValid()) ymin = paxis.min().getValue();
-      if (paxis.max().isValid()) ymax = paxis.max().getValue();
+      if (paxis.min()) ymin = paxis.min().value();
+      if (paxis.max()) ymax = paxis.max().value();
 
       double ir;
 
@@ -121,7 +121,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   //------
 
   // draw axes
-  CBBox2D clip  = renderer->clip().getValue();
+  CBBox2D clip  = renderer->clip().value();
   CBBox2D range = renderer->range();
 
   for (const auto &ir : irange) {
@@ -133,8 +133,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     const CGnuPlotAxisData &paxis = group->paxis(i + 1);
 
-    if (paxis.min().isValid()) ymin = paxis.min().getValue();
-    if (paxis.max().isValid()) ymax = paxis.max().getValue();
+    if (paxis.min()) ymin = paxis.min().value();
+    if (paxis.max()) ymax = paxis.max().value();
 
     CGnuPlotAxis *yaxis = group->getPlotAxis(CGnuPlotTypes::AxisType::P, i + 1, true);
 

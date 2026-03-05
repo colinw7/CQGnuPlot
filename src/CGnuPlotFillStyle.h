@@ -3,13 +3,12 @@
 
 #include <CGnuPlotTypes.h>
 #include <CGnuPlotColorSpec.h>
-#include <COptVal.h>
 
 class CGnuPlotFillStyle {
  public:
-  typedef CGnuPlotTypes::FillType     FillType;
-  typedef CGnuPlotTypes::FillPattern  FillPattern;
-  typedef COptValT<CGnuPlotColorSpec> OptColor;
+  typedef CGnuPlotTypes::FillType          FillType;
+  typedef CGnuPlotTypes::FillPattern       FillPattern;
+  typedef std::optional<CGnuPlotColorSpec> OptColor;
 
  public:
   CGnuPlotFillStyle() { }
@@ -29,9 +28,9 @@ class CGnuPlotFillStyle {
   bool hasBorder() const { return border_; }
   void setBorder(bool b) { border_ = b; }
 
-  const COptInt &borderLineType() const { return borderLineType_; }
+  const std::optional<int> &borderLineType() const { return borderLineType_; }
   void setBorderLineType(int i) { borderLineType_ = i; }
-  void unsetBorderLineType() { borderLineType_ = COptInt(); }
+  void unsetBorderLineType() { borderLineType_ = std::optional<int>(); }
 
   const OptColor &borderColor() const { return borderColor_; }
   void setBorderColor(const CGnuPlotColorSpec &c) { borderColor_ = c; }
@@ -45,7 +44,7 @@ class CGnuPlotFillStyle {
     pattern_        = FillPattern::NONE;
     transparent_    = false;
     border_         = true;
-    borderLineType_ = COptInt();
+    borderLineType_ = std::optional<int>();
     borderColor_    = OptColor();
   }
 
@@ -60,13 +59,13 @@ class CGnuPlotFillStyle {
   }
 
  private:
-  FillType    style_       { FillType::EMPTY };
-  double      density_     { 1.0 };               // density 0.0 empty, 1.0 is line color
-  FillPattern pattern_     { FillPattern::NONE };
-  bool        transparent_ { false };
-  bool        border_      { true };
-  COptInt     borderLineType_;
-  OptColor    borderColor_;
+  FillType           style_       { FillType::EMPTY };
+  double             density_     { 1.0 };               // density 0.0 empty, 1.0 is line color
+  FillPattern        pattern_     { FillPattern::NONE };
+  bool               transparent_ { false };
+  bool               border_      { true };
+  std::optional<int> borderLineType_;
+  OptColor           borderColor_;
 };
 
 #endif

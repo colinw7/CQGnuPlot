@@ -125,5 +125,5 @@ show(std::ostream &os) const
   else
     os << " pointsize default";
 
-  os << " pointinterval " << pointInterval() << std::endl;
+  os << " pointinterval " << pointInterval() << "\n";
 }

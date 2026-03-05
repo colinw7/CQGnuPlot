@@ -6,8 +6,8 @@ CGnuPlotErrorBarObject::
 CGnuPlotErrorBarObject(CGnuPlotPlot *plot) :
  CGnuPlotPlotObject(plot)
 {
-  stroke_ = plot->createStroke();
-  mark_   = plot->createMark();
+  stroke_ = CGnuPlotStrokeP(plot->createStroke());
+  mark_   = CGnuPlotMarkP  (plot->createMark());
 }
 
 bool
@@ -49,13 +49,13 @@ draw(CGnuPlotRenderer *renderer) const
   CGnuPlotMarkP   mark   = mark_;
 
   if (highlighted) {
-    stroke = stroke_->dup();
+    stroke = CGnuPlotStrokeP(stroke_->dup());
 
     stroke->setEnabled(true);
     stroke->setColor(CRGBA(1,0,0));
     stroke->setWidth(2);
 
-    mark = mark_->dup();
+    mark = CGnuPlotMarkP(mark_->dup());
 
     mark->setColor(CRGBA(1,0,0));
   }

@@ -35,5 +35,5 @@ void
 CGnuPlotObject::
 setBBox(const CBBox2D &)
 {
-  std::cerr << "Not implemented" << std::endl;
+  std::cerr << "Not implemented\n";
 }

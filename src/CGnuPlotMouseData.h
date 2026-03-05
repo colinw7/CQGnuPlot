@@ -16,14 +16,14 @@ class CGnuPlotMouseData {
   void setEnabled(bool b) { enabled_ = b; }
 
   void setDoubleClick(double ms) { dclick_ = ms; }
-  void resetDoubleClick() { dclick_.setInvalid(); }
+  void resetDoubleClick() { dclick_.reset(); }
 
   void setZoomCoordinates(bool b) { zoomCoords_ = b; }
 
   void setZoomFactors(double x, double y) { zoomX_ = x; zoomY_ = y; }
 
   void setRulerPos(const CPoint2D &p) { rulerPos_ = p; }
-  void resetRulerPos() { rulerPos_.setInvalid(); }
+  void resetRulerPos() { rulerPos_.reset(); }
 
   void setPolarDistance(PolarDistanceType type) { polarDistType_ = type; }
 
@@ -43,71 +43,70 @@ class CGnuPlotMouseData {
 
   void show(std::ostream &os) {
     if (enabled_) {
-      os << "mouse is on" << std::endl;
+      os << "mouse is on\n";
 
       if (zoomCoords_)
-        os << "zoom coordinates will be drawn" << std::endl;
+        os << "zoom coordinates will be drawn\n";
       else
-        os << "no zoom coordinates will be drawn" << std::endl;
+        os << "no zoom coordinates will be drawn\n";
 
       if (polarDistType_ == PolarDistanceType::NONE)
-        os << "no polar distance to ruler will be shown" << std::endl;
+        os << "no polar distance to ruler will be shown\n";
       else
-        os << "distance to ruler will be show in polar coordinates" << std::endl;
+        os << "distance to ruler will be show in polar coordinates\n";
 
-      if (dclick_.isValid())
-        os << "double click resolution is " << dclick_.getValue() << " ms" << std::endl;
+      if (dclick_)
+        os << "double click resolution is " << dclick_.value() << " ms\n";
       else
-        os << "double click resolution is 300 ms" << std::endl;
+        os << "double click resolution is 300 ms\n";
 
-      if (format_.isValid())
-        os << "formatting numbers with \"" << format_.getValue() << "\"" << std::endl;
+      if (format_)
+        os << "formatting numbers with \"" << format_.value() << "\"\n";
       else
-        os << "formatting numbers with \"%g\"" << std::endl;
+        os << "formatting numbers with \"%g\"\n";
 
-      if (mouseFormatInt_.isValid())
-        os << "format for Button 2 is " << mouseFormatInt_.getValue() << std::endl;
+      if (mouseFormatInt_)
+        os << "format for Button 2 is " << mouseFormatInt_.value() << "\n";
       else
-        os << "format for Button 2 is 0" << std::endl;
+        os << "format for Button 2 is 0\n";
 
       if (mouseFormatStr_ != "")
         os << "Button 2 draws persistent labels with options \"" <<
-              mouseFormatStr_ << "\"" << std::endl;
+              mouseFormatStr_ << "\"\n";
 
-      if (! zoomX_.isValid() || ! zoomY_.isValid())
-        os << "zoom factors are x: 1   y: 1" << std::endl;
+      if (! zoomX_ || ! zoomY_)
+        os << "zoom factors are x: 1   y: 1\n";
       else
-        os << "zoom factors are x: " << zoomX_.getValue() <<
-              "   y: " << zoomY_.getValue() << std::endl;
+        os << "zoom factors are x: " << zoomX_.value() << "   y: " << zoomY_.value() << "\n";
 
       if (zoomJump_)
-        os << "zoomjump is on" << std::endl;
+        os << "zoomjump is on\n";
       else
-        os << "zoomjump is off" << std::endl;
+        os << "zoomjump is off\n";
 
       if (verbose_)
-        os << "communication commands will be shown" << std::endl;
+        os << "communication commands will be shown\n";
       else
-        os << "communication commands will not be shown" << std::endl;
+        os << "communication commands will not be shown\n";
     }
     else
-      os << "mouse is off" << std::endl;
+      os << "mouse is off\n";
   }
 
  private:
-  bool              enabled_        { true };
-  COptReal          dclick_;
-  bool              zoomCoords_     { true };
-  COptReal          zoomX_;
-  COptReal          zoomY_;
-  COptPoint2D       rulerPos_;
-  PolarDistanceType polarDistType_  { PolarDistanceType::NONE };
-  COptString        format_;
-  std::string       mouseFormatStr_;
-  COptInt           mouseFormatInt_;
-  std::string       labels_;
-  bool              zoomJump_       { false };
-  bool              verbose_        { false };
+  bool                       enabled_        { true };
+  std::optional<double>      dclick_;
+  bool                       zoomCoords_     { true };
+  std::optional<double>      zoomX_;
+  std::optional<double>      zoomY_;
+  std::optional<CPoint2D>    rulerPos_;
+  PolarDistanceType          polarDistType_  { PolarDistanceType::NONE };
+  std::optional<std::string> format_;
+  std::string                mouseFormatStr_;
+  std::optional<int>         mouseFormatInt_;
+  std::string                labels_;
+  bool                       zoomJump_       { false };
+  bool                       verbose_        { false };
 };
 
 #endif

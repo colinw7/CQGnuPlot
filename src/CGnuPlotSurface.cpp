@@ -13,8 +13,8 @@ CGnuPlotSurface(CGnuPlotPlot *plot) :
 
 void
 CGnuPlotSurface::
-setData(const COptReal &zmin, const COptReal &zmax, const ZPolygons &zpolygons,
-        const IJPoints &ijpoints)
+setData(const std::optional<double> &zmin, const std::optional<double> &zmax,
+        const ZPolygons &zpolygons, const IJPoints &ijpoints)
 {
   zmin_      = zmin;
   zmax_      = zmax;
@@ -121,7 +121,7 @@ draw(CGnuPlotRenderer *renderer)
           rgba = pic.second;
         }
         else {
-          double r = (z - zmin_.getValue())/(zmax_.getValue() - zmin_.getValue());
+          double r = (z - zmin_.value())/(zmax_.value() - zmin_.value());
 
           CColor c1 = plot_->group()->palette()->getColor(r);
 

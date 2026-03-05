@@ -180,8 +180,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     CRGBA tc = c1;
 
-    if (labelStyle.textColor().isValid())
-      tc = labelStyle.textColor().getValue().calcColor(group);
+    if (labelStyle.textColor())
+      tc = labelStyle.textColor().value().calcColor(group);
 
     CGnuPlotPointData data;
 
@@ -233,7 +233,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     }
     else {
       if (data.isVisible()) {
-        double s = data.size().getValue(1);
+        double s = data.size().value_or(1);
 
         if (data.isErasePoint()) {
           double pw = renderer->pixelWidthToWindowWidth  (8*s);
@@ -375,8 +375,8 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
 
     CRGBA tc = lc;
 
-    if (labelStyle.textColor().isValid())
-      tc = labelStyle.textColor().getValue().calcColor(plot->group());
+    if (labelStyle.textColor())
+      tc = labelStyle.textColor().value().calcColor(plot->group());
 
     renderer->drawHAlignedText(pm, HAlignPos(CHALIGN_TYPE_CENTER, 0),
                                VAlignPos(CVALIGN_TYPE_CENTER, 0),

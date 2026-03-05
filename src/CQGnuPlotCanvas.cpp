@@ -302,7 +302,7 @@ void
 CQGnuPlotCanvas::
 keyPressEvent(QKeyEvent *e)
 {
-  QPoint pos = this->mapFromGlobal(QCursor::pos());
+  auto pos = this->mapFromGlobal(QCursor::pos());
 
   CGnuPlotMouseEvent mouseEvent;
 

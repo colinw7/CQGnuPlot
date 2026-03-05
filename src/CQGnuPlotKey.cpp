@@ -35,7 +35,7 @@ int
 CQGnuPlotKey::
 boxLineStyle() const
 {
-  return CGnuPlotKey::boxLineStyle().getValue(-1);
+  return CGnuPlotKey::boxLineStyle().value_or(-1);
 }
 
 CQGnuPlotEnum::HAlignType
@@ -84,7 +84,7 @@ double
 CQGnuPlotKey::
 sampLen() const
 {
-  return CGnuPlotKey::sampLen().getValue(4);
+  return CGnuPlotKey::sampLen().value_or(4);
 }
 
 void
@@ -98,7 +98,7 @@ double
 CQGnuPlotKey::
 spacing() const
 {
-  return CGnuPlotKey::spacing().getValue(1.5);
+  return CGnuPlotKey::spacing().value_or(1.5);
 }
 
 void

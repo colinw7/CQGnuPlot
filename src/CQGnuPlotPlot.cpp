@@ -532,7 +532,7 @@ bool
 CQGnuPlotPlot::
 mouseTip(const CGnuPlotMouseEvent &mouseEvent, CGnuPlotTipData &tip)
 {
-  selectedPos_.setInvalid();
+  selectedPos_.reset();
 
   for (auto &arrow : arrowObjects()) {
     if (! arrow->inside(mouseEvent))

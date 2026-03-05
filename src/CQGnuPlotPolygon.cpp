@@ -13,7 +13,7 @@ double
 CQGnuPlotPolygon::
 getLineWidth() const
 {
-  return CGnuPlotPolygon::getLineWidth().getValue(0);
+  return CGnuPlotPolygon::getLineWidth().value_or(0);
 }
 
 void

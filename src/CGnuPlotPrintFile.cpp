@@ -130,7 +130,7 @@ CGnuPlotPrintFile::
 show(std::ostream &os) const
 {
   if (isBlock_) {
-    os << "print output is saved to datablock $" << filename_ << std::endl;
+    os << "print output is saved to datablock $" << filename_ << "\n";
   }
   else {
     os << "print output is sent to ";
@@ -142,6 +142,6 @@ show(std::ostream &os) const
     else
       os << "<stdout>";
 
-    os << std::endl;
+    os << "\n";
   }
 }

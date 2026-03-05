@@ -67,7 +67,7 @@ class CGnuPlotAxis {
 
   //---
 
-  const COptInt &logBase() const { return data_.logBase(); }
+  const std::optional<int> &logBase() const { return data_.logBase(); }
   void setLogBase(int b) { data_.setLogBase(b); }
   void resetLogBase() { data_.resetLogBase(); }
 
@@ -118,7 +118,7 @@ class CGnuPlotAxis {
   double ticsRotate() const { return data_.ticsRotate(); }
   void setTicsRotate(double a) { data_.setTicsRotate(a); }
 
-  COptReal labelRotate() const { return data_.labelRotate(); }
+  std::optional<double> labelRotate() const { return data_.labelRotate(); }
   void setLabelRotate(double a) { data_.setLabelRotate(a); }
   void unsetLabelRotate() { data_.unsetLabelRotate(); }
 
@@ -144,11 +144,11 @@ class CGnuPlotAxis {
 
   //---
 
-  const COptString &getFormat() const { return data_.format(); }
+  const std::optional<std::string> &getFormat() const { return data_.format(); }
   void setFormat(const std::string &s) { data_.setFormat(s); }
   void unsetFormat() { data_.unsetFormat(); }
 
-  const COptString &getTimeFormat() const { return data_.timeFmt(); }
+  const std::optional<std::string> &getTimeFormat() const { return data_.timeFmt(); }
   void setTimeFormat(const std::string &s) { data_.setTimeFmt(s); }
   void unsetTimeFormat() { data_.unsetTimeFmt(); }
 

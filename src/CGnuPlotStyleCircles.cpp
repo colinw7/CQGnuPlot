@@ -10,24 +10,25 @@ namespace {
 
 struct PieSlice {
   PieSlice(const CPoint2D &c_, double r_, double a1_, double a2_,
-           const COptRGBA &lc_, const COptRGBA &fc_) :
+           const std::optional<CRGBA> &lc_, const std::optional<CRGBA> &fc_) :
    c(c_), r(r_), a1(a1_), a2(a2_), lc(lc_), fc(fc_) {
   }
 
-  CPoint2D c;
-  double   r;
-  double   a1, a2;
-  COptRGBA lc, fc;
+  CPoint2D             c;
+  double               r;
+  double               a1, a2;
+  std::optional<CRGBA> lc, fc;
 };
 
 struct Ellipse {
-  Ellipse(const CPoint2D &c_, double w_, double h_, const COptRGBA &lc_, const COptRGBA &fc_) :
+  Ellipse(const CPoint2D &c_, double w_, double h_, const std::optional<CRGBA> &lc_,
+          const std::optional<CRGBA> &fc_) :
    c(c_), w(w_), h(h_), lc(lc_), fc(fc_) {
   }
 
-  const CPoint2D c;
-  double         w, h;
-  COptRGBA       lc, fc;
+  const CPoint2D       c;
+  double               w, h;
+  std::optional<CRGBA> lc, fc;
 };
 
 }
@@ -133,7 +134,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       a2 = reals[4];
     }
     else {
-      std::cerr << "Bad circle points" << std::endl;
+      std::cerr << "Bad circle points\n";
       continue;
     }
 
@@ -160,7 +161,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       }
     }
     else {
-      COptRGBA lc2, fc2;
+      std::optional<CRGBA> lc2, fc2;
 
       if (fill.type() == CGnuPlotTypes::FillType::SOLID)
         fc2 = fc1;
@@ -196,11 +197,11 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         CGnuPlotFillP   fill1  (pie->fill  ()->dup());
         CGnuPlotStrokeP stroke1(pie->stroke()->dup());
 
-        if (o.lc.isValid())
-          stroke1->setColor(o.lc.getValue());
+        if (o.lc)
+          stroke1->setColor(o.lc.value());
 
-        if (o.fc.isValid())
-          fill1->setColor(o.fc.getValue());
+        if (o.fc)
+          fill1->setColor(o.fc.value());
 
         pie->setFill  (fill1  );
         pie->setStroke(stroke1);
@@ -221,11 +222,11 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         CGnuPlotFillP   fill1  (ellipse->fill  ()->dup());
         CGnuPlotStrokeP stroke1(ellipse->stroke()->dup());
 
-        if (o.lc.isValid())
-          stroke1->setColor(o.lc.getValue());
+        if (o.lc)
+          stroke1->setColor(o.lc.value());
 
-        if (o.fc.isValid())
-          fill1->setColor(o.fc.getValue());
+        if (o.fc)
+          fill1->setColor(o.fc.value());
 
         ellipse->setFill  (fill1  );
         ellipse->setStroke(stroke1);

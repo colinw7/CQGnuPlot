@@ -55,11 +55,11 @@ class CGnuPlotPrefValue : public CGnuPlotPrefValueBase {
   }
 
   void show(std::ostream &os) const override {
-    os << "set " << pref_ << " " << toString(value_) << std::endl;
+    os << "set " << pref_ << " " << toString(value_) << "\n";
   }
 
   void print(std::ostream &os) const override {
-    os << name_ << " is " << toString(value_) << std::endl;
+    os << name_ << " is " << toString(value_) << "\n";
   }
 
  private:

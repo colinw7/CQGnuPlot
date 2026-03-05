@@ -4,7 +4,6 @@
 #include <CExpr.h>
 #include <CFont.h>
 #include <CStrUtil.h>
-#include <COptVal.h>
 #include <CPoint2D.h>
 #include <CBBox2D.h>
 #include <CRGBA.h>
@@ -224,7 +223,7 @@ class CGnuPlot {
     }
 
     void show(std::ostream &os) {
-      os << "offsets are " << l_ << ", " << r_ << ", " << t_ << ", " << b_ << std::endl;
+      os << "offsets are " << l_ << ", " << r_ << ", " << t_ << ", " << b_ << "\n";
     }
 
    private:
@@ -260,11 +259,11 @@ class CGnuPlot {
   //---
 
   struct FunctionDataParams {
-    bool     is3D { false };
-    COptReal xmin;
-    COptReal xmax;
-    COptReal ymin;
-    COptReal ymax;
+    bool                  is3D { false };
+    std::optional<double> xmin;
+    std::optional<double> xmax;
+    std::optional<double> ymin;
+    std::optional<double> ymax;
   };
 
   //---
@@ -421,7 +420,7 @@ class CGnuPlot {
 
   //---
 
-  const COptBBox2D &clearRect() const { return clearRect_; }
+  const std::optional<CBBox2D> &clearRect() const { return clearRect_; }
 
   //---
 
@@ -464,36 +463,36 @@ class CGnuPlot {
   //---
 
   void getXRange(double *xmin, double *xmax) const {
-    *xmin = xaxis(1).min().getValue(-10);
-    *xmax = xaxis(1).max().getValue( 10);
+    *xmin = xaxis(1).min().value_or(-10);
+    *xmax = xaxis(1).max().value_or( 10);
   }
   void getYRange(double *ymin, double *ymax) const {
-    *ymin = yaxis(1).min().getValue(-10);
-    *ymax = yaxis(1).max().getValue( 10);
+    *ymin = yaxis(1).min().value_or(-10);
+    *ymax = yaxis(1).max().value_or( 10);
   }
   void getZRange(double *zmin, double *zmax) const {
-    *zmin = zaxis(1).min().getValue(-10);
-    *zmax = zaxis(1).max().getValue( 10);
+    *zmin = zaxis(1).min().value_or(-10);
+    *zmax = zaxis(1).max().value_or( 10);
   }
   void getParametricTRange(double *tmin, double *tmax) const {
-    *tmin = taxis(1).min().getValue(-5);
-    *tmax = taxis(1).max().getValue( 5);
+    *tmin = taxis(1).min().value_or(-5);
+    *tmax = taxis(1).max().value_or( 5);
   }
   void getPolarTRange(double *tmin, double *tmax) const {
-    *tmin = taxis(1).min().getValue(0);
+    *tmin = taxis(1).min().value_or(0);
 
     if (isAngleDegrees())
-      *tmax = taxis(1).max().getValue(360.0);
+      *tmax = taxis(1).max().value_or(360.0);
     else
-      *tmax = taxis(1).max().getValue(2*M_PI);
+      *tmax = taxis(1).max().value_or(2*M_PI);
   }
   void getURange(double *umin, double *umax) const {
-    *umin = uaxis().min().getValue(-5);
-    *umax = uaxis().max().getValue(5);
+    *umin = uaxis().min().value_or(-5);
+    *umax = uaxis().max().value_or( 5);
   }
   void getVRange(double *vmin, double *vmax) const {
-    *vmin = vaxis().min().getValue(-5);
-    *vmax = vaxis().max().getValue(5);
+    *vmin = vaxis().min().value_or(-5);
+    *vmax = vaxis().max().value_or( 5);
   }
 
   void setXRange(double xmin, double xmax) {
@@ -536,9 +535,9 @@ class CGnuPlot {
   const CGnuPlotFilledCurve &filledCurve() const { return filledCurve_; }
   void setFilledCurve(const CGnuPlotFilledCurve &c) { filledCurve_ = c; }
 
-  const COptReal &whiskerBars() const { return whiskerBars_; }
+  const std::optional<double> &whiskerBars() const { return whiskerBars_; }
   void setWhiskerBars(double w) { whiskerBars_ = w; }
-  void resetWhiskerBars() { whiskerBars_.setInvalid(); }
+  void resetWhiskerBars() { whiskerBars_.reset(); }
 
   const CGnuPlotCamera &camera() const { return camera_; }
 
@@ -598,9 +597,9 @@ class CGnuPlot {
 
   //------
 
-  const COptString &timeFmt() { return timeFmt_; }
+  const std::optional<std::string> &timeFmt() { return timeFmt_; }
   void setTimeFmt(const std::string &f) { timeFmt_ = f; }
-  void unsetTimeFmt() { timeFmt_.setInvalid(); }
+  void unsetTimeFmt() { timeFmt_.reset(); }
 
   //------
 
@@ -760,7 +759,7 @@ class CGnuPlot {
 
         os << T::getName() << " " << obj->getInd();
         obj->print(os);
-        os << std::endl;
+        os << "\n";
       }
     }
   }
@@ -1167,7 +1166,7 @@ class CGnuPlot {
   bool getRealVariable   (const std::string &name, double &value) const;
   bool getStringVariable (const std::string &name, std::string &value) const;
 
-  bool isColumnHeader(CParseLine &line, COptInt &col);
+  bool isColumnHeader(CParseLine &line, std::optional<int> &col);
 
   bool parsePosition(CParseLine &line, CGnuPlotPosition &pos);
   bool parseCoordValue(CParseLine &line, CGnuPlotCoordValue &v);
@@ -1318,53 +1317,53 @@ class CGnuPlot {
   CGnuPlotRectStyle      rectStyle_;
   CGnuPlotStyleData      styleData_;
 
-  LineDashes             lineDashes_;
-  bool                   binary_ { false };
-  CGnuPlotBinaryFormat   binaryFormat_;
-  CGnuPlotMatrixData     matrixData_;
-  CGnuPlotClip           clip_;
-  bool                   parametric_ { false };
-  bool                   polar_ { false };
-  bool                   macros_ { false };
-  double                 zero_ { 1E-8 };
-  HistoryData            historyData_;
-  CGnuPlotImageStyle     imageStyle_;
-  Endian                 endian_ { CGnuPlotTypes::Endian::DEFAULT };
-  Integers               recordValues_;
-  VarAnnotations         varAnnotations_;
-  CGnuPlotCamera         camera_;
-  CGnuPlotPalette        palette_;
-  CGnuPlotColorBoxData   colorBox_;
-  CGnuPlotFilledCurve    filledCurve_;
-  COptString             timeFmt_;
-  CGnuPlotDummyVars      dummyVars_;
-  CGnuPlotSamples        samples_;
-  CGnuPlotISOSamples     isoSamples_;
-  LinkData               linkData_;
-  CGnuPlotTypes::Mapping mapping_ { CGnuPlotTypes::Mapping::CARTESIAN_MAPPING };
-  CGnuPlotPlotSize       plotSize_;
-  DecimalSign            decimalSign_;
-  Offsets                offsets_;
-  CGnuPlotFitData        fitData_;
-  PathList               loadPaths_;
-  PathList               fontPath_;
-  std::string            psDir_;
-  std::string            encoding_;
-  std::string            locale_;
-  CGnuPlotMouseData      mouseData_;
-  CGnuPlotMultiplotP     multiplot_;
-  CGnuPlotTimeStampData  timeStamp_;
-  COptBBox2D             clearRect_;
-  CGnuPlotHidden3DData   hidden3D_;
-  CGnuPlotSurfaceData    surfaceData_;
-  CGnuPlotContourData    contourData_;
-  CGnuPlotPm3DData       pm3D_;
-  double                 pointIntervalBox_ { 1 };
-  COptReal               whiskerBars_;
-  mutable ReadLineP      readLine_;
-  Blocks                 blocks_;
-  CGnuPlotSampleVars     sampleVars_;
-  CGnuPlotSampleVars     saveSampleVars_;
+  LineDashes                 lineDashes_;
+  bool                       binary_ { false };
+  CGnuPlotBinaryFormat       binaryFormat_;
+  CGnuPlotMatrixData         matrixData_;
+  CGnuPlotClip               clip_;
+  bool                       parametric_ { false };
+  bool                       polar_ { false };
+  bool                       macros_ { false };
+  double                     zero_ { 1E-8 };
+  HistoryData                historyData_;
+  CGnuPlotImageStyle         imageStyle_;
+  Endian                     endian_ { CGnuPlotTypes::Endian::DEFAULT };
+  Integers                   recordValues_;
+  VarAnnotations             varAnnotations_;
+  CGnuPlotCamera             camera_;
+  CGnuPlotPalette            palette_;
+  CGnuPlotColorBoxData       colorBox_;
+  CGnuPlotFilledCurve        filledCurve_;
+  std::optional<std::string> timeFmt_;
+  CGnuPlotDummyVars          dummyVars_;
+  CGnuPlotSamples            samples_;
+  CGnuPlotISOSamples         isoSamples_;
+  LinkData                   linkData_;
+  CGnuPlotTypes::Mapping     mapping_ { CGnuPlotTypes::Mapping::CARTESIAN_MAPPING };
+  CGnuPlotPlotSize           plotSize_;
+  DecimalSign                decimalSign_;
+  Offsets                    offsets_;
+  CGnuPlotFitData            fitData_;
+  PathList                   loadPaths_;
+  PathList                   fontPath_;
+  std::string                psDir_;
+  std::string                encoding_;
+  std::string                locale_;
+  CGnuPlotMouseData          mouseData_;
+  CGnuPlotMultiplotP         multiplot_;
+  CGnuPlotTimeStampData      timeStamp_;
+  std::optional<CBBox2D>     clearRect_;
+  CGnuPlotHidden3DData       hidden3D_;
+  CGnuPlotSurfaceData        surfaceData_;
+  CGnuPlotContourData        contourData_;
+  CGnuPlotPm3DData           pm3D_;
+  double                     pointIntervalBox_ { 1 };
+  std::optional<double>      whiskerBars_;
+  mutable ReadLineP          readLine_;
+  Blocks                     blocks_;
+  CGnuPlotSampleVars         sampleVars_;
+  CGnuPlotSampleVars         saveSampleVars_;
 
   mutable CoordSys       defSystem_      { CoordSys::FIRST };
   mutable Values         fieldValues_;

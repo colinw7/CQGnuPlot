@@ -323,7 +323,7 @@ drawPath(const std::vector<CPoint2D> &points, const CGnuPlotStroke &stroke)
       os() << " L " << p.x << " " << p.y;
   }
 
-  os() << "\" " << "style=\"" << fillNone() << " " << strokeColor(stroke.color()) << " " <<
+  os() << "\" style=\"" << fillNone() << " " << strokeColor(stroke.color()) << " " <<
           strokeWidth(stroke.width()) << "\"/>\n";
 }
 

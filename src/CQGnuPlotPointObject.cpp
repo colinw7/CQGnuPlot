@@ -48,7 +48,7 @@ double
 CQGnuPlotPointObject::
 size() const
 {
-  return CGnuPlotPointObject::size().getValue(1);
+  return CGnuPlotPointObject::size().value_or(1);
 }
 
 void

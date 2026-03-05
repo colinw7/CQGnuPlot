@@ -386,7 +386,7 @@ draw(CGnuPlotTextRenderer *renderer, const CPoint2D &pos, const CRGBA &c, double
 void
 CGnuPlotText::
 draw(CGnuPlotTextRenderer *renderer, const CBBox2D &bbox, CHAlignType halign,
-     const CRGBA &c, double a, const COptPoint2D &o) const
+     const CRGBA &c, double a, const std::optional<CPoint2D> &o) const
 {
   //renderer->drawRotatedRect(bbox, a, CRGBA(1,0,0), 1);
 
@@ -404,8 +404,8 @@ draw(CGnuPlotTextRenderer *renderer, const CBBox2D &bbox, CHAlignType halign,
 
   CPoint2D origin;
 
-  if      (o.isValid())
-    origin = o.getValue();
+  if      (o)
+    origin = o.value();
   else if (bbox.isSet())
     origin = bbox.getCenter();
 

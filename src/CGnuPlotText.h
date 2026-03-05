@@ -2,20 +2,18 @@
 #define CGnuPlotText_H
 
 #include <CBBox2D.h>
-#include <COptVal.h>
 #include <CAlignType.h>
 #include <CRGBA.h>
 #include <CFont.h>
 #include <string>
 #include <vector>
 #include <map>
+#include <optional>
 #include <iostream>
 
 class CParseLine;
 class CGnuPlotTextPart;
 class CGnuPlotTextRenderer;
-
-typedef COptValT<CPoint2D> COptPoint2D;
 
 enum class CGnuPlotCharType {
   SUPERSCRIPT,
@@ -90,7 +88,8 @@ class CGnuPlotText {
   void draw(CGnuPlotTextRenderer *renderer, const CPoint2D &pos, const CRGBA &c, double a) const;
 
   void draw(CGnuPlotTextRenderer *renderer, const CBBox2D &bbox, CHAlignType halign,
-            const CRGBA &c=CRGBA(0, 0, 0), double a=0, const COptPoint2D &o=COptPoint2D()) const;
+            const CRGBA &c=CRGBA(0, 0, 0), double a=0,
+            const std::optional<CPoint2D> &o=std::optional<CPoint2D>()) const;
 
   CBBox2D calcBBox(CGnuPlotTextRenderer *renderer, const CPoint2D &pos) const;
 

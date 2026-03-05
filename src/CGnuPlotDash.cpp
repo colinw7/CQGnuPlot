@@ -5,10 +5,10 @@ CLineDash
 CGnuPlotDash::
 calcDash(CGnuPlot *plot, const CLineDash &dash) const
 {
-  if      (ind_.isValid())
-    return plot->getLineDash(ind_.getValue());
-  else if (dash_.isValid())
-    return dash_.getValue();
+  if      (ind_)
+    return plot->getLineDash(ind_.value());
+  else if (dash_)
+    return dash_.value();
   else
     return dash;
 }
@@ -17,10 +17,10 @@ void
 CGnuPlotDash::
 print(std::ostream &os) const
 {
-  if      (ind_.isValid())
-    os << ind_.getValue();
-  else if (dash_.isValid() && ! dash_.getValue().isSolid())
-    os << "(" << dash_.getValue() << ")";
+  if      (ind_)
+    os << ind_.value();
+  else if (dash_ && ! dash_.value().isSolid())
+    os << "(" << dash_.value() << ")";
   else
     os << "solid";
 }

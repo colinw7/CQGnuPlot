@@ -189,10 +189,10 @@ void
 CGnuPlotRenderer::
 fillClippedPolygon(const Points2D &points, const CGnuPlotFill &fill)
 {
-  if (! isPseudo() && clip().isValid()) {
+  if (! isPseudo() && clip()) {
     Points2D ipoints;
 
-    if (CMathGeom2D::IntersectPolygon(points, clip().getValue(), ipoints))
+    if (CMathGeom2D::IntersectPolygon(points, clip().value(), ipoints))
       fillPolygon(ipoints, fill);
   }
   else
@@ -245,10 +245,10 @@ void
 CGnuPlotRenderer::
 fillClippedPolygon(const Points2D &points, const CRGBA &c)
 {
-  if (! isPseudo() && clip().isValid()) {
+  if (! isPseudo() && clip()) {
     Points2D ipoints;
 
-    if (CMathGeom2D::IntersectPolygon(points, clip().getValue(), ipoints))
+    if (CMathGeom2D::IntersectPolygon(points, clip().value(), ipoints))
       fillPolygon(ipoints, c);
   }
   else
@@ -301,10 +301,10 @@ void
 CGnuPlotRenderer::
 strokeClippedPolygon(const Points2D &points, const CGnuPlotStroke &stroke)
 {
-  if (! isPseudo() && clip().isValid()) {
+  if (! isPseudo() && clip()) {
     Points2D ipoints;
 
-    if (CMathGeom2D::IntersectPolygon(points, clip().getValue(), ipoints))
+    if (CMathGeom2D::IntersectPolygon(points, clip().value(), ipoints))
       strokePolygon(ipoints, stroke);
   }
   else
@@ -367,10 +367,10 @@ void
 CGnuPlotRenderer::
 drawClippedPolygon(const Points2D &points, const CRGBA &c, double width, const CLineDash &dash)
 {
-  if (! isPseudo() && clip().isValid()) {
+  if (! isPseudo() && clip()) {
     Points2D ipoints;
 
-    if (CMathGeom2D::IntersectPolygon(points, clip().getValue(), ipoints))
+    if (CMathGeom2D::IntersectPolygon(points, clip().value(), ipoints))
       drawPolygon(ipoints, c, width, dash);
   }
   else
@@ -409,10 +409,10 @@ CGnuPlotRenderer::
 patternClippedPolygon(const Points2D &points, FillPattern pattern,
                       const CRGBA &fg, const CRGBA &bg)
 {
-  if (! isPseudo() && clip().isValid()) {
+  if (! isPseudo() && clip()) {
     Points2D ipoints;
 
-    if (CMathGeom2D::IntersectPolygon(points, clip().getValue(), ipoints))
+    if (CMathGeom2D::IntersectPolygon(points, clip().value(), ipoints))
       patternPolygon(ipoints, pattern, fg, bg);
   }
   else
@@ -424,7 +424,7 @@ CGnuPlotRenderer::
 drawClippedEllipse(const CPoint2D &p, double rx, double ry, double a,
                    const CRGBA &c, double width, const CLineDash &dash)
 {
-  if (! isPseudo() && clip().isValid()) {
+  if (! isPseudo() && clip()) {
     if (a == 0) {
       int    na = 120;
       double da = 2*M_PI/na;
@@ -454,7 +454,7 @@ void
 CGnuPlotRenderer::
 fillClippedEllipse(const CPoint2D &p, double rx, double ry, double a, const CRGBA &c)
 {
-  if (! isPseudo() && clip().isValid()) {
+  if (! isPseudo() && clip()) {
     if (a == 0) {
       int    na = 120;
       double da = 2*M_PI/na;
@@ -522,10 +522,10 @@ void
 CGnuPlotRenderer::
 drawClippedRect(const CBBox2D &rect, const CRGBA &c, double width, const CLineDash &dash)
 {
-  if (clip().isValid() && ! isPseudo()) {
-    if      (clip().getValue().inside(rect))
+  if (clip() && ! isPseudo()) {
+    if      (clip().value().inside(rect))
       drawRect(rect, c, width, dash);
-    else if (clip().getValue().intersect(rect)) {
+    else if (clip().value().intersect(rect)) {
       drawClipLine(rect.getLL(), rect.getLR(), c, width, dash);
       drawClipLine(rect.getLR(), rect.getUR(), c, width, dash);
       drawClipLine(rect.getUR(), rect.getUL(), c, width, dash);
@@ -566,12 +566,12 @@ void
 CGnuPlotRenderer::
 fillClippedRect(const CBBox2D &rect, const CRGBA &c)
 {
-  if (clip().isValid() && ! isPseudo()) {
+  if (clip() && ! isPseudo()) {
     CBBox2D crect;
 
-    if      (clip().getValue().inside(rect))
+    if      (clip().value().inside(rect))
       fillRect(rect, c);
-    else if (clip().getValue().intersect(rect, crect))
+    else if (clip().value().intersect(rect, crect))
       fillRect(crect, c);
   }
   else
@@ -582,12 +582,12 @@ void
 CGnuPlotRenderer::
 patternClippedRect(const CBBox2D &rect, FillPattern pattern, const CRGBA &fg, const CRGBA &bg)
 {
-  if (clip().isValid() && ! isPseudo()) {
+  if (clip() && ! isPseudo()) {
     CBBox2D crect;
 
-    if      (clip().getValue().inside(rect))
+    if      (clip().value().inside(rect))
       patternRect(rect, pattern, fg, bg);
-    else if (clip().getValue().intersect(rect, crect))
+    else if (clip().value().intersect(rect, crect))
       patternRect(crect, pattern, fg, bg);
   }
   else
@@ -643,9 +643,9 @@ drawClipLine(const CPoint2D &p1, const CPoint2D &p2, const CRGBA &c, double widt
 void
 CGnuPlotRenderer::
 drawRotatedRect(const CBBox2D &rect, double a, const CRGBA &c, double width,
-                const CLineDash &dash, const COptPoint2D &o)
+                const CLineDash &dash, const std::optional<CPoint2D> &o)
 {
-  CPoint2D o1 = (o.isValid() ? o.getValue() : rect.getCenter());
+  CPoint2D o1 = (o ? o.value() : rect.getCenter());
 
   CPoint2D p1 = rotatePoint(rect.getLL(), a, o1);
   CPoint2D p2 = rotatePoint(rect.getLR(), a, o1);
@@ -660,9 +660,9 @@ drawRotatedRect(const CBBox2D &rect, double a, const CRGBA &c, double width,
 
 void
 CGnuPlotRenderer::
-fillRotatedRect(const CBBox2D &rect, double a, const CRGBA &c, const COptPoint2D &o)
+fillRotatedRect(const CBBox2D &rect, double a, const CRGBA &c, const std::optional<CPoint2D> &o)
 {
-  CPoint2D o1 = (o.isValid() ? o.getValue() : rect.getCenter());
+  CPoint2D o1 = (o ? o.value() : rect.getCenter());
 
   CPoint2D p1 = rotatePoint(rect.getLL(), a, o1);
   CPoint2D p2 = rotatePoint(rect.getLR(), a, o1);
@@ -678,14 +678,14 @@ bool
 CGnuPlotRenderer::
 clipLine(CPoint2D &p1, CPoint2D &p2)
 {
-  if (! clip().isValid() || isPseudo())
+  if (! clip() || isPseudo())
     return true;
 
   double x1 = p1.x, y1 = p1.y;
   double x2 = p2.x, y2 = p2.y;
 
-  if (! CMathGeom2D::clipLine(clip().getValue().getXMin(), clip().getValue().getYMin(),
-                              clip().getValue().getXMax(), clip().getValue().getYMax(),
+  if (! CMathGeom2D::clipLine(clip().value().getXMin(), clip().value().getYMin(),
+                              clip().value().getXMax(), clip().value().getYMax(),
                               &x1, &y1, &x2, &y2))
     return false;
 
@@ -1352,13 +1352,13 @@ drawClippedPath(const Points3D &points, const CRGBA &c, double width, const CLin
   stroke.setWidth   (width);
   stroke.setLineDash(dash);
 
-  if (clip().isValid() && ! isPseudo()) {
+  if (clip() && ! isPseudo()) {
     Points2D points1;
 
     for (const auto &p : points) {
       CPoint2D p1 = transform2D(p);
 
-      if (clip().getValue().inside(p1))
+      if (clip().value().inside(p1))
         points1.push_back(p1);
     }
 
@@ -1668,8 +1668,8 @@ windowToPixel(double wx, double wy, double *px, double *py)
   pymin += tmargin; pymax -= bmargin;
 
   // adjust for ratio
-  if (ratio_.isValid() && ratio_.getValue() > 0.0) {
-    double ratio = ratio_.getValue();
+  if (ratio_ && ratio_.value() > 0.0) {
+    double ratio = ratio_.value();
 
     pw = pxmax - pxmin;
     ph = pymax - pymin;
@@ -1762,8 +1762,8 @@ pixelToWindowI(double px, double py, double *wx, double *wy, bool margin)
   pymin += tmargin; pymax -= bmargin;
 
   // adjust for ratio
-  if (ratio_.isValid() && ratio_.getValue() > 0.0) {
-    double ratio = ratio_.getValue();
+  if (ratio_ && ratio_.value() > 0.0) {
+    double ratio = ratio_.value();
 
     pw = pxmax - pxmin;
     ph = pymax - pymin;

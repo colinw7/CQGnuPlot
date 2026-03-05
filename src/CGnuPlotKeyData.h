@@ -6,14 +6,13 @@
 #include <CGnuPlotFillStyle.h>
 #include <CGnuPlotDash.h>
 #include <CAlignType.h>
-#include <COptVal.h>
 #include <CFont.h>
 
 class CGnuPlotKeyData {
  public:
-  typedef std::vector<std::string>   Columns;
-  typedef COptValT<CGnuPlotPosition> OptPos;
-  typedef std::map<int,std::string>  PointLabels;
+  typedef std::vector<std::string>        Columns;
+  typedef std::optional<CGnuPlotPosition> OptPos;
+  typedef std::map<int,std::string>       PointLabels;
 
   enum class HeadPosition {
     IN_KEY,
@@ -75,13 +74,13 @@ class CGnuPlotKeyData {
   int heightIncrement() const { return heightIncrement_; }
   void setHeightIncrement(int i) { heightIncrement_ = i; }
 
-  const COptReal &sampLen() const { return sampLen_; }
+  const std::optional<double> &sampLen() const { return sampLen_; }
   void setSampLen(double r) { sampLen_ = r; }
 
-  const COptReal &spacing() const { return spacing_; }
+  const std::optional<double> &spacing() const { return spacing_; }
   void setSpacing(double r) { spacing_ = r; }
 
-  const COptString &title() const { return title_; }
+  const std::optional<std::string> &title() const { return title_; }
   void setTitle(const std::string &s) { title_ = s; }
 
   const CFontPtr &font() const { return font_; }
@@ -95,13 +94,13 @@ class CGnuPlotKeyData {
   bool hasBox() const { return box_; }
   void setBox(bool b) { box_ = b; }
 
-  const COptInt &boxLineType() const { return boxLineType_; }
+  const std::optional<int> &boxLineType() const { return boxLineType_; }
   void setBoxLineType(int lt) { boxLineType_ = lt; }
-  void resetBoxLineType() { boxLineType_.setInvalid(); }
+  void resetBoxLineType() { boxLineType_.reset(); }
 
-  const COptInt &boxLineStyle() const { return boxLineStyle_; }
+  const std::optional<int> &boxLineStyle() const { return boxLineStyle_; }
   void setBoxLineStyle(int lt) { boxLineStyle_ = lt; }
-  void resetBoxLineStyle() { boxLineStyle_.setInvalid(); }
+  void resetBoxLineStyle() { boxLineStyle_.reset(); }
 
   double boxLineWidth() const { return boxLineWidth_; }
   void setBoxLineWidth(double w) { boxLineWidth_ = w; }
@@ -117,9 +116,9 @@ class CGnuPlotKeyData {
   bool columnHead() const { return columnhead_; }
   void setColumnHead(bool b) { columnhead_ = b; }
 
-  const COptInt &columnNum() const { return columnNum_; }
+  const std::optional<int> &columnNum() const { return columnNum_; }
   void setColumnNum(int i) { columnNum_ = i; }
-  void resetColumnNum() { columnNum_.setInvalid(); }
+  void resetColumnNum() { columnNum_.reset(); }
 
   const Columns &columns() const { return columns_; }
   void setColumns(const Columns &c) { columns_ = c; }
@@ -127,13 +126,13 @@ class CGnuPlotKeyData {
   const CGnuPlotColorSpec &textColor() const { return textColor_; }
   void setTextColor(const CGnuPlotColorSpec &c) { textColor_ = c; }
 
-  const COptInt &maxCols() const { return maxCols_; }
+  const std::optional<int> &maxCols() const { return maxCols_; }
   void setMaxCols(int i) { maxCols_ = i; }
-  void resetMaxCols() { maxCols_.setInvalid(); }
+  void resetMaxCols() { maxCols_.reset(); }
 
-  const COptInt &maxRows() const { return maxRows_; }
+  const std::optional<int> &maxRows() const { return maxRows_; }
   void setMaxRows(int i) { maxRows_ = i; }
-  void resetMaxRows() { maxRows_.setInvalid(); }
+  void resetMaxRows() { maxRows_.reset(); }
 
   void setPointLabel(int pointNum, const std::string &label) {
     pointLabels_[pointNum] = label;
@@ -149,15 +148,15 @@ class CGnuPlotKeyData {
   //---
 
   bool isColumnNumValid() const {
-    const COptInt &inum = columnNum();
-    if (! inum.isValid()) return false;
+    const std::optional<int> &inum = columnNum();
+    if (! inum) return false;
 
-    int num = inum.getValue();
+    int num = inum.value();
     return (num >= 1 && num <= int(columns().size()));
   }
 
   std::string columnNumValue() const {
-    return columns_[columnNum_.getValue(0) - 1];
+    return columns_[columnNum_.value_or(0) - 1];
   }
 
   const HeadPosition &headPosition() const { return headPosition_; }
@@ -183,64 +182,64 @@ class CGnuPlotKeyData {
     pos_             = OptPos();
     widthIncrement_  = 0;
     heightIncrement_ = 0;
-    sampLen_         = COptReal();
-    spacing_         = COptReal();
-    title_           = COptString();
+    sampLen_         = std::optional<double>();
+    spacing_         = std::optional<double>();
+    title_           = std::optional<std::string>();
     font_            = CFontPtr();
     box_             = false;
-    boxLineType_     = COptInt();
-    boxLineStyle_    = COptInt();
+    boxLineType_     = std::optional<int>();
+    boxLineStyle_    = std::optional<int>();
     boxLineWidth_    = 1;
     boxLineDash_     = CGnuPlotDash();
     columnhead_      = false;
-    columnNum_       = COptInt();
+    columnNum_       = std::optional<int>();
     columns_         = Columns();
     textColor_       = CGnuPlotColorSpec();
-    maxCols_         = COptInt();
-    maxRows_         = COptInt();
+    maxCols_         = std::optional<int>();
+    maxRows_         = std::optional<int>();
     pointLabels_     = PointLabels();
   }
 
   void show(std::ostream &os) const;
 
  private:
-  bool              displayed_  { true };               // key displayed
-  bool              outside_    { false };              // inside/outside plot area
-  bool              lmargin_    { false };
-  bool              rmargin_    { false };
-  bool              tmargin_    { false };
-  bool              bmargin_    { false };
-  CHAlignType       halign_     { CHALIGN_TYPE_RIGHT }; // key horizontal side
-  CVAlignType       valign_     { CVALIGN_TYPE_TOP   }; // key vertical side
-  bool              vertical_   { true };               // ??
-  CHAlignType       justify_    { CHALIGN_TYPE_RIGHT };
-  bool              right_      { true };               // text justification
-  bool              reverse_    { false };              // reverse text and sample
-  bool              invert_     { false };              // invert plot order
-  bool              autotitle_  { true };
-  bool              opaque_     { false };              // draw opaque
-  bool              enhanced_   { false };              // enhanced text
-  OptPos            pos_;
-  int               widthIncrement_  { 0 };
-  int               heightIncrement_ { 0 };
-  COptReal          sampLen_;                           // key line length (default 4)
-  COptReal          spacing_;                           // key line spacing (default 1.25)
-  COptString        title_;
-  CFontPtr          font_;
-  bool              box_           { false };
-  COptInt           boxLineType_;
-  COptInt           boxLineStyle_;
-  double            boxLineWidth_ { 1 };
-  CGnuPlotDash      boxLineDash_;
-  CGnuPlotFillStyle boxFillStyle_;
-  bool              columnhead_ { false };
-  COptInt           columnNum_;
-  Columns           columns_;
-  HeadPosition      headPosition_ { HeadPosition::IN_KEY };
-  CGnuPlotColorSpec textColor_;
-  COptInt           maxCols_;
-  COptInt           maxRows_;
-  PointLabels       pointLabels_;
+  bool                       displayed_  { true };               // key displayed
+  bool                       outside_    { false };              // inside/outside plot area
+  bool                       lmargin_    { false };
+  bool                       rmargin_    { false };
+  bool                       tmargin_    { false };
+  bool                       bmargin_    { false };
+  CHAlignType                halign_     { CHALIGN_TYPE_RIGHT }; // key horizontal side
+  CVAlignType                valign_     { CVALIGN_TYPE_TOP   }; // key vertical side
+  bool                       vertical_   { true };               // ??
+  CHAlignType                justify_    { CHALIGN_TYPE_RIGHT };
+  bool                       right_      { true };               // text justification
+  bool                       reverse_    { false };              // reverse text and sample
+  bool                       invert_     { false };              // invert plot order
+  bool                       autotitle_  { true };
+  bool                       opaque_     { false };              // draw opaque
+  bool                       enhanced_   { false };              // enhanced text
+  OptPos                     pos_;
+  int                        widthIncrement_  { 0 };
+  int                        heightIncrement_ { 0 };
+  std::optional<double>      sampLen_;                           // key line length (default 4)
+  std::optional<double>      spacing_;                           // key line spacing (default 1.25)
+  std::optional<std::string> title_;
+  CFontPtr                   font_;
+  bool                       box_           { false };
+  std::optional<int>         boxLineType_;
+  std::optional<int>         boxLineStyle_;
+  double                     boxLineWidth_ { 1 };
+  CGnuPlotDash               boxLineDash_;
+  CGnuPlotFillStyle          boxFillStyle_;
+  bool                       columnhead_ { false };
+  std::optional<int>         columnNum_;
+  Columns                    columns_;
+  HeadPosition               headPosition_ { HeadPosition::IN_KEY };
+  CGnuPlotColorSpec          textColor_;
+  std::optional<int>         maxCols_;
+  std::optional<int>         maxRows_;
+  PointLabels                pointLabels_;
 };
 
 #endif

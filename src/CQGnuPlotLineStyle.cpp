@@ -18,7 +18,7 @@ int
 CQGnuPlotLineStyle::
 lineType() const
 {
-  return CGnuPlotLineStyle::lineType().getValue(0);
+  return CGnuPlotLineStyle::lineType().value_or(0);
 }
 
 double
@@ -32,7 +32,7 @@ int
 CQGnuPlotLineStyle::
 lineDash() const
 {
-  return CGnuPlotLineStyle::lineDash().ind().getValue(0);
+  return CGnuPlotLineStyle::lineDash().ind().value_or(0);
 }
 
 void
@@ -85,5 +85,5 @@ int
 CQGnuPlotLineStyle::
 pointInterval() const
 {
-  return CGnuPlotLineStyle::pointInterval().getValue(0);
+  return CGnuPlotLineStyle::pointInterval().value_or(0);
 }

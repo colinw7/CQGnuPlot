@@ -78,7 +78,7 @@ print(std::ostream &os) const
 
   ptext.print(os);
 
-  os << "\"" << " at " << getPos();
+  os << "\" at " << getPos();
 
   if (hasHypertext())
     os << " hypertext";
@@ -90,7 +90,7 @@ print(std::ostream &os) const
   if (getAngle() < 0)
     os << " not rotated";
   else
-    os << " rotated by " << getAngle() << " degrees";
+    os << " rotated by " << getAngle().value() << " degrees";
 
   if      (getLayer() == CGnuPlotTypes::DrawLayer::FRONT)
     os << " front";
@@ -122,8 +122,8 @@ print(std::ostream &os) const
   else
     os << " nopoint ";
 
-  if (getOffset().isValid())
-    os << " offset " << getOffset().getValue();
+  if (getOffset())
+    os << " offset " << getOffset().value();
 
   if (boxStroke() && boxStroke()->isEnabled())
    os << " boxed";

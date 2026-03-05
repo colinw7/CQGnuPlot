@@ -24,7 +24,7 @@ connectNodes(int source, int target, int value)
   auto p2 = nodes_.find(target);
 
   if (p1 == nodes_.end() || p2 == nodes_.end()) {
-    std::cerr << "Node not found" << std::endl;
+    std::cerr << "Node not found\n";
     return;
   }
 
@@ -191,7 +191,7 @@ nodeAtPoint(double x, double y)
     int value = node1->nodeValue(node2);
 
     std::cerr << node1->name() << " ";
-    std::cerr << node2->name() << ":" << value << std::endl;
+    std::cerr << node2->name() << ":" << value << "\n";
   }
   else {
     ix_ = -1;

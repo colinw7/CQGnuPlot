@@ -4,8 +4,8 @@
 #include <CGnuPlotStyleValue.h>
 #include <CGnuPlotCoordValue.h>
 #include <CGnuPlotDash.h>
-#include <COptVal.h>
 #include <CRGBA.h>
+#include <optional>
 
 class CGnuPlot;
 
@@ -70,10 +70,10 @@ class CGnuPlotVectorsStyleValue : public CGnuPlotStyleValue {
   double lineWidth(CGnuPlot *plot=nullptr) const;
   void setLineWidth(double w) { lineWidth_ = w; }
 
-  const COptRGBA &lineColor() const { return lineColor_; }
+  const std::optional<CRGBA> &lineColor() const { return lineColor_; }
   void setLineColor(const CRGBA &c) { lineColor_ = c; }
 
-  const COptInt &lineStyle() const { return lineStyle_; }
+  const std::optional<int> &lineStyle() const { return lineStyle_; }
   void setLineStyle(int t) { lineStyle_ = t; }
 
   const CGnuPlotDash &dash() const { return dash_; }
@@ -82,7 +82,7 @@ class CGnuPlotVectorsStyleValue : public CGnuPlotStyleValue {
   bool isVariable() const { return variable_; }
   void setVariable(bool b) { variable_ = b; }
 
-  const COptReal &varValue() const { return varValue_; }
+  const std::optional<double> &varValue() const { return varValue_; }
   void setVarValue(double r) { varValue_ = r; }
 
   void print(CGnuPlot *plot, std::ostream &os) const;
@@ -106,22 +106,22 @@ class CGnuPlotVectorsStyleValue : public CGnuPlotStyleValue {
   }
 
  private:
-  bool               fhead_     { false };
-  bool               thead_     { true };
-  CGnuPlotCoordValue length_    { -1 };
-  double             angle_     { -1 };
-  double             backAngle_ { -1 };
-  bool               filled_    { false };
-  bool               empty_     { false };
-  bool               border_    { true  };
-  bool               front_     { false };
-  bool               fixed_     { false }; // no auto size reduce for show arrows
-  COptReal           lineWidth_;
-  COptInt            lineStyle_;
-  COptRGBA           lineColor_;
-  CGnuPlotDash       dash_;
-  bool               variable_  { false };
-  COptReal           varValue_;
+  bool                  fhead_     { false };
+  bool                  thead_     { true };
+  CGnuPlotCoordValue    length_    { -1 };
+  double                angle_     { -1 };
+  double                backAngle_ { -1 };
+  bool                  filled_    { false };
+  bool                  empty_     { false };
+  bool                  border_    { true  };
+  bool                  front_     { false };
+  bool                  fixed_     { false }; // no auto size reduce for show arrows
+  std::optional<double> lineWidth_;
+  std::optional<int>    lineStyle_;
+  std::optional<CRGBA>  lineColor_;
+  CGnuPlotDash          dash_;
+  bool                  variable_  { false };
+  std::optional<double> varValue_;
 };
 
 #endif

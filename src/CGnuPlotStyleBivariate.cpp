@@ -84,7 +84,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     }
     else {
       renderer->drawPoint(data.point(), data.color());
-      renderer->drawPoint(data.point() + CPoint2D(0, data.size().getValue(0)), data.color());
+      renderer->drawPoint(data.point() + CPoint2D(0, data.size().value_or(0)), data.color());
     }
 
     ++pointNum;

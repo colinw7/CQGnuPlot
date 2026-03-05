@@ -3,9 +3,9 @@
 
 #include <CPoint2D.h>
 #include <CRGBA.h>
-#include <COptVal.h>
 #include <map>
 #include <vector>
+#include <optional>
 
 class CGnuPlotRenderer;
 class CGnuPlotPlot;
@@ -32,16 +32,16 @@ class CGnuPlotSurface {
   bool isDataColor() const { return dataColor_; }
   void setDataColor(bool b) { dataColor_ = b; }
 
-  void setData(const COptReal &zmin, const COptReal &zmax, const ZPolygons &zpolygons,
-               const IJPoints &ijpoints);
+  void setData(const std::optional<double> &zmin, const std::optional<double> &zmax,
+               const ZPolygons &zpolygons, const IJPoints &ijpoints);
 
  private:
-  CGnuPlotPlot *plot_;
-  COptReal      zmin_, zmax_;
-  ZPolygons     zpolygons_;
-  IJPoints      ijpoints_;
-  bool          calcColor_ { false };
-  bool          dataColor_ { false };
+  CGnuPlotPlot*         plot_;
+  std::optional<double> zmin_, zmax_;
+  ZPolygons             zpolygons_;
+  IJPoints              ijpoints_;
+  bool                  calcColor_ { false };
+  bool                  dataColor_ { false };
 };
 
 #endif

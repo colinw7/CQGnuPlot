@@ -88,7 +88,6 @@ CGnuPlotAnnotation.cpp \
 CGnuPlotArrow.cpp \
 CGnuPlotArrowData.cpp \
 CGnuPlotArrowObject.cpp \
-CGnuPlotArrowStyle.cpp \
 CGnuPlotAxis.cpp \
 CGnuPlotAxisData.cpp \
 CGnuPlotBoxBarObject.cpp \
@@ -338,7 +337,6 @@ CGnuPlot.h \
 CGnuPlotArrow.h \
 CGnuPlotArrowData.h \
 CGnuPlotArrowObject.h \
-CGnuPlotArrowStyle.h \
 CGnuPlotAxis.h \
 CGnuPlotAxisData.h \
 CGnuPlotBBoxRenderer.h \

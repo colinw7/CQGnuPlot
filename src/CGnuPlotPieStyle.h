@@ -5,19 +5,19 @@ class CGnuPlotPieStyle {
  public:
   CGnuPlotPieStyle() { }
 
-  const COptReal &startAngle() const { return startAngle_; }
+  const std::optional<double> &startAngle() const { return startAngle_; }
   void setStartAngle(double a) { startAngle_ = a; }
 
-  const COptReal &innerRadius() const { return innerRadius_; }
+  const std::optional<double> &innerRadius() const { return innerRadius_; }
   void setInnerRadius(double a) { innerRadius_ = a; }
 
-  const COptReal &labelRadius() const { return labelRadius_; }
+  const std::optional<double> &labelRadius() const { return labelRadius_; }
   void setLabelRadius(double a) { labelRadius_ = a; }
 
  protected:
-  COptReal startAngle_;
-  COptReal innerRadius_;
-  COptReal labelRadius_;
+  std::optional<double> startAngle_;
+  std::optional<double> innerRadius_;
+  std::optional<double> labelRadius_;
 };
 
 #endif

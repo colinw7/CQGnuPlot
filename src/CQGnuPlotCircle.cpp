@@ -47,14 +47,14 @@ double
 CQGnuPlotCircle::
 getLineWidth() const
 {
-  return lw_.getValue(1);
+  return lw_.value_or(1);
 }
 
 void
 CQGnuPlotCircle::
 setLineWidth(double r)
 {
-  lw_.setValue(r);
+  lw_ = r;
 }
 
 void

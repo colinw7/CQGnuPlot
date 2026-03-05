@@ -5,7 +5,7 @@
 #include <CLineDash.h>
 #include <CLineCapType.h>
 #include <CLineJoinType.h>
-#include <CRefPtr.h>
+#include <memory>
 
 class CGnuPlotPlot;
 
@@ -51,6 +51,6 @@ class CGnuPlotStroke {
   double        mlimit_  { 3 };
 };
 
-typedef CRefPtr<CGnuPlotStroke> CGnuPlotStrokeP;
+typedef std::shared_ptr<CGnuPlotStroke> CGnuPlotStrokeP;
 
 #endif

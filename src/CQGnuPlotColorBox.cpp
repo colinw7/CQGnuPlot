@@ -66,7 +66,7 @@ double
 CQGnuPlotColorBox::
 getMin() const
 {
-  return CGnuPlotColorBox::min().getValue(0);
+  return CGnuPlotColorBox::min().value_or(0);
 }
 
 void
@@ -80,7 +80,7 @@ double
 CQGnuPlotColorBox::
 getMax() const
 {
-  return CGnuPlotColorBox::max().getValue(10);
+  return CGnuPlotColorBox::max().value_or(10);
 }
 
 void

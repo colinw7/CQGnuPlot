@@ -1,7 +1,6 @@
 #ifndef CGnuPlotPieObject_H
 #define CGnuPlotPieObject_H
 
-#include <COptVal.h>
 #include <CPoint2D.h>
 #include <CRGBA.h>
 #include <string>

@@ -31,6 +31,6 @@ class CGnuPlotTimeStamp {
   CGnuPlotTimeStampData  data_;
 };
 
-typedef CRefPtr<CGnuPlotTimeStamp> CGnuPlotTimeStampP;
+typedef std::shared_ptr<CGnuPlotTimeStamp> CGnuPlotTimeStampP;
 
 #endif

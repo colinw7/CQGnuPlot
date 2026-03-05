@@ -96,7 +96,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     //---
 
-    COptRGBA lc;
+    std::optional<CRGBA> lc;
 
     if (isCalcColor && ind < reals.size()) {
       double z = reals[ind];
@@ -122,8 +122,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         CGnuPlotFillP   fill  (bar->fill  ()->dup());
         CGnuPlotStrokeP stroke(bar->stroke()->dup());
 
-        if (lc.isValid())
-          stroke->setColor(lc.getValue());
+        if (lc)
+          stroke->setColor(lc.value());
 
         bar->setFill  (fill  );
         bar->setStroke(stroke);

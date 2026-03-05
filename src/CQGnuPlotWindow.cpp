@@ -463,7 +463,7 @@ void
 CQGnuPlotMainWindow::
 searchProperties()
 {
-  QLineEdit *edit = qobject_cast<QLineEdit *>(sender());
+  auto *edit = qobject_cast<QLineEdit *>(sender());
 
   tree_->search(edit->text());
 }
@@ -481,12 +481,12 @@ addProperties()
   const CGnuPlot::LineStyles &lineStyles = plot_->lineStyles();
 
   for (const auto &ls : lineStyles) {
-    CQGnuPlotLineStyle *ls1 = static_cast<CQGnuPlotLineStyle *>(ls.second.get());
+    auto *ls1 = static_cast<CQGnuPlotLineStyle *>(ls.second.get());
 
-    if (! ls1->ind().isValid())
+    if (! ls1->ind())
       continue;
 
-    QString lineStyleName = QString("LineStyles/lineStyle%1").arg(ls1->ind().getValue());
+    QString lineStyleName = QString("LineStyles/lineStyle%1").arg(ls1->ind().value());
 
     tree_->addProperty(lineStyleName, ls1, "lineType"     );
     tree_->addProperty(lineStyleName, ls1, "lineWidth"    );
@@ -500,8 +500,8 @@ addProperties()
 
   //---
 
-  CQGnuPlotMultiplot *qmultiplot = (plot_->multiplot().isValid() ?
-    static_cast<CQGnuPlotMultiplot *>(plot_->multiplot().getPtr()) : nullptr);
+  auto *qmultiplot = (plot_->multiplot() ?
+    static_cast<CQGnuPlotMultiplot *>(plot_->multiplot().get()) : nullptr);
 
   if (qmultiplot) {
     QString multiplotName("Multiplot");
@@ -530,7 +530,7 @@ addProperties()
   //---
 
   for (auto group : groups()) {
-    CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group.get());
+    auto *qgroup = static_cast<CQGnuPlotGroup *>(group.get());
 
     addGroupProperties(qgroup);
 
@@ -543,7 +543,7 @@ void
 CQGnuPlotMainWindow::
 addGroupProperties(CGnuPlotGroup *group)
 {
-  CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
+  auto *qgroup = static_cast<CQGnuPlotGroup *>(group);
 
   QString groupName = QString("Group%1").arg(group->id());
 
@@ -552,7 +552,7 @@ addGroupProperties(CGnuPlotGroup *group)
   tree_->addProperty(groupName, qgroup, "isPolar");
 
   if (group->is3D()) {
-    CQGnuPlotCamera *qcamera = static_cast<CQGnuPlotCamera *>(group->camera().get());
+    auto *qcamera = static_cast<CQGnuPlotCamera *>(group->camera().get());
 
     QString cameraName = groupName + "/camera";
 
@@ -577,7 +577,7 @@ addGroupProperties(CGnuPlotGroup *group)
 
     //---
 
-    CQGnuPlotPm3D *qpm3d = static_cast<CQGnuPlotPm3D *>(group->pm3D().get());
+    auto *qpm3d = static_cast<CQGnuPlotPm3D *>(group->pm3D().get());
 
     QString pm3dName = groupName + "/pm3d";
 
@@ -621,7 +621,7 @@ addGroupProperties(CGnuPlotGroup *group)
 
   //---
 
-  CQGnuPlotTitle *qtitle = static_cast<CQGnuPlotTitle *>(group->title().get());
+  auto *qtitle = static_cast<CQGnuPlotTitle *>(group->title().get());
 
   QString titleName = QString("%1/title").arg(groupName);
 
@@ -634,7 +634,7 @@ addGroupProperties(CGnuPlotGroup *group)
 
   //---
 
-  CQGnuPlotTimeStamp *qtimeStamp = static_cast<CQGnuPlotTimeStamp *>(group->timeStamp().getPtr());
+  auto *qtimeStamp = static_cast<CQGnuPlotTimeStamp *>(group->timeStamp().get());
 
   QString timeStampName = QString("%1/timeStamp").arg(groupName);
 
@@ -646,7 +646,7 @@ addGroupProperties(CGnuPlotGroup *group)
     const CGnuPlotGroup::IAxes &iaxes = axis.second;
 
     for (const auto &iaxis : iaxes) {
-      CQGnuPlotAxis *qaxis = static_cast<CQGnuPlotAxis *>(iaxis.second);
+      auto *qaxis = static_cast<CQGnuPlotAxis *>(iaxis.second);
 
       QString axisName = QString("%1/Axes/axis_%2").arg(groupName).arg(qaxis->id().c_str());
 
@@ -711,7 +711,7 @@ addGroupProperties(CGnuPlotGroup *group)
 
   //---
 
-  CQGnuPlotKey *qkey = dynamic_cast<CQGnuPlotKey *>(qgroup->key().get());
+  auto *qkey = dynamic_cast<CQGnuPlotKey *>(qgroup->key().get());
 
   QString keyName = groupName + "/key";
 
@@ -735,7 +735,7 @@ addGroupProperties(CGnuPlotGroup *group)
 
   //---
 
-  CQGnuPlotColorBox *qcolorBox = dynamic_cast<CQGnuPlotColorBox *>(qgroup->colorBox().get());
+  auto *qcolorBox = dynamic_cast<CQGnuPlotColorBox *>(qgroup->colorBox().get());
 
   QString colorBoxName = groupName + "/colorBox";
 
@@ -754,7 +754,7 @@ addGroupProperties(CGnuPlotGroup *group)
 
   //---
 
-  CQGnuPlotPalette *qpalette = dynamic_cast<CQGnuPlotPalette *>(qgroup->palette().get());
+  auto *qpalette = dynamic_cast<CQGnuPlotPalette *>(qgroup->palette().get());
 
   QString paletteName = groupName + "/palette";
 
@@ -783,7 +783,7 @@ addGroupProperties(CGnuPlotGroup *group)
         QString arrowName =
           QString("%1/Arrows/%2_%3").arg(groupName).arg(arrow->getName()).arg(ann->getInd());
 
-        CQGnuPlotArrow *qarrow = static_cast<CQGnuPlotArrow *>(arrow);
+        auto *qarrow = static_cast<CQGnuPlotArrow *>(arrow);
 
         tree_->addProperty(arrowName, qarrow, "strokeColor");
         tree_->addProperty(arrowName, qarrow, "fillColor");
@@ -810,7 +810,7 @@ addGroupProperties(CGnuPlotGroup *group)
         QString circleName =
           QString("%1/Circles/%2_%3").arg(groupName).arg(circle->getName()).arg(ann->getInd());
 
-        CQGnuPlotCircle *qcircle = static_cast<CQGnuPlotCircle *>(circle);
+        auto *qcircle = static_cast<CQGnuPlotCircle *>(circle);
 
         tree_->addProperty(circleName, qcircle, "strokeColor");
         tree_->addProperty(circleName, qcircle, "fillColor");
@@ -825,7 +825,7 @@ addGroupProperties(CGnuPlotGroup *group)
         QString ellipseName =
           QString("%1/Ellipses/%2_%3").arg(groupName).arg(ellipse->getName()).arg(ann->getInd());
 
-        CQGnuPlotEllipse *qellipse = static_cast<CQGnuPlotEllipse *>(ellipse);
+        auto *qellipse = static_cast<CQGnuPlotEllipse *>(ellipse);
 
         tree_->addProperty(ellipseName, qellipse, "strokeColor");
         tree_->addProperty(ellipseName, qellipse, "fillColor");
@@ -841,7 +841,7 @@ addGroupProperties(CGnuPlotGroup *group)
         QString labelName =
           QString("%1/Labels/%2_%3").arg(groupName).arg(label->getName()).arg(ann->getInd());
 
-        CQGnuPlotLabel *qlabel = static_cast<CQGnuPlotLabel *>(label);
+        auto *qlabel = static_cast<CQGnuPlotLabel *>(label);
 
         tree_->addProperty(labelName, qlabel, "displayed");
         tree_->addProperty(labelName, qlabel, "drawLayer");
@@ -869,7 +869,7 @@ addGroupProperties(CGnuPlotGroup *group)
         QString polyName =
           QString("%1/Polygons/%2_%3").arg(groupName).arg(poly->getName()).arg(ann->getInd());
 
-        CQGnuPlotPolygon *qpoly = static_cast<CQGnuPlotPolygon *>(poly);
+        auto *qpoly = static_cast<CQGnuPlotPolygon *>(poly);
 
         tree_->addProperty(polyName, qpoly, "strokeColor");
         tree_->addProperty(polyName, qpoly, "fillColor");
@@ -881,7 +881,7 @@ addGroupProperties(CGnuPlotGroup *group)
         QString rectName =
           QString("%1/Rectangles/%2_%3").arg(groupName).arg(rect->getName()).arg(ann->getInd());
 
-        CQGnuPlotRectangle *qrect = static_cast<CQGnuPlotRectangle *>(rect);
+        auto *qrect = static_cast<CQGnuPlotRectangle *>(rect);
 
         tree_->addProperty(rectName, qrect, "strokeColor");
         tree_->addProperty(rectName, qrect, "fillColor");
@@ -904,9 +904,9 @@ addPlotProperties(CGnuPlotPlot *plot)
 {
   static int MAX_OBJECTS = 1000;
 
-  CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
+  auto *qplot = static_cast<CQGnuPlotPlot *>(plot);
 
-  CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(plot->group());
+  auto *qgroup = static_cast<CQGnuPlotGroup *>(plot->group());
 
   QString plotName = QString("Group%1/Plot%2").arg(qgroup->id()).arg(plot->id());
 
@@ -980,7 +980,7 @@ addPlotProperties(CGnuPlotPlot *plot)
 
   //---
 
-  CQGnuPlotAdjacencyStyleValue *qadjacency = static_cast<CQGnuPlotAdjacencyStyleValue *>(
+  auto *qadjacency = static_cast<CQGnuPlotAdjacencyStyleValue *>(
     CGnuPlotStyleValueMgrInst->getValue<CGnuPlotAdjacencyStyleValue>(qplot));
 
   if (qadjacency) {
@@ -991,7 +991,7 @@ addPlotProperties(CGnuPlotPlot *plot)
 
   //---
 
-  CQGnuPlotBoxErrorBarsStyleValue *qboxerrorbars = static_cast<CQGnuPlotBoxErrorBarsStyleValue *>(
+  auto *qboxerrorbars = static_cast<CQGnuPlotBoxErrorBarsStyleValue *>(
     CGnuPlotStyleValueMgrInst->getValue<CGnuPlotBoxErrorBarsStyleValue>(qplot));
 
   if (qboxerrorbars) {
@@ -1006,7 +1006,7 @@ addPlotProperties(CGnuPlotPlot *plot)
 
   //---
 
-  CQGnuPlotBoxesStyleValue *qboxes = static_cast<CQGnuPlotBoxesStyleValue *>(
+  auto *qboxes = static_cast<CQGnuPlotBoxesStyleValue *>(
     CGnuPlotStyleValueMgrInst->getValue<CGnuPlotBoxesStyleValue>(qplot));
 
   if (qboxes) {
@@ -1021,7 +1021,7 @@ addPlotProperties(CGnuPlotPlot *plot)
 
   //---
 
-  CQGnuPlotBoxPlotStyleValue *qboxPlot = static_cast<CQGnuPlotBoxPlotStyleValue *>(
+  auto *qboxPlot = static_cast<CQGnuPlotBoxPlotStyleValue *>(
     CGnuPlotStyleValueMgrInst->getValue<CGnuPlotBoxPlotStyleValue>(qplot));
 
   if (qboxPlot) {
@@ -1039,7 +1039,7 @@ addPlotProperties(CGnuPlotPlot *plot)
 
   //---
 
-  CQGnuPlotBubbleStyleValue *qbubble = static_cast<CQGnuPlotBubbleStyleValue *>(
+  auto *qbubble = static_cast<CQGnuPlotBubbleStyleValue *>(
     CGnuPlotStyleValueMgrInst->getValue<CGnuPlotBubbleStyleValue>(qplot));
 
   if (qbubble) {
@@ -1050,7 +1050,7 @@ addPlotProperties(CGnuPlotPlot *plot)
 
   //---
 
-  CQGnuPlotCandlesticksStyleValue *qcandlesticks = static_cast<CQGnuPlotCandlesticksStyleValue *>(
+  auto *qcandlesticks = static_cast<CQGnuPlotCandlesticksStyleValue *>(
     CGnuPlotStyleValueMgrInst->getValue<CGnuPlotCandlesticksStyleValue>(qplot));
 
   if (qcandlesticks) {
@@ -1065,7 +1065,7 @@ addPlotProperties(CGnuPlotPlot *plot)
 
   //---
 
-  CQGnuPlotChordDiagramStyleValue *qchord = static_cast<CQGnuPlotChordDiagramStyleValue *>(
+  auto *qchord = static_cast<CQGnuPlotChordDiagramStyleValue *>(
     CGnuPlotStyleValueMgrInst->getValue<CGnuPlotChordDiagramStyleValue>(qplot));
 
   if (qchord) {
@@ -1076,7 +1076,7 @@ addPlotProperties(CGnuPlotPlot *plot)
 
   //---
 
-  CQGnuPlotCirclesStyleValue *qcircles = static_cast<CQGnuPlotCirclesStyleValue *>(
+  auto *qcircles = static_cast<CQGnuPlotCirclesStyleValue *>(
     CGnuPlotStyleValueMgrInst->getValue<CGnuPlotCirclesStyleValue>(qplot));
 
   if (qcircles) {
@@ -1088,7 +1088,7 @@ addPlotProperties(CGnuPlotPlot *plot)
 
   //---
 
-  CQGnuPlotDelaunayStyleValue *qdelaunay = static_cast<CQGnuPlotDelaunayStyleValue *>(
+  auto *qdelaunay = static_cast<CQGnuPlotDelaunayStyleValue *>(
     CGnuPlotStyleValueMgrInst->getValue<CGnuPlotDelaunayStyleValue>(qplot));
 
   if (qdelaunay) {
@@ -1100,7 +1100,7 @@ addPlotProperties(CGnuPlotPlot *plot)
 
   //---
 
-  CQGnuPlotEllipsesStyleValue *qellipses = static_cast<CQGnuPlotEllipsesStyleValue *>(
+  auto *qellipses = static_cast<CQGnuPlotEllipsesStyleValue *>(
     CGnuPlotStyleValueMgrInst->getValue<CGnuPlotEllipsesStyleValue>(qplot));
 
   if (qellipses) {
@@ -1112,7 +1112,7 @@ addPlotProperties(CGnuPlotPlot *plot)
 
   //---
 
-  CQGnuPlotDendrogramStyleValue *qdendrogram = static_cast<CQGnuPlotDendrogramStyleValue *>(
+  auto *qdendrogram = static_cast<CQGnuPlotDendrogramStyleValue *>(
     CGnuPlotStyleValueMgrInst->getValue<CGnuPlotDendrogramStyleValue>(qplot));
 
   if (qdendrogram) {
@@ -1127,7 +1127,7 @@ addPlotProperties(CGnuPlotPlot *plot)
 
   //---
 
-  CQGnuPlotForceDirectedStyleValue *qforcedir = static_cast<CQGnuPlotForceDirectedStyleValue *>(
+  auto *qforcedir = static_cast<CQGnuPlotForceDirectedStyleValue *>(
     CGnuPlotStyleValueMgrInst->getValue<CGnuPlotForceDirectedStyleValue>(qplot));
 
   if (qforcedir) {
@@ -1140,7 +1140,7 @@ addPlotProperties(CGnuPlotPlot *plot)
 
   //---
 
-  CQGnuPlotHierBubbleStyleValue *qhierbubble = static_cast<CQGnuPlotHierBubbleStyleValue *>(
+  auto *qhierbubble = static_cast<CQGnuPlotHierBubbleStyleValue *>(
     CGnuPlotStyleValueMgrInst->getValue<CGnuPlotHierBubbleStyleValue>(qplot));
 
   if (qhierbubble) {
@@ -1151,7 +1151,7 @@ addPlotProperties(CGnuPlotPlot *plot)
 
   //---
 
-  CQGnuPlotLabelsStyleValue *qlabels = static_cast<CQGnuPlotLabelsStyleValue *>(
+  auto *qlabels = static_cast<CQGnuPlotLabelsStyleValue *>(
     CGnuPlotStyleValueMgrInst->getValue<CGnuPlotLabelsStyleValue>(qplot));
 
   if (qlabels) {
@@ -1167,7 +1167,7 @@ addPlotProperties(CGnuPlotPlot *plot)
 
   //---
 
-  CQGnuPlotPieChartStyleValue *qpiechart = static_cast<CQGnuPlotPieChartStyleValue *>(
+  auto *qpiechart = static_cast<CQGnuPlotPieChartStyleValue *>(
     CGnuPlotStyleValueMgrInst->getValue<CGnuPlotPieChartStyleValue>(qplot));
 
   if (qpiechart) {
@@ -1182,7 +1182,7 @@ addPlotProperties(CGnuPlotPlot *plot)
 
   //---
 
-  CQGnuPlotRadarStyleValue *qradar = static_cast<CQGnuPlotRadarStyleValue *>(
+  auto *qradar = static_cast<CQGnuPlotRadarStyleValue *>(
     CGnuPlotStyleValueMgrInst->getValue<CGnuPlotRadarStyleValue>(qplot));
 
   if (qradar) {
@@ -1200,7 +1200,7 @@ addPlotProperties(CGnuPlotPlot *plot)
 
   //---
 
-  CQGnuPlotSunburstStyleValue *qsunburst = static_cast<CQGnuPlotSunburstStyleValue *>(
+  auto *qsunburst = static_cast<CQGnuPlotSunburstStyleValue *>(
     CGnuPlotStyleValueMgrInst->getValue<CGnuPlotSunburstStyleValue>(qplot));
 
   if (qsunburst) {
@@ -1214,7 +1214,7 @@ addPlotProperties(CGnuPlotPlot *plot)
 
   //---
 
-  CQGnuPlotTreeMapStyleValue *qtreemap = static_cast<CQGnuPlotTreeMapStyleValue *>(
+  auto *qtreemap = static_cast<CQGnuPlotTreeMapStyleValue *>(
     CGnuPlotStyleValueMgrInst->getValue<CGnuPlotTreeMapStyleValue>(qplot));
 
   if (qtreemap) {
@@ -1227,7 +1227,7 @@ addPlotProperties(CGnuPlotPlot *plot)
 
   //---
 
-  CQGnuPlotVectorsStyleValue *qvectors = static_cast<CQGnuPlotVectorsStyleValue *>(
+  auto *qvectors = static_cast<CQGnuPlotVectorsStyleValue *>(
     CGnuPlotStyleValueMgrInst->getValue<CGnuPlotVectorsStyleValue>(qplot));
 
   if (qvectors) {
@@ -1258,7 +1258,7 @@ addPlotProperties(CGnuPlotPlot *plot)
     for (const auto &arrow : plot->arrowObjects()) {
       QString arrowName = QString("%1/Arrow%2").arg(arrowsName).arg(i + 1);
 
-      CQGnuPlotArrowObject *qarrow = static_cast<CQGnuPlotArrowObject *>(arrow);
+      auto *qarrow = static_cast<CQGnuPlotArrowObject *>(arrow);
 
       tree_->addProperty(arrowName, qarrow, "displayed");
       tree_->addProperty(arrowName, qarrow, "coordType");
@@ -1301,7 +1301,7 @@ addPlotProperties(CGnuPlotPlot *plot)
     for (const auto &bar : plot->boxBarObjects()) {
       QString barName = QString("%1/Bar%2").arg(barsName).arg(i + 1);
 
-      CQGnuPlotBoxBarObject *qbar = static_cast<CQGnuPlotBoxBarObject *>(bar);
+      auto *qbar = static_cast<CQGnuPlotBoxBarObject *>(bar);
 
       tree_->addProperty(barName, qbar, "displayed");
       tree_->addProperty(barName, qbar, "x");
@@ -1316,7 +1316,7 @@ addPlotProperties(CGnuPlotPlot *plot)
       int j = 0;
 
       for (const auto &endBar : qbar->endBars()) {
-        CQGnuPlotEndBar *qendBar = static_cast<CQGnuPlotEndBar *>(endBar.get());
+        auto *qendBar = static_cast<CQGnuPlotEndBar *>(endBar.get());
 
         QString endBarName = QString("%1/EndBar%2").arg(barName).arg(j + 1);
 
@@ -1353,7 +1353,7 @@ addPlotProperties(CGnuPlotPlot *plot)
     for (const auto &box : plot->boxObjects()) {
       QString boxName = QString("%1/Box%2").arg(boxesName).arg(i + 1);
 
-      CQGnuPlotBoxObject *qbox = static_cast<CQGnuPlotBoxObject *>(box);
+      auto *qbox = static_cast<CQGnuPlotBoxObject *>(box);
 
       tree_->addProperty(boxName, qbox, "displayed");
       tree_->addProperty(boxName, qbox, "x");
@@ -1406,7 +1406,7 @@ addPlotProperties(CGnuPlotPlot *plot)
     for (const auto &bubble : plot->bubbleObjects()) {
       QString bubbleName = QString("%1/Bubble%2").arg(bubblesName).arg(i + 1);
 
-      CQGnuPlotBubbleObject *qbubble = static_cast<CQGnuPlotBubbleObject *>(bubble);
+      auto *qbubble = static_cast<CQGnuPlotBubbleObject *>(bubble);
 
       tree_->addProperty(bubbleName, qbubble, "displayed");
       tree_->addProperty(bubbleName, qbubble, "name" );
@@ -1434,7 +1434,7 @@ addPlotProperties(CGnuPlotPlot *plot)
     for (const auto &ellipse : plot->ellipseObjects()) {
       QString ellipseName = QString("%1/Ellipse%2").arg(ellipsesName).arg(i + 1);
 
-      CQGnuPlotEllipseObject *qellipse = static_cast<CQGnuPlotEllipseObject *>(ellipse);
+      auto *qellipse = static_cast<CQGnuPlotEllipseObject *>(ellipse);
 
       tree_->addProperty(ellipseName, qellipse, "displayed");
       tree_->addProperty(ellipseName, qellipse, "angle");
@@ -1462,7 +1462,7 @@ addPlotProperties(CGnuPlotPlot *plot)
     for (const auto &bar : plot->errorBarObjects()) {
       QString barName = QString("%1/Bar%2").arg(barsName).arg(i + 1);
 
-      CQGnuPlotErrorBarObject *qbar = static_cast<CQGnuPlotErrorBarObject *>(bar);
+      auto *qbar = static_cast<CQGnuPlotErrorBarObject *>(bar);
 
       tree_->addProperty(barName, qbar, "displayed");
       tree_->addProperty(barName, qbar, "x");
@@ -1510,7 +1510,7 @@ addPlotProperties(CGnuPlotPlot *plot)
     for (const auto &bar : plot->financeBarObjects()) {
       QString barName = QString("%1/Bar%2").arg(barsName).arg(i + 1);
 
-      CQGnuPlotFinanceBarObject *qbar = static_cast<CQGnuPlotFinanceBarObject *>(bar);
+      auto *qbar = static_cast<CQGnuPlotFinanceBarObject *>(bar);
 
       tree_->addProperty(barName, qbar, "displayed");
       tree_->addProperty(barName, qbar, "value");
@@ -1540,7 +1540,7 @@ addPlotProperties(CGnuPlotPlot *plot)
     for (const auto &image : plot->imageObjects()) {
       QString imageName = QString("%1/Image%2").arg(imagesName).arg(i + 1);
 
-      CQGnuPlotImageObject *qimage = static_cast<CQGnuPlotImageObject *>(image);
+      auto *qimage = static_cast<CQGnuPlotImageObject *>(image);
 
       tree_->addProperty(imageName, qimage, "displayed");
       tree_->addProperty(imageName, qimage, "size");
@@ -1571,7 +1571,7 @@ addPlotProperties(CGnuPlotPlot *plot)
     for (const auto &label : plot->labelObjects()) {
       QString labelName = QString("%1/Label%2").arg(labelsName).arg(i + 1);
 
-      CQGnuPlotLabelObject *qlabel = static_cast<CQGnuPlotLabelObject *>(label);
+      auto *qlabel = static_cast<CQGnuPlotLabelObject *>(label);
 
       tree_->addProperty(labelName, qlabel, "displayed");
       tree_->addProperty(labelName, qlabel, "text");
@@ -1624,7 +1624,7 @@ addPlotProperties(CGnuPlotPlot *plot)
     for (const auto &path : plot->pathObjects()) {
       QString pathName = QString("%1/Path%2").arg(pathsName).arg(i + 1);
 
-      CQGnuPlotPathObject *qpath = static_cast<CQGnuPlotPathObject *>(path);
+      auto *qpath = static_cast<CQGnuPlotPathObject *>(path);
 
       tree_->addProperty(pathName, qpath, "displayed");
       tree_->addProperty(pathName, qpath, "clipped");
@@ -1652,7 +1652,7 @@ addPlotProperties(CGnuPlotPlot *plot)
     for (const auto &pie : plot->pieObjects()) {
       QString pieName = QString("%1/Pie%2").arg(piesName).arg(i + 1);
 
-      CQGnuPlotPieObject *qpie = static_cast<CQGnuPlotPieObject *>(pie);
+      auto *qpie = static_cast<CQGnuPlotPieObject *>(pie);
 
       tree_->addProperty(pieName, qpie, "displayed"      );
       tree_->addProperty(pieName, qpie, "name"           );
@@ -1694,7 +1694,7 @@ addPlotProperties(CGnuPlotPlot *plot)
     for (const auto &point : plot->pointObjects()) {
       QString pointName = QString("%1/Point%2").arg(pointsName).arg(i + 1);
 
-      CQGnuPlotPointObject *qpoint = static_cast<CQGnuPlotPointObject *>(point);
+      auto *qpoint = static_cast<CQGnuPlotPointObject *>(point);
 
       tree_->addProperty(pointName, qpoint, "displayed");
       tree_->addProperty(pointName, qpoint, "point");
@@ -1732,7 +1732,7 @@ addPlotProperties(CGnuPlotPlot *plot)
     for (const auto &polygon : plot->polygonObjects()) {
       QString polygonName = QString("%1/Polygon%2").arg(polygonsName).arg(i + 1);
 
-      CQGnuPlotPolygonObject *qpolygon = static_cast<CQGnuPlotPolygonObject *>(polygon);
+      auto *qpolygon = static_cast<CQGnuPlotPolygonObject *>(polygon);
 
       tree_->addProperty(polygonName, qpolygon, "displayed");
       tree_->addProperty(polygonName, qpolygon, "text");
@@ -1763,7 +1763,7 @@ addPlotProperties(CGnuPlotPlot *plot)
     for (const auto &rect : plot->rectObjects()) {
       QString rectName = QString("%1/Rect%2").arg(rectsName).arg(i + 1);
 
-      CQGnuPlotRectObject *qrect = static_cast<CQGnuPlotRectObject *>(rect);
+      auto *qrect = static_cast<CQGnuPlotRectObject *>(rect);
 
       tree_->addProperty(rectName, qrect, "displayed");
       tree_->addProperty(rectName, qrect, "text");
@@ -1872,7 +1872,7 @@ newWindow()
 {
   CGnuPlotWindowP window = qapp()->createNewWindow();
 
-  CQGnuPlotMainWindow *qwindow = dynamic_cast<CQGnuPlotMainWindow *>(window.get());
+  auto *qwindow = dynamic_cast<CQGnuPlotMainWindow *>(window.get());
 
   qwindow->show();
 }
@@ -1892,7 +1892,7 @@ void
 CQGnuPlotMainWindow::
 loadFileSlot()
 {
-  CQGnuPlotLoadFileDialog *dialog = qobject_cast<CQGnuPlotLoadFileDialog *>(sender());
+  auto *dialog = qobject_cast<CQGnuPlotLoadFileDialog *>(sender());
 
   bool                     is2D         = dialog->is2D();
   bool                     isParametric = dialog->isParametric();
@@ -2070,7 +2070,7 @@ void
 CQGnuPlotMainWindow::
 loadFunctionSlot()
 {
-  CQGnuPlotLoadFunctionDialog *dialog = qobject_cast<CQGnuPlotLoadFunctionDialog *>(sender());
+  auto *dialog = qobject_cast<CQGnuPlotLoadFunctionDialog *>(sender());
 
   bool                     is2D         = dialog->is2D();
   bool                     isParametric = dialog->isParametric();
@@ -2240,7 +2240,7 @@ void
 CQGnuPlotMainWindow::
 createObjectsSlot()
 {
-  CQGnuPlotCreateDialog *dialog = qobject_cast<CQGnuPlotCreateDialog *>(sender());
+  auto *dialog = qobject_cast<CQGnuPlotCreateDialog *>(sender());
 
   CQGnuPlotGroup *currentGroup = this->currentGroup();
 
@@ -2354,7 +2354,7 @@ void
 CQGnuPlotMainWindow::
 saveAcceptSlot()
 {
-  CQGnuPlotSaveDialog *dialog = qobject_cast<CQGnuPlotSaveDialog *>(sender());
+  auto *dialog = qobject_cast<CQGnuPlotSaveDialog *>(sender());
 
   bool    isSVG    = dialog->isSVG();
   bool    isPS     = dialog->isPS();
@@ -2414,20 +2414,17 @@ saveDevice(const QString &filename, const QString &deviceName, int width, int he
   CGnuPlotRenderer *renderer = nullptr;
 
   if      (deviceName == "svg") {
-    CGnuPlotSVGRenderer *svgRenderer =
-      dynamic_cast<CGnuPlotSVGRenderer *>(app()->device()->renderer());
+    auto *svgRenderer = dynamic_cast<CGnuPlotSVGRenderer *>(app()->device()->renderer());
 
     renderer = svgRenderer;
   }
   else if (deviceName == "ps") {
-    CGnuPlotPSRenderer *psRenderer =
-      dynamic_cast<CGnuPlotPSRenderer *>(app()->device()->renderer());
+    auto *psRenderer = dynamic_cast<CGnuPlotPSRenderer *>(app()->device()->renderer());
 
     renderer = psRenderer;
   }
   else {
-    CQGnuPlotPNGRenderer *pngRenderer =
-      dynamic_cast<CQGnuPlotPNGRenderer *>(app()->device()->renderer());
+    auto *pngRenderer = dynamic_cast<CQGnuPlotPNGRenderer *>(app()->device()->renderer());
 
     pngRenderer->setOutputSize(QSize(width, height));
 
@@ -2548,7 +2545,7 @@ pointsSlot()
   tree_->getSelectedObjects(objs);
 
   for (const auto &o : objs) {
-    CQGnuPlotPlot *qplot = qobject_cast<CQGnuPlotPlot *>(o);
+    auto *qplot = qobject_cast<CQGnuPlotPlot *>(o);
     if (! qplot) continue;
 
     qplot->printPoints();
@@ -2589,7 +2586,7 @@ createTiledGroup()
   int i = 0;
 
   for (auto group : groups()) {
-    CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group.get());
+    auto *qgroup = static_cast<CQGnuPlotGroup *>(group.get());
 
     int r = i / nc;
     int c = i % nc;
@@ -2622,7 +2619,7 @@ getGroupAt(const CPoint2D &p)
   mouseEvent.setPixel(p);
 
   for (auto group : groups()) {
-    CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group.get());
+    auto *qgroup = static_cast<CQGnuPlotGroup *>(group.get());
 
     if (qgroup->inside(mouseEvent))
       return qgroup;
@@ -2639,7 +2636,7 @@ mousePress(const CGnuPlotMouseEvent &mouseEvent)
 
   if      (mode_ == Mode::SELECT) {
     for (auto group : groups()) {
-      CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group.get());
+      auto *qgroup = static_cast<CQGnuPlotGroup *>(group.get());
 
       qgroup->mousePress(mouseEvent);
     }
@@ -2659,7 +2656,7 @@ mouseMove(const CGnuPlotMouseEvent &mouseEvent, bool pressed)
 {
   if (mode_ == Mode::SELECT) {
     for (auto group : groups()) {
-      CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group.get());
+      auto *qgroup = static_cast<CQGnuPlotGroup *>(group.get());
 
       qgroup->mouseMove(mouseEvent, pressed);
     }
@@ -2744,9 +2741,9 @@ mouseMove(const CGnuPlotMouseEvent &mouseEvent, bool pressed)
 
       bool concatTips = true;
 
-      std::string tipStr;
-      COptReal    concatX;
-      COptReal    concatY;
+      std::string           tipStr;
+      std::optional<double> concatX;
+      std::optional<double> concatY;
 
       uint i = 0;
 
@@ -2778,7 +2775,7 @@ mouseMove(const CGnuPlotMouseEvent &mouseEvent, bool pressed)
 
           concatX = p3.x;
 
-          concatY.updateMin(p3.y);
+          CUtil::updateMin(concatY, p3.y);
         }
 
         ++i;
@@ -2789,7 +2786,7 @@ mouseMove(const CGnuPlotMouseEvent &mouseEvent, bool pressed)
 
         pw->tip->setHtml(tipStr.c_str());
 
-        QPoint gp = canvas_->mapToGlobal(QPoint(concatX.getValue(0), concatY.getValue(0)));
+        QPoint gp = canvas_->mapToGlobal(QPoint(concatX.value_or(0), concatY.value_or(0)));
 
         pw->tip->show(gp);
       }
@@ -2831,7 +2828,7 @@ mouseRelease(const CGnuPlotMouseEvent &mouseEvent)
 {
   if      (mode_ == Mode::SELECT) {
     for (auto group : groups()) {
-      CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group.get());
+      auto *qgroup = static_cast<CQGnuPlotGroup *>(group.get());
 
       qgroup->mouseRelease(mouseEvent);
     }
@@ -2914,7 +2911,7 @@ keyPress(const CGnuPlotKeyEvent &keyEvent)
     }
     else {
       for (auto group : groups()) {
-        CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group.get());
+        auto *qgroup = static_cast<CQGnuPlotGroup *>(group.get());
 
         qgroup->keyPress(keyEvent);
       }
@@ -3126,7 +3123,7 @@ CQGnuPlotMainWindow::
 mouseTip(const CGnuPlotMouseEvent &mouseEvent, CGnuPlotTipData &tip)
 {
   for (auto group : groups()) {
-    CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group.get());
+    auto *qgroup = static_cast<CQGnuPlotGroup *>(group.get());
 
     if (qgroup->mouseTip(mouseEvent, tip))
       return true;
@@ -3151,7 +3148,7 @@ paint(QPainter *p)
   qrenderer->setPainter(p);
 
   for (auto group : groups()) {
-    CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group.get());
+    auto *qgroup = static_cast<CQGnuPlotGroup *>(group.get());
 
     qgroup->setPainter(p);
   }
@@ -3246,7 +3243,7 @@ void
 CQGnuPlotMainWindow::
 treeMenuExec(QObject *obj, const QPoint &gpos)
 {
-  CQGnuPlotGroup *qgroup = qobject_cast<CQGnuPlotGroup *>(obj);
+  auto *qgroup = qobject_cast<CQGnuPlotGroup *>(obj);
 
   if (qgroup) {
     QMenu menu;

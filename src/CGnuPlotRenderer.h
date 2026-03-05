@@ -10,7 +10,6 @@
 #include <CBBox2D.h>
 #include <CFont.h>
 #include <CImagePtr.h>
-#include <CRefPtr.h>
 #include <CMatrix2D.h>
 
 class CGnuPlotWindow;
@@ -203,7 +202,7 @@ class CGnuPlotHiddenEnhancedText : public CGnuPlotHiddenObject {
   CFontPtr    font_;
 };
 
-typedef CRefPtr<CGnuPlotHiddenObject> CGnuPlotHiddenObjectP;
+typedef std::shared_ptr<CGnuPlotHiddenObject> CGnuPlotHiddenObjectP;
 
 //------
 
@@ -258,16 +257,16 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
   void setRange(const CBBox2D &r1);
   void setRange(const CBBox2D &r1, const CBBox2D &r2);
 
-  const COptReal &ratio() const { return ratio_; }
-  void setRatio(const COptReal &r) { ratio_ = r; }
-  void unsetRatio() { ratio_.setInvalid(); }
+  const std::optional<double> &ratio() const { return ratio_; }
+  void setRatio(const std::optional<double> &r) { ratio_ = r; }
+  void unsetRatio() { ratio_.reset(); }
 
   bool mapping() const { return mapping_; }
   void setMapping(bool b) { mapping_ = b; }
 
-  const COptBBox2D &clip() const { return clip_; }
+  const std::optional<CBBox2D> &clip() const { return clip_; }
   void setClip(const CBBox2D &r) { clip_ = r; }
-  void resetClip() { clip_.setInvalid(); }
+  void resetClip() { clip_.reset(); }
 
   bool reverseX() const { return reverseX_; }
   bool reverseY() const { return reverseY_; }
@@ -489,9 +488,10 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
                           const CRGBA &fg, const CRGBA &bg);
 
   void drawRotatedRect(const CBBox2D &rect, double a, const CRGBA &c, double width,
-                       const CLineDash &dash=CLineDash(), const COptPoint2D &o=COptPoint2D());
+                       const CLineDash &dash=CLineDash(),
+                       const std::optional<CPoint2D> &o=std::optional<CPoint2D>());
   void fillRotatedRect(const CBBox2D &rect, double a, const CRGBA &c,
-                       const COptPoint2D &o=COptPoint2D());
+                       const std::optional<CPoint2D> &o=std::optional<CPoint2D>());
 
   void strokeEllipse(const CPoint2D &p, double rx, double ry, double a,
                      const CGnuPlotStroke &stroke);
@@ -614,27 +614,27 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
   void updateMatrix();
 
  protected:
-  CGnuPlotWindow*   window_ { nullptr }; // current window
-  CGnuPlotCamera*   camera_ { nullptr }; // camera
-  int               width_  { 100 };     // pixel width
-  int               height_ { 100 };     // pixel height
-  bool              mapping_ { true };   // mapping enabled
-  CBBox2D           region_;             // window region (0,0) -> (1,1)
-  CGnuPlotMargin    margin_;             // margin for plot
-  CBBox2D           range1_;             // data first range
-  CBBox2D           range2_;             // data second range
-  COptReal          ratio_;              // aspect ratio
-  COptBBox2D        clip_;               // clip area
-  CFontPtr          font_;               // font
-  bool              reverseX_ { false };
-  bool              reverseY_ { false };
-  ZHiddenObjects    hiddenObjects_;
-  double            hiddenZ_ { 1.0 };
-  double            xscale_ { 1.0 };
-  double            yscale_ { 1.0 };
-  CPoint2D          offset_ { 0, 0 };
-  mutable CMatrix2D matrix_;
-  mutable CMatrix2D imatrix_;
+  CGnuPlotWindow*        window_ { nullptr }; // current window
+  CGnuPlotCamera*        camera_ { nullptr }; // camera
+  int                    width_  { 100 };     // pixel width
+  int                    height_ { 100 };     // pixel height
+  bool                   mapping_ { true };   // mapping enabled
+  CBBox2D                region_;             // window region (0,0) -> (1,1)
+  CGnuPlotMargin         margin_;             // margin for plot
+  CBBox2D                range1_;             // data first range
+  CBBox2D                range2_;             // data second range
+  std::optional<double>  ratio_;              // aspect ratio
+  std::optional<CBBox2D> clip_;               // clip area
+  CFontPtr               font_;               // font
+  bool                   reverseX_ { false };
+  bool                   reverseY_ { false };
+  ZHiddenObjects         hiddenObjects_;
+  double                 hiddenZ_ { 1.0 };
+  double                 xscale_ { 1.0 };
+  double                 yscale_ { 1.0 };
+  CPoint2D               offset_ { 0, 0 };
+  mutable CMatrix2D      matrix_;
+  mutable CMatrix2D      imatrix_;
 };
 
 #endif

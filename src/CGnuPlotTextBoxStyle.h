@@ -30,7 +30,7 @@ class CGnuPlotTextBoxStyle {
     // TODO:
     //os << "with margins ";
     os << " and " << (border_  ? "border": "no border");
-    os << std::endl;
+    os << "\n";
   }
 
  private:

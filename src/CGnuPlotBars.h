@@ -15,14 +15,14 @@ class CGnuPlotBars {
 
   void show(std::ostream &os) const {
     if (size_ <= 0.0)
-      os << "errors are plotted without bars" << std::endl;
+      os << "errors are plotted without bars\n";
     else
       os << "errorbars are plotted in " << (front_ ? "front" : "back") <<
-            " with bars of size " << size_ << std::endl;
+            " with bars of size " << size_ << "\n";
   }
 
   void save(std::ostream &os) const {
-    os << "set bar " << size_ << " " << (front_ ? "front" : "back") << std::endl;
+    os << "set bar " << size_ << " " << (front_ ? "front" : "back") << "\n";
   }
 
  private:

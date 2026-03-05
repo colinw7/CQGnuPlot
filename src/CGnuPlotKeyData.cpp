@@ -12,14 +12,14 @@ CGnuPlotKeyData::
 show(std::ostream &os) const
 {
   if (! displayed_) {
-    os << "key is OFF" << std::endl;
+    os << "key is OFF\n";
     return;
   }
 
   os << "key is ON, position:";
 
-  if (pos_.isValid()) {
-    os << " " << pos_.getValue();
+  if (pos_) {
+    os << " " << pos_.value();
   }
   else {
     if      (valign_ == CVALIGN_TYPE_TOP)
@@ -39,7 +39,7 @@ show(std::ostream &os) const
 
   os << (vertical_ ? " vertical" : " horizontal");
   os << (outside_  ? " outside"  : " inside");
-  os << std::endl;
+  os << "\n";
 
   os << "key is";
   os << (justify_ == CHALIGN_TYPE_RIGHT ? " right" : " left") << " justified,";
@@ -48,45 +48,45 @@ show(std::ostream &os) const
   os << (enhanced_ ? " enhanced" : " not enhanced");
 
   if (box_) {
-    os << " boxed" << std::endl;
+    os << " boxed\n";
 
-    os << "with linetype " << boxLineType_.getValue(-1) <<
-          " linestyle " << boxLineStyle_.getValue(-1) <<
-          " linewidth " << boxLineWidth_ << std::endl;
+    os << "with linetype " << boxLineType_.value_or(-1) <<
+          " linestyle " << boxLineStyle_.value_or(-1) <<
+          " linewidth " << boxLineWidth_ << "\n";
 
     os << "key box is " << (opaque_ ? "opaque" : "not opaque") <<
-          "and drawn in front of the graph" << std::endl;
+          "and drawn in front of the graph\n";
   }
   else
-    os << " not boxed" << std::endl;
+    os << " not boxed\n";
 
-  os << "sample length is " << sampLen_.getValue(4) << " characters" << std::endl;
-  os << "vertical spacing is " << spacing_.getValue(1) << " characters" << std::endl;
-  os << "width adjustment is " << widthIncrement_ << " characters" << std::endl;
-  os << "height adjustment is " << heightIncrement_ << " characters" << std::endl;
+  os << "sample length is " << sampLen_.value_or(4) << " characters\n";
+  os << "vertical spacing is " << spacing_.value_or(1) << " characters\n";
+  os << "width adjustment is " << widthIncrement_ << " characters\n";
+  os << "height adjustment is " << heightIncrement_ << " characters\n";
 
   if (autotitle_) {
     if (columnhead_)
-      os << "curves are automatically titled with column header" << std::endl;
+      os << "curves are automatically titled with column header\n";
     else
-      os << "curves are automatically titled with filename" << std::endl;
+      os << "curves are automatically titled with filename\n";
   }
   else
-    os << "curves are not automatically titled" << std::endl;
+    os << "curves are not automatically titled\n";
 
   os << "maximum number of columns is ";
 
-  if (! maxCols_.isValid())
-    os << "calculated automatically" << std::endl;
+  if (! maxCols_)
+    os << "calculated automatically\n";
   else
-    os << maxCols_.getValue() << " for horizontal alignment" << std::endl;
+    os << maxCols_.value() << " for horizontal alignment\n";
 
   os << "maximum number of rows is ";
 
-  if (! maxRows_.isValid())
-    os << "calculated automatically" << std::endl;
+  if (! maxRows_)
+    os << "calculated automatically\n";
   else
-    os << maxRows_.getValue() << " for vertical alignment" << std::endl;
+    os << maxRows_.value() << " for vertical alignment\n";
 
-  os << "key title is \"" << title_.getValue("") << "\"" << std::endl;
+  os << "key title is \"" << title_.value_or("") << "\"\n";
 }

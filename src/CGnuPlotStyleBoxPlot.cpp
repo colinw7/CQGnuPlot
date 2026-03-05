@@ -134,7 +134,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   }
 
   CGnuPlotTypes::SymbolType outlierSymbol =
-    CGnuPlotTypes::SymbolType(value->pointType().getValue(7));
+    CGnuPlotTypes::SymbolType(value->pointType().value_or(7));
 
   double ps = plot->pointSize();
 
@@ -169,7 +169,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   double ix = (syv.empty() && iyv.size() == 1 ? x : 1);
 
   for (const auto &yv : iyv) {
-    double ix1 = ix + ic*value->separation().getValue(1.0);
+    double ix1 = ix + ic*value->separation().value_or(1.0);
 
     std::string s = xaxis->getValueStr(int(ix1), ix1);
 
@@ -187,8 +187,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     if (renderer->isPseudo() || ! boxObj->testAndSetUsed()) {
       boxObj->setLineWidth   (ww);
       boxObj->setBoxWidth    (bw);
-      boxObj->setRange       (value->range   ().getValue(1.5));
-      boxObj->setFraction    (value->fraction().getValue(0.95));
+      boxObj->setRange       (value->range   ().value_or(1.5));
+      boxObj->setFraction    (value->fraction().value_or(0.95));
       boxObj->setShowOutliers(value->outliers());
       boxObj->setBoxLabels   (value->labels());
       boxObj->setValueStr    (s);
@@ -211,7 +211,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   //---
 
   for (const auto &i : inds) {
-    double ix1 = ix + ic*value->separation().getValue(1.0);
+    double ix1 = ix + ic*value->separation().value_or(1.0);
 
     auto yv = syv[i];
 
@@ -238,8 +238,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     if (renderer->isPseudo() || ! boxObj->testAndSetUsed()) {
       boxObj->setLineWidth   (ww);
       boxObj->setBoxWidth    (bw);
-      boxObj->setRange       (value->range   ().getValue(1.5));
-      boxObj->setFraction    (value->fraction().getValue(0.95));
+      boxObj->setRange       (value->range   ().value_or(1.5));
+      boxObj->setFraction    (value->fraction().value_or(0.95));
       boxObj->setShowOutliers(value->outliers());
       boxObj->setBoxLabels   (value->labels());
       boxObj->setValueStr    (s);

@@ -5,12 +5,12 @@
 #include <CGnuPlotEveryData.h>
 #include <CGnuPlotIndexData.h>
 #include <CSize2D.h>
-#include <COptVal.h>
 
 #include <string>
 #include <vector>
 #include <map>
 #include <limits>
+#include <optional>
 #include <iostream>
 
 class CGnuPlotFile {
@@ -49,7 +49,7 @@ class CGnuPlotFile {
       for (const auto &f : fields) {
         os << " "; f.print(os);
       }
-      os << std::endl;
+      os << "\n";
     }
   };
 
@@ -85,8 +85,8 @@ class CGnuPlotFile {
   const std::string &fileName() const { return filename_; }
   void setFileName(const std::string &v) { filename_ = v; }
 
-  bool hasCommentChars() const { return commentChars_.isValid(); }
-  std::string commentChars() const { return commentChars_.getValue("#"); }
+  bool hasCommentChars() const { return bool(commentChars_); }
+  std::string commentChars() const { return commentChars_.value_or("#"); }
   void setCommentChars(const std::string &chars) { commentChars_ = chars; }
 
   const std::string &missingStr() const { return missingStr_; }
@@ -275,12 +275,14 @@ class CGnuPlotFile {
   void parseFileLine(const std::string &str, Fields &fields);
 
  private:
-  typedef std::vector<Fields>          FieldsArray;
-  typedef std::map<int,FieldsArray>    SubFieldsArray;
-  typedef std::map<int,SubFieldsArray> SetSubFieldsArray;
+  using OptString = std::optional<std::string>;
+
+  using FieldsArray       = std::vector<Fields>;
+  using SubFieldsArray    = std::map<int,FieldsArray>;
+  using SetSubFieldsArray = std::map<int,SubFieldsArray>;
 
   std::string          filename_     { "" };
-  COptString           commentChars_;
+  OptString            commentChars_;
   std::string          missingStr_;
   char                 separator_    { '\0' };
   bool                 parseStrings_ { true };

@@ -5,27 +5,27 @@ void
 CGnuPlotBorderData::
 show(std::ostream &os) const
 {
-  int s = sides().getValue(31);
+  int s = sides().value_or(31);
 
   if (s)
-    os << "border is not drawn" << std::endl;
+    os << "border is not drawn\n";
   else
     os << "border " << s << " is drawn in" <<
           CStrUniqueMatch::valueToString<DrawLayer>(layer()) << " layer with" <<
-          " linecolor " << lineStyle() <<
+          " linecolor " << lineStyle().value() <<
           " linewidth " << lineWidth() <<
-          " lineType " << lineType() << std::endl;
+          " lineType " << lineType().value() << "\n";
 }
 
 void
 CGnuPlotBorderData::
 save(std::ostream &os) const
 {
-  int s = sides().getValue(31);
+  int s = sides().value_or(31);
 
   os << "set border " << s << " " <<
         CStrUniqueMatch::valueToString<DrawLayer>(layer()) <<
-        " lt " << lineType() <<
+        " lt " << lineType().value() <<
         " linewidth " << lineWidth() <<
-        " dashtype solid" << std::endl;
+        " dashtype solid\n";
 }

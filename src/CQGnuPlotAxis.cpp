@@ -34,7 +34,7 @@ QString
 CQGnuPlotAxis::
 getTimeFormat() const
 {
-  return QString(CGnuPlotAxis::getTimeFormat().getValue("%g").c_str());
+  return QString(CGnuPlotAxis::getTimeFormat().value_or("%g").c_str());
 }
 
 void

@@ -22,6 +22,12 @@ bool evaluateExpression(CExpr *expr, const std::string &exprStr, CExprValuePtr &
 //---
 
 CGnuPlotEveryData::
+CGnuPlotEveryData(int start, int end, int step) :
+ pointStart_(start), pointEnd_(end), pointStep_(step)
+{
+}
+
+CGnuPlotEveryData::
 CGnuPlotEveryData(CExpr *expr, const std::string &str)
 {
   if (str != "")

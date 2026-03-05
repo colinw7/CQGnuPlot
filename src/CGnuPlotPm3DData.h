@@ -97,7 +97,7 @@ class CGnuPlotPm3DData {
 
   void show(std::ostream &os) const {
     os << "pm3d style is " << (implicit_ ? "implicit" : "explicit");
-    os << " (draw pm3d surface according to style)" << std::endl;
+    os << " (draw pm3d surface according to style)\n";
 
     os << "pm3d plotted at";
     if (pos_.empty())
@@ -109,61 +109,61 @@ class CGnuPlotPm3DData {
         os << " " << posTypeToStr(pos_[i]);
       }
     }
-    os << std::endl;
+    os << "\n";
 
     if      (scanType_ == ScanType::AUTOMATIC)
-      os << "taking scans direction automatically" << std::endl;
+      os << "taking scans direction automatically\n";
     else if (scanType_ == ScanType::FORWARD)
-      os << "taking scans in FORWARD direction" << std::endl;
+      os << "taking scans in FORWARD direction\n";
     else if (scanType_ == ScanType::BACKWARD)
-      os << "taking scans in BACKWARD direction" << std::endl;
+      os << "taking scans in BACKWARD direction\n";
     else if (scanType_ == ScanType::DEPTH_ORDER)
-      os << "true depth ordering" << std::endl;
+      os << "true depth ordering\n";
 
     os << "subsequent scans with different nb of pts are flushed from";
-    if      (flushType_ == FlushType::BEGIN ) os << "BEGIN"  << std::endl;
-    else if (flushType_ == FlushType::CENTER) os << "CENTER" << std::endl;
-    else if (flushType_ == FlushType::END   ) os << "END"    << std::endl;
+    if      (flushType_ == FlushType::BEGIN ) os << "BEGIN"  << "\n";
+    else if (flushType_ == FlushType::CENTER) os << "CENTER\n";
+    else if (flushType_ == FlushType::END   ) os << "END"    << "\n";
 
     if (ftriangles_)
-      os << "flushing triangles are drawn" << std::endl;
+      os << "flushing triangles are drawn\n";
     else
-      os << "flushing triangles are not drawn" << std::endl;
+      os << "flushing triangles are not drawn\n";
 
     if (clipin_ == 4)
-      os << "clipping: all 4 points of the quadrangle in x,y ranges" << std::endl;
+      os << "clipping: all 4 points of the quadrangle in x,y ranges\n";
     else
-      os << "clipping: at least 1 point of the quadrangle in x,y ranges" << std::endl;
+      os << "clipping: at least 1 point of the quadrangle in x,y ranges\n";
 
     if (linetype_ != -1)
-      os << "pm3d quadrangle borders will default to linetype " << linetype_ << std::endl;
+      os << "pm3d quadrangle borders will default to linetype " << linetype_ << "\n";
     else
-      os << "pm3d quadrangles will have no border" << std::endl;
+      os << "pm3d quadrangles will have no border\n";
 
-    os << "steps for bilinear interpolation: " << isteps1_ << "," << isteps2_ << std::endl;
+    os << "steps for bilinear interpolation: " << isteps1_ << "," << isteps2_ << "\n";
 
     if      (cornerType_ == CornerType::MEAN)
-      os << "quadrangle color according to averaged 4 corners" << std::endl;
+      os << "quadrangle color according to averaged 4 corners\n";
     else if (cornerType_ == CornerType::GEOMEAN)
-      os << "quadrangle color according to geometrical mean of 4 corners" << std::endl;
+      os << "quadrangle color according to geometrical mean of 4 corners\n";
     else if (cornerType_ == CornerType::HARMEAN)
-      os << "quadrangle color according to harmonic mean of 4 corners" << std::endl;
+      os << "quadrangle color according to harmonic mean of 4 corners\n";
     else if (cornerType_ == CornerType::RMS)
-      os << "quadrangle color according to root mean square of 4 corners" << std::endl;
+      os << "quadrangle color according to root mean square of 4 corners\n";
     else if (cornerType_ == CornerType::MEDIAN)
-      os << "quadrangle color according to median of 4 corners" << std::endl;
+      os << "quadrangle color according to median of 4 corners\n";
     else if (cornerType_ == CornerType::MIN)
-      os << "quadrangle color according to min of 4 corners" << std::endl;
+      os << "quadrangle color according to min of 4 corners\n";
     else if (cornerType_ == CornerType::MAX)
-      os << "quadrangle color according to max of 4 corners" << std::endl;
+      os << "quadrangle color according to max of 4 corners\n";
     else if (cornerType_ == CornerType::C1)
-      os << "quadrangle color according to corner 1" << std::endl;
+      os << "quadrangle color according to corner 1\n";
     else if (cornerType_ == CornerType::C2)
-      os << "quadrangle color according to corner 2" << std::endl;
+      os << "quadrangle color according to corner 2\n";
     else if (cornerType_ == CornerType::C3)
-      os << "quadrangle color according to corner 3" << std::endl;
+      os << "quadrangle color according to corner 3\n";
     else if (cornerType_ == CornerType::C4)
-      os << "quadrangle color according to corner 4" << std::endl;
+      os << "quadrangle color according to corner 4\n";
   }
 
   void unset() {

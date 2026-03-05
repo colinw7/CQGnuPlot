@@ -12,42 +12,42 @@ struct CGnuPlotPlotSize {
   void unsetSize() {
     square = false;
 
-    xsize.setInvalid();
-    ysize.setInvalid();
+    xsize.reset();
+    ysize.reset();
 
-    xratio.setInvalid();
-    yratio.setInvalid();
+    xratio.reset();
+    yratio.reset();
   }
 
   void unsetOrigin() {
-    xo.setInvalid();
-    yo.setInvalid();
+    xo.reset();
+    yo.reset();
   }
 
   void showSize(std::ostream &os) {
     if (square)
-      os << "size is scaled by 1,1" << std::endl;
+      os << "size is scaled by 1,1\n";
     else
-      os << "size is scaled by " << xsize.getValue(1) << "," << ysize.getValue(1) << std::endl;
+      os << "size is scaled by " << xsize.value_or(1) << "," << ysize.value_or(1) << "\n";
 
-    if (! xratio.isValid() && ! yratio.isValid())
-      os << "No attempt to control aspect ratio" << std::endl;
+    if (! xratio && ! yratio)
+      os << "No attempt to control aspect ratio\n";
     else
       os << "Try to set aspect ratio to " <<
-            xratio.getValue(1) << ":" << yratio.getValue(1) << std::endl;
+            xratio.value_or(1) << ":" << yratio.value_or(1) << "\n";
   }
 
   void showOrigin(std::ostream &os) {
-    os << "origin is set to " << xo.getValue(0) << ", " << yo.getValue(0) << std::endl;
+    os << "origin is set to " << xo.value_or(0) << ", " << yo.value_or(0) << "\n";
   }
 
-  bool     square { false };
-  COptReal xo;
-  COptReal yo;
-  COptReal xsize;
-  COptReal ysize;
-  COptReal xratio;
-  COptReal yratio;
+  bool                  square { false };
+  std::optional<double> xo;
+  std::optional<double> yo;
+  std::optional<double> xsize;
+  std::optional<double> ysize;
+  std::optional<double> xratio;
+  std::optional<double> yratio;
 };
 
 #endif

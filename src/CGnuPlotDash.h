@@ -1,8 +1,10 @@
 #ifndef CGnuPlotDash_H
 #define CGnuPlotDash_H
 
-#include <ostream>
 #include <CGnuPlotTypes.h>
+
+#include <ostream>
+#include <optional>
 
 class CGnuPlot;
 
@@ -18,17 +20,17 @@ class CGnuPlotDash {
     setDash(dash);
   }
 
-  const COptInt &ind() const { return ind_; }
+  const std::optional<int> &ind() const { return ind_; }
   void setInd(int ind) { reset(); ind_ = ind; }
 
-  const COptLineDash &dash() const { return dash_; }
+  const std::optional<CLineDash> &dash() const { return dash_; }
   void setDash(const CLineDash &dash) { reset(); dash_ = dash; }
 
   CLineDash calcDash(CGnuPlot *plot, const CLineDash &dash=CLineDash()) const;
 
-  bool isValid() const { return ind_.isValid() || dash_.isValid(); }
+  bool isValid() const { return ind_ || dash_; }
 
-  void reset() { ind_.setInvalid(); dash_.setInvalid(); }
+  void reset() { ind_.reset(); dash_.reset(); }
 
   friend std::ostream &operator<<(std::ostream &os, const CGnuPlotDash &dash) {
     dash.print(os);
@@ -39,8 +41,8 @@ class CGnuPlotDash {
   void print(std::ostream &os=std::cout) const;
 
  private:
-  COptInt      ind_;
-  COptLineDash dash_;
+  std::optional<int>       ind_;
+  std::optional<CLineDash> dash_;
 };
 
 #endif

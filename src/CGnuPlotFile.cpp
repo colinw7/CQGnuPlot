@@ -234,7 +234,7 @@ processDataFile()
 
     //---
 
-    auto comment      = commentChars_.getValue("#");
+    auto comment      = commentChars_.value_or("#");
     bool commentFound = false;
 
     auto line1 = line;
@@ -473,7 +473,7 @@ processBinaryFile()
     int nd = int(values.size())/wh;
 
     if (nd < 0) {
-      std::cerr << "Bad image data size" << std::endl;
+      std::cerr << "Bad image data size\n";
       return false;
     }
 
@@ -564,7 +564,7 @@ void
 CGnuPlotFile::
 unset()
 {
-  commentChars_ = COptString();
+  commentChars_ = OptString();
   missingStr_   = "";
   separator_    = '\0';
   fortran_      = false;
@@ -590,11 +590,11 @@ show(std::ostream &os, std::map<std::string,bool> &show, bool verbose)
       else
         os << "\"" << missingStr() << "\" in datafile is interpreted as missing value";
 
-      os << std::endl;
+      os << "\n";
     }
     else {
       if ( ! missingStr().empty())
-        os << "set datafile missing \"" << missingStr() << "\"" << std::endl;
+        os << "set datafile missing \"" << missingStr() << "\"\n";
     }
   }
 
@@ -609,16 +609,16 @@ show(std::ostream &os, std::map<std::string,bool> &show, bool verbose)
     else
       os << "\"" << separator() << "\"";
 
-    os << std::endl;
+    os << "\n";
   }
 
   if (show.empty() || show.find("commentschar") != show.end()) {
     if (verbose) {
-      os << "Comments chars are \"" << commentChars() << "\"" << std::endl;
+      os << "Comments chars are \"" << commentChars() << "\"\n";
     }
     else {
       if (hasCommentChars()) {
-        os << "set datafile commentschar \"" << commentChars() << "\"" << std::endl;
+        os << "set datafile commentschar \"" << commentChars() << "\"\n";
       }
     }
   }
@@ -635,7 +635,7 @@ save(std::ostream &os)
   else
     os << "separator \"" << separator() << "\"";
 
-  os << std::endl;
+  os << "\n";
 }
 
 void

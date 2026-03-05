@@ -1,9 +1,6 @@
 #ifndef CGnuPlotTypes_H
 #define CGnuPlotTypes_H
 
-#include <string>
-#include <vector>
-#include <COptVal.h>
 #include <CRGBA.h>
 #include <CPoint2D.h>
 #include <CPoint3D.h>
@@ -12,12 +9,12 @@
 #include <CLineDash.h>
 #include <CAlignType.h>
 
+#include <memory>
+#include <optional>
+#include <string>
+#include <vector>
+
 typedef std::vector<std::string> StringArray;
-typedef COptValT<CRGBA>          COptRGBA;
-typedef COptValT<CPoint2D>       COptPoint2D;
-typedef COptValT<CPoint3D>       COptPoint3D;
-typedef COptValT<CBBox2D>        COptBBox2D;
-typedef COptValT<CLineDash>      COptLineDash;
 
 namespace CGnuPlotTypes {
   enum class CommandName {

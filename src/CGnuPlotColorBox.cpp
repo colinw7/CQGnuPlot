@@ -27,7 +27,7 @@ titleRotate() const
 {
   const CGnuPlotAxisData &cbaxis = group_->colorBox()->axis();
 
-  return cbaxis.labelRotate().getValue(0);
+  return cbaxis.labelRotate().value_or(0);
 }
 
 void
@@ -90,8 +90,8 @@ draw(CGnuPlotRenderer *renderer)
 
   const CGnuPlotAxisData &cbaxis = group_->colorBox()->axis();
 
-  double cbmin = cbaxis.min().getValue(group_->zaxis(1).min().getValue(0));
-  double cbmax = cbaxis.max().getValue(group_->zaxis(1).max().getValue(1));
+  double cbmin = cbaxis.min().value_or(group_->zaxis(1).min().value_or(0));
+  double cbmax = cbaxis.max().value_or(group_->zaxis(1).max().value_or(1));
 
   // calc color box position
   double x1, y1, x2, y2, tx, ty;
@@ -363,7 +363,7 @@ draw(CGnuPlotRenderer *renderer)
     CPoint2D p;
 
     if (isVertical()) {
-      a = cbaxis.labelRotate().getValue(90);
+      a = cbaxis.labelRotate().value_or(90);
 
       double ym = (y1 + y2)/2;
 
@@ -373,7 +373,7 @@ draw(CGnuPlotRenderer *renderer)
                                 VAlignPos(CVALIGN_TYPE_CENTER, 0), c);
     }
     else {
-      a = cbaxis.labelRotate().getValue(0);
+      a = cbaxis.labelRotate().value_or(0);
 
       double xm = (x1 + x2)/2;
 
@@ -394,8 +394,8 @@ valueToColor(double x) const
 {
   const CGnuPlotAxisData &cbaxis = group_->colorBox()->axis();
 
-  double cbmin = cbaxis.min().getValue(group_->zaxis(1).min().getValue(0));
-  double cbmax = cbaxis.max().getValue(group_->zaxis(1).max().getValue(1));
+  double cbmin = cbaxis.min().value_or(group_->zaxis(1).min().value_or(0));
+  double cbmax = cbaxis.max().value_or(group_->zaxis(1).max().value_or(1));
 
   double z = CGnuPlotUtil::map(x, cbmin, cbmax, 0, 1);
 
@@ -420,21 +420,21 @@ show(std::ostream &os) const
   if (isEnabled()) {
     os << (borderStyle() < 0 ? std::string("DEFAULT line type") :
                                "line type " + CGnuPlotUtil::toString(borderStyle())) << " " <<
-          (isFront() ? "is drawn front" : "is drawn back") << std::endl;
+          (isFront() ? "is drawn front" : "is drawn back") << "\n";
 
     if (! isUser())
-      os << "at DEFAULT position" << std::endl;
+      os << "at DEFAULT position\n";
     else
-      os << "at USER origin: " << origin() << " size: " << size() << std::endl;
+      os << "at USER origin: " << origin() << " size: " << size() << "\n";
   }
   else {
-    os << "DEFAULT line type is NOT drawn" << std::endl;
+    os << "DEFAULT line type is NOT drawn\n";
   }
 
   if (isVertical())
-    os << "color gradient is VERTICAL in the color box" << std::endl;
+    os << "color gradient is VERTICAL in the color box\n";
   else
-    os << "color gradient is HORIZONTAL in the color box" << std::endl;
+    os << "color gradient is HORIZONTAL in the color box\n";
 }
 
 void
@@ -469,5 +469,5 @@ save(std::ostream &os) const
   else
     os << "noborder";
 
-  os << std::endl;
+  os << "\n";
 }

@@ -35,9 +35,9 @@ class CGnuPlotLabelData {
   const CGnuPlotColorSpec &textColor() const { return textColor_; }
   void setTextColor(const CGnuPlotColorSpec &c) { textColor_ = c; }
 
-  const COptReal &getAngle() const { return angle_; }
+  const std::optional<double> &getAngle() const { return angle_; }
   void setAngle(double a) { angle_ = a; }
-  void resetAngle() { angle_.setInvalid(); }
+  void resetAngle() { angle_.reset(); }
 
   bool isEnhanced() const { return enhanced_; }
   void setEnhanced(bool b) { enhanced_ = b; }
@@ -50,7 +50,7 @@ class CGnuPlotLabelData {
   const CFontPtr &getFont() const { return labelStyle_.font(); }
   void setFont(const CFontPtr &f) { labelStyle_.setFont(f); }
 
-  const COptPoint2D &getOffset() const { return labelStyle_.offset(); }
+  const std::optional<CPoint2D> &getOffset() const { return labelStyle_.offset(); }
   void setOffset(const CPoint2D &o) { labelStyle_.setOffset(o); }
 
   int lineType() const { return lineType_; }
@@ -102,23 +102,23 @@ class CGnuPlotLabelData {
  protected:
   static CFontPtr defFont_;
 
-  CGnuPlotGroup*     group_ { nullptr };
-  CGnuPlotPlot*      plot_  { nullptr };
-  std::string        text_;
-  CGnuPlotPosition   pos_;
-  COptReal           angle_;
-  bool               enhanced_   { true };
-  CGnuPlotLabelStyle labelStyle_;
-  CGnuPlotColorSpec  textColor_;
-  int                lineType_   { -1 };
-  CGnuPlotFill*      boxFill_    { nullptr };
-  CGnuPlotStroke*    boxStroke_  { nullptr };
-  bool               hypertext_  { false };
-  double             pointSize_  { 1 };
-  double             pointWidth_ { 1 };
-  mutable CBBox2D    bbox_;
-  mutable CRGBA      drawColor_;
-  mutable CPoint2D   drawPos_;
+  CGnuPlotGroup*        group_ { nullptr };
+  CGnuPlotPlot*         plot_  { nullptr };
+  std::string           text_;
+  CGnuPlotPosition      pos_;
+  std::optional<double> angle_;
+  bool                  enhanced_   { true };
+  CGnuPlotLabelStyle    labelStyle_;
+  CGnuPlotColorSpec     textColor_;
+  int                   lineType_   { -1 };
+  CGnuPlotFill*         boxFill_    { nullptr };
+  CGnuPlotStroke*       boxStroke_  { nullptr };
+  bool                  hypertext_  { false };
+  double                pointSize_  { 1 };
+  double                pointWidth_ { 1 };
+  mutable CBBox2D       bbox_;
+  mutable CRGBA         drawColor_;
+  mutable CPoint2D      drawPos_;
 };
 
 #endif

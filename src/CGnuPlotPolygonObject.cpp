@@ -8,8 +8,8 @@ CGnuPlotPolygonObject::
 CGnuPlotPolygonObject(CGnuPlotPlot *plot) :
  CGnuPlotPlotObject(plot)
 {
-  fill_   = plot->createFill  ();
-  stroke_ = plot->createStroke();
+  fill_   = CGnuPlotFillP  (plot->createFill  ());
+  stroke_ = CGnuPlotStrokeP(plot->createStroke());
 }
 
 void
@@ -59,8 +59,8 @@ draw(CGnuPlotRenderer *renderer) const
   CGnuPlotStrokeP stroke = stroke_;
 
   if (highlighted) {
-    fill   = fill_  ->dup();
-    stroke = stroke_->dup();
+    fill   = CGnuPlotFillP  (fill_  ->dup());
+    stroke = CGnuPlotStrokeP(stroke_->dup());
 
     if (fill->type() == CGnuPlotTypes::FillType::PATTERN)
       fill->setBackground(fill->background().getLightRGBA());

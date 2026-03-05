@@ -86,7 +86,7 @@ class CTreeMap {
       w_ = w; h_ = h;
 
       //std::cerr << "Node: " << name() << " @ ( " << x_ << "," << y_ << ")" <<
-      //             " [" << w_ << "," << h_ << "]" << std::endl;
+      //             " [" << w_ << "," << h_ << "]\n";
 
       placed_ = true;
     }
@@ -171,9 +171,9 @@ class CTreeMap {
       // sort nodes by size
       std::sort(nodes.begin(), nodes.end(), NodeCmp());
 
-      //std::cerr << name() << std::endl;
+      //std::cerr << name() << "\n";
       //for (uint i = 0; i < nodes.size(); ++i)
-      //  std::cerr << " " << nodes[i]->name() << ":" << nodes[i]->size() << std::endl;
+      //  std::cerr << " " << nodes[i]->name() << ":" << nodes[i]->size() << "\n";
 
       packSubNodes(x, y, w, h, nodes);
     }

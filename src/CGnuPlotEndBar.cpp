@@ -7,7 +7,7 @@ CGnuPlotEndBar::
 CGnuPlotEndBar(CGnuPlotPlot *plot) :
  plot_(plot)
 {
-  stroke_ = plot->createStroke();
+  stroke_ = CGnuPlotStrokeP(plot->createStroke());
 }
 
 void
@@ -19,7 +19,7 @@ draw(CGnuPlotRenderer *renderer) const
   CGnuPlotStrokeP stroke = stroke_;
 
   if (highlighted) {
-    stroke = stroke_->dup();
+    stroke = CGnuPlotStrokeP(stroke_->dup());
 
     stroke->setEnabled(true);
     stroke->setColor(CRGBA(1,0,0));

@@ -44,8 +44,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   CRGBA tc(0, 0, 0);
 
-  if (value->textColor().isValid())
-    tc = value->textColor().getValue().calcColor(group);
+  if (value->textColor())
+    tc = value->textColor().value().calcColor(group);
 
   //CFontPtr font = renderer->getFont();
   //double tw1 = renderer->pixelWidthToWindowWidth(font->getStringWidth("X"));
@@ -243,8 +243,8 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   CRGBA tc(0, 0, 0);
 
-  if (value->textColor().isValid())
-    tc = value->textColor().getValue().calcColor(group);
+  if (value->textColor())
+    tc = value->textColor().value().calcColor(group);
 
   CFontPtr font = renderer->getFont();
 

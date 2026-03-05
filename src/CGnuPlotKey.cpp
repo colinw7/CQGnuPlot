@@ -62,8 +62,8 @@ draw(CGnuPlotRenderer *renderer)
 
   double bx = 8*pw;
   double by = 8*ph;
-  double ll = keyData_.sampLen().getValue(4  )*renderer_->charPixelWidth ()*pw;
-  double ls = keyData_.spacing().getValue(1.5)*renderer_->charPixelHeight()*ph;
+  double ll = keyData_.sampLen().value_or(4  )*renderer_->charPixelWidth ()*pw;
+  double ls = keyData_.spacing().value_or(1.5)*renderer_->charPixelHeight()*ph;
 
   //---
 
@@ -158,8 +158,8 @@ draw(CGnuPlotRenderer *renderer)
       CPoint2D p2(xx + ll, yy);
 
       // draw key line
-      if      (l.color().isValid()) {
-        CRGBA c = l.color().getValue();
+      if      (l.color()) {
+        CRGBA c = l.color().value();
 
         renderer_->drawLine(p1, p2, c, stroke.width(), stroke.lineDash());
       }
@@ -238,8 +238,8 @@ drawClustered()
 
   double bx = 8*pw;
   double by = 8*ph;
-  double ll = keyData_.sampLen().getValue(4  )*renderer_->charPixelWidth ()*pw;
-  double ls = keyData_.spacing().getValue(1.5)*renderer_->charPixelHeight()*ph;
+  double ll = keyData_.sampLen().value_or(4  )*renderer_->charPixelWidth ()*pw;
+  double ls = keyData_.spacing().value_or(1.5)*renderer_->charPixelHeight()*ph;
 
   //---
 
@@ -441,8 +441,8 @@ drawColumnStacked()
 
   double bx = 8*pw;
   double by = 8*ph;
-  double ll = keyData_.sampLen().getValue(4  )*renderer_->charPixelWidth ()*pw;
-  double ls = keyData_.spacing().getValue(1.5)*renderer_->charPixelHeight()*ph;
+  double ll = keyData_.sampLen().value_or(4  )*renderer_->charPixelWidth ()*pw;
+  double ls = keyData_.spacing().value_or(1.5)*renderer_->charPixelHeight()*ph;
 
   //---
 
@@ -592,8 +592,8 @@ drawBox()
   if (getFillBox()) {
     CRGBA fc = group_->window()->backgroundColor();
 
-    if (boxLineStyle().isValid()) {
-      CGnuPlotLineStyleP lineStyle = app()->getLineStyleInd(boxLineStyle().getValue());
+    if (boxLineStyle()) {
+      CGnuPlotLineStyleP lineStyle = app()->getLineStyleInd(boxLineStyle().value());
 
       fc = lineStyle->calcColor(group_, fc);
     }
@@ -604,10 +604,10 @@ drawBox()
   if (getDrawBox()) {
     CRGBA lc(0, 0, 0);
 
-    if      (boxLineType().isValid())
-      lc = CGnuPlotStyleInst->indexColor(boxLineType().getValue());
-    else if (boxLineStyle().isValid()) {
-      CGnuPlotLineStyleP lineStyle = app()->getLineStyleInd(boxLineStyle().getValue());
+    if      (boxLineType())
+      lc = CGnuPlotStyleInst->indexColor(boxLineType().value());
+    else if (boxLineStyle()) {
+      CGnuPlotLineStyleP lineStyle = app()->getLineStyleInd(boxLineStyle().value());
 
       lc = lineStyle->calcColor(group_, lc);
     }
@@ -633,8 +633,8 @@ calcBBox(const CSize2D &size)
 
   double x1 = 0, y1 = 0;
 
-  if (keyData_.position().isValid()) {
-    CPoint2D p = keyData_.position().getValue().getPoint2D(renderer_);
+  if (keyData_.position()) {
+    CPoint2D p = keyData_.position().value().getPoint2D(renderer_);
 
     if      (halign == CHALIGN_TYPE_LEFT)
       x1 = p.x;

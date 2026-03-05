@@ -1,13 +1,14 @@
 #ifndef CGnuPlotUsingCols_H
 #define CGnuPlotUsingCols_H
 
+#include <CGnuPlotTicLabel.h>
+#include <CExpr.h>
+
 #include <string>
 #include <vector>
 #include <map>
 #include <iostream>
-
-#include <CExpr.h>
-#include <CGnuPlotTicLabel.h>
+#include <optional>
 
 class CGnuPlot;
 class CParseLine;
@@ -111,11 +112,11 @@ class CGnuPlotUsingCols {
     return (usingCol.ival() >= low && usingCol.ival() <= high);
   }
 
-  const COptInt &colMin() const { return colMin_; }
-  void setColMin(const COptInt &v) { colMin_ = v; }
+  const std::optional<int> &colMin() const { return colMin_; }
+  void setColMin(const std::optional<int> &v) { colMin_ = v; }
 
-  const COptInt &colMax() const { return colMax_; }
-  void setColMax(const COptInt &v) { colMax_ = v; }
+  const std::optional<int> &colMax() const { return colMax_; }
+  void setColMax(const std::optional<int> &v) { colMax_ = v; }
 
   const std::string &format() const { return format_; }
   void setFormat(const std::string &format) { format_ = format; }
@@ -152,18 +153,18 @@ class CGnuPlotUsingCols {
  private:
   typedef std::vector<CGnuPlotUsingCol> Cols;
 
-  std::string       str_;
-  Cols              cols_;
-  COptInt           colMin_, colMax_;
-  AxisTicLabel      axisTicLabel_;
-  std::string       format_;
-  std::string       keyLabel_;
-  mutable CGnuPlot *plot_      { 0 };
-  CExpr*            expr_      { 0 };
-  bool              exprLocal_ { false };
-  mutable int       setNum_    { 0 };
-  mutable int       pointNum_  { 0 };
-  mutable Values    fieldValues_;
+  std::string        str_;
+  Cols               cols_;
+  std::optional<int> colMin_, colMax_;
+  AxisTicLabel       axisTicLabel_;
+  std::string        format_;
+  std::string        keyLabel_;
+  mutable CGnuPlot*  plot_      { nullptr };
+  CExpr*             expr_      { 0 };
+  bool               exprLocal_ { false };
+  mutable int        setNum_    { 0 };
+  mutable int        pointNum_  { 0 };
+  mutable Values     fieldValues_;
 };
 
 #endif

@@ -4,7 +4,6 @@
 #include <CGnuPlotTypes.h>
 #include <CGnuPlotColorSpec.h>
 #include <CGnuPlotDash.h>
-#include <CRefPtr.h>
 
 class CGnuPlot;
 
@@ -71,6 +70,6 @@ class CGnuPlotLineType {
   bool              palette_ { false };
 };
 
-typedef CRefPtr<CGnuPlotLineType> CGnuPlotLineTypeP;
+typedef std::shared_ptr<CGnuPlotLineType> CGnuPlotLineTypeP;
 
 #endif

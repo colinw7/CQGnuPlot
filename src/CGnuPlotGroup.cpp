@@ -29,7 +29,7 @@ initObjects()
 
   camera_ = CGnuPlotCameraP(app()->createCamera(this));
 
-  timeStamp_ = app()->createTimeStamp(this);
+  timeStamp_ = CGnuPlotTimeStampP(app()->createTimeStamp(this));
 }
 
 CGnuPlot *
@@ -71,14 +71,14 @@ init()
     double defStart = (axisData.isLogValue() ? 1  : 0);
     double defEnd   = (axisData.isLogValue() ? 10 : 1);
 
-    if (axisData.min().isValid() || axisData.max().isValid()) {
-      double xmin = axisData.min().getValue(defStart);
-      double xmax = axisData.max().getValue(defEnd  );
+    if (axisData.min() || axisData.max()) {
+      double xmin = axisData.min().value_or(defStart);
+      double xmax = axisData.max().value_or(defEnd  );
 
       normalizeXRange(ind, xmin, xmax);
 
-      if (axisData.min().isValid()) axisData.setMin(xmin);
-      if (axisData.max().isValid()) axisData.setMax(xmax);
+      if (axisData.min()) axisData.setMin(xmin);
+      if (axisData.max()) axisData.setMax(xmax);
     }
   }
 
@@ -88,14 +88,14 @@ init()
     double defStart = (axisData.isLogValue() ? 1  : 0);
     double defEnd   = (axisData.isLogValue() ? 10 : 1);
 
-    if (axisData.min().isValid() || axisData.max().isValid()) {
-      double ymin = axisData.min().getValue(defStart);
-      double ymax = axisData.max().getValue(defEnd  );
+    if (axisData.min() || axisData.max()) {
+      double ymin = axisData.min().value_or(defStart);
+      double ymax = axisData.max().value_or(defEnd  );
 
       normalizeYRange(ind, ymin, ymax);
 
-      if (axisData.min().isValid()) axisData.setMin(ymin);
-      if (axisData.max().isValid()) axisData.setMax(ymax);
+      if (axisData.min()) axisData.setMin(ymin);
+      if (axisData.max()) axisData.setMax(ymax);
     }
   }
 
@@ -105,14 +105,14 @@ init()
     double defStart = (axisData.isLogValue() ? 1  : 0);
     double defEnd   = (axisData.isLogValue() ? 10 : 1);
 
-    if (axisData.min().isValid() || axisData.max().isValid()) {
-      double zmin = axisData.min().getValue(defStart);
-      double zmax = axisData.max().getValue(defEnd  );
+    if (axisData.min() || axisData.max()) {
+      double zmin = axisData.min().value_or(defStart);
+      double zmax = axisData.max().value_or(defEnd  );
 
       normalizeZRange(1, zmin, zmax);
 
-      if (axisData.min().isValid()) axisData.setMin(zmin);
-      if (axisData.max().isValid()) axisData.setMax(zmax);
+      if (axisData.min()) axisData.setMin(zmin);
+      if (axisData.max()) axisData.setMax(zmax);
     }
   }
 
@@ -309,9 +309,9 @@ fit()
   CGnuPlotPlotP singlePlot = getSingleStylePlot();
 
   // data range (ind == 1)
-  COptReal xmin1, xmax1, ymin1, ymax1, zmin1, zmax1;
+  std::optional<double> xmin1, xmax1, ymin1, ymax1, zmin1, zmax1;
   // data range (ind == 2)
-  COptReal xmin2, xmax2, ymin2, ymax2;
+  std::optional<double> xmin2, xmax2, ymin2, ymax2;
 
   double dx = 0.0, dy = 0.0, dz = 0.0;
 
@@ -333,17 +333,17 @@ fit()
     CGnuPlotAxis *plotXAxis1 = getPlotAxis(AxisType::X, 1, true);
     CGnuPlotAxis *plotXAxis2 = getPlotAxis(AxisType::X, 2, true);
 
-    COptReal xamin1 = xaxis(1).min(), xamax1 = xaxis(1).max();
-    COptReal xamin2 = xaxis(2).min(), xamax2 = xaxis(2).max();
+    std::optional<double> xamin1 = xaxis(1).min(), xamax1 = xaxis(1).max();
+    std::optional<double> xamin2 = xaxis(2).min(), xamax2 = xaxis(2).max();
 
-    if (xamin1.isValid() || xamax1.isValid()) {
-      if (xamin1.isValid()) xmin1 = plotXAxis1->mapLogValue(xamin1.getValue());
-      if (xamax1.isValid()) xmax1 = plotXAxis1->mapLogValue(xamax1.getValue());
+    if (xamin1 || xamax1) {
+      if (xamin1) xmin1 = plotXAxis1->mapLogValue(xamin1.value());
+      if (xamax1) xmax1 = plotXAxis1->mapLogValue(xamax1.value());
     }
 
-    if (xamin2.isValid() || xamax2.isValid()) {
-      if (xamin2.isValid()) xmin2 = plotXAxis2->mapLogValue(xamin2.getValue());
-      if (xamax2.isValid()) xmax2 = plotXAxis2->mapLogValue(xamax2.getValue());
+    if (xamin2 || xamax2) {
+      if (xamin2) xmin2 = plotXAxis2->mapLogValue(xamin2.value());
+      if (xamax2) xmax2 = plotXAxis2->mapLogValue(xamax2.value());
     }
 
     //---
@@ -351,17 +351,17 @@ fit()
     CGnuPlotAxis *plotRAxis = getPlotAxis(AxisType::R, 1, true);
 
     if (isPolar()) {
-      if (! xamin1.isValid() && raxis().max().isValid()) {
-        xamin1 = -plotRAxis->mapLogValue(raxis().max().getValue());
+      if (! xamin1 && raxis().max()) {
+        xamin1 = -plotRAxis->mapLogValue(raxis().max().value());
       }
-      if (! xamax1.isValid() && raxis().max().isValid())
-        xamax1 =  plotRAxis->mapLogValue(raxis().max().getValue());
+      if (! xamax1 && raxis().max())
+        xamax1 =  plotRAxis->mapLogValue(raxis().max().value());
     }
 
     //---
 
-    COptReal xpmin1, xpmax1, xpmin2, xpmax2;
-    COptReal cbmin, cbmax;
+    std::optional<double> xpmin1, xpmax1, xpmin2, xpmax2;
+    std::optional<double> cbmin, cbmax;
 
     for (auto plot : plots_) {
       double xmin, xmax;
@@ -369,56 +369,56 @@ fit()
       plot->calcXRange(&xmin, &xmax);
 
       if (plot->xind() == 1) {
-        xpmin1.updateMin(xmin);
-        xpmax1.updateMax(xmax);
+        CUtil::updateMin(xpmin1, xmin);
+        CUtil::updateMax(xpmax1, xmax);
       }
       else {
-        xpmin2.updateMin(xmin);
-        xpmax2.updateMax(xmax);
+        CUtil::updateMin(xpmin2, xmin);
+        CUtil::updateMax(xpmax2, xmax);
       }
 
-      cbmin.updateMin(plot->cbmin());
-      cbmax.updateMax(plot->cbmax());
+      CUtil::updateMin(cbmin, plot->cbmin());
+      CUtil::updateMax(cbmax, plot->cbmax());
     }
 
-    if (! xamin1.isValid()) xmin1.updateMin(xpmin1);
-    if (! xamax1.isValid()) xmax1.updateMax(xpmax1);
-    if (! xamin2.isValid()) xmin2.updateMin(xpmin2);
-    if (! xamax2.isValid()) xmax2.updateMax(xpmax2);
+    if (! xamin1) CUtil::updateMin(xmin1, xpmin1);
+    if (! xamax1) CUtil::updateMax(xmax1, xpmax1);
+    if (! xamin2) CUtil::updateMin(xmin2, xpmin2);
+    if (! xamax2) CUtil::updateMax(xmax2, xpmax2);
 
     //---
 
     CGnuPlotAxis *plotYAxis1 = getPlotAxis(AxisType::Y, 1, true);
     CGnuPlotAxis *plotYAxis2 = getPlotAxis(AxisType::Y, 2, true);
 
-    COptReal yamin1 = yaxis(1).min(), yamax1 = yaxis(1).max();
-    COptReal yamin2 = yaxis(2).min(), yamax2 = yaxis(2).max();
+    std::optional<double> yamin1 = yaxis(1).min(), yamax1 = yaxis(1).max();
+    std::optional<double> yamin2 = yaxis(2).min(), yamax2 = yaxis(2).max();
 
-    if (yamin1.isValid() || yamax1.isValid()) {
-      if (yamin1.isValid()) ymin1 = plotYAxis1->mapLogValue(yamin1.getValue());
-      if (yamax1.isValid()) ymax1 = plotYAxis1->mapLogValue(yamax1.getValue());
+    if (yamin1 || yamax1) {
+      if (yamin1) ymin1 = plotYAxis1->mapLogValue(yamin1.value());
+      if (yamax1) ymax1 = plotYAxis1->mapLogValue(yamax1.value());
     }
 
-    if (yamin2.isValid() || yamax2.isValid()) {
-      if (yamin2.isValid()) ymin2 = plotYAxis2->mapLogValue(yamin2.getValue());
-      if (yamax2.isValid()) ymax2 = plotYAxis2->mapLogValue(yamax2.getValue());
+    if (yamin2 || yamax2) {
+      if (yamin2) ymin2 = plotYAxis2->mapLogValue(yamin2.value());
+      if (yamax2) ymax2 = plotYAxis2->mapLogValue(yamax2.value());
     }
 
     if (isPolar()) {
-      if (! yamin1.isValid() && raxis().max().isValid())
-        yamin1 = -plotRAxis->mapLogValue(raxis().max().getValue());
-      if (! yamax1.isValid() && raxis().max().isValid())
-        yamax1 =  plotRAxis->mapLogValue(raxis().max().getValue());
+      if (! yamin1 && raxis().max())
+        yamin1 = -plotRAxis->mapLogValue(raxis().max().value());
+      if (! yamax1 && raxis().max())
+        yamax1 =  plotRAxis->mapLogValue(raxis().max().value());
     }
 
-    if (! colorBox_->axis().min().isValid() && cbmin.isValid())
-      colorBox_->axis().setMin(cbmin.getValue());
-    if (! colorBox_->axis().max().isValid() && cbmax.isValid())
-      colorBox_->axis().setMax(cbmax.getValue());
+    if (! colorBox_->axis().min() && cbmin)
+      colorBox_->axis().setMin(cbmin.value());
+    if (! colorBox_->axis().max() && cbmax)
+      colorBox_->axis().setMax(cbmax.value());
 
     //---
 
-    COptReal ypmin1, ypmax1, ypmin2, ypmax2;
+    std::optional<double> ypmin1, ypmax1, ypmin2, ypmax2;
 
     for (auto plot : plots_) {
       double ymin, ymax;
@@ -427,82 +427,82 @@ fit()
         continue;
 
       if (plot->yind() == 1) {
-        ypmin1.updateMin(ymin);
-        ypmax1.updateMax(ymax);
+        CUtil::updateMin(ypmin1, ymin);
+        CUtil::updateMax(ypmax1, ymax);
       }
       else {
-        ypmin2.updateMin(ymin);
-        ypmax2.updateMax(ymax);
+        CUtil::updateMin(ypmin2, ymin);
+        CUtil::updateMax(ypmax2, ymax);
       }
     }
 
-    if (! yamin1.isValid()) ymin1.updateMin(ypmin1);
-    if (! yamax1.isValid()) ymax1.updateMax(ypmax1);
-    if (! yamin2.isValid()) ymin2.updateMin(ypmin2);
-    if (! yamax2.isValid()) ymax2.updateMax(ypmax2);
+    if (! yamin1) CUtil::updateMin(ymin1, ypmin1);
+    if (! yamax1) CUtil::updateMax(ymax1, ypmax1);
+    if (! yamin2) CUtil::updateMin(ymin2, ypmin2);
+    if (! yamax2) CUtil::updateMax(ymax2, ypmax2);
 
     //---
 
-    COptReal zpmin1, zpmax1;
+    std::optional<double> zpmin1, zpmax1;
 
     if (is3D()) {
-      COptReal zamin1 = zaxis(1).min(); zmin1 = zamin1;
-      COptReal zamax1 = zaxis(1).max(); zmax1 = zamax1;
+      std::optional<double> zamin1 = zaxis(1).min(); zmin1 = zamin1;
+      std::optional<double> zamax1 = zaxis(1).max(); zmax1 = zamax1;
 
       for (auto plot : plots_) {
         double zmin, zmax;
 
         plot->calcZRange(&zmin, &zmax);
 
-        zpmin1.updateMin(zmin);
-        zpmax1.updateMax(zmax);
+        CUtil::updateMin(zpmin1, zmin);
+        CUtil::updateMax(zpmax1, zmax);
       }
 
-      if (! zamin1.isValid()) zmin1.updateMin(zpmin1);
-      if (! zamax1.isValid()) zmax1.updateMax(zpmax1);
+      if (! zamin1) CUtil::updateMin(zmin1, zpmin1);
+      if (! zamax1) CUtil::updateMax(zmax1, zpmax1);
     }
 
     //---
 
     if (isPolar()) {
-      double xmax3 = (xamax1.isValid() ? xamax1.getValue(10) : xmax1.getValue(10));
-      double ymax3 = (yamax1.isValid() ? yamax1.getValue(10) : ymax1.getValue(10));
+      double xmax3 = (xamax1 ? xamax1.value_or(10) : xmax1.value_or(10));
+      double ymax3 = (yamax1 ? yamax1.value_or(10) : ymax1.value_or(10));
 
       double r = plotRAxis->mapLogValue(std::max(xmax3, ymax3));
 
-      if (! xmin1.isValid()) xmin1 = -r;
-      if (! xmax1.isValid()) xmax1 =  r;
-      if (! ymin1.isValid()) ymin1 = -r;
-      if (! ymax1.isValid()) ymax1 =  r;
+      if (! xmin1) xmin1 = -r;
+      if (! xmax1) xmax1 =  r;
+      if (! ymin1) ymin1 = -r;
+      if (! ymax1) ymax1 =  r;
     }
 
     //---
 
-    if (xpmin1.isValid()) { plotXAxis1->setDataRange(xpmin1.getValue(), xpmax1.getValue()); }
-    if (ypmin1.isValid()) { plotYAxis1->setDataRange(ypmin1.getValue(), ypmax1.getValue()); }
-    if (xpmin2.isValid()) { plotXAxis2->setDataRange(xpmin2.getValue(), xpmax2.getValue()); }
-    if (xpmin2.isValid()) { plotYAxis2->setDataRange(ypmin2.getValue(), ypmax2.getValue()); }
+    if (xpmin1) { plotXAxis1->setDataRange(xpmin1.value(), xpmax1.value()); }
+    if (ypmin1) { plotYAxis1->setDataRange(ypmin1.value(), ypmax1.value()); }
+    if (xpmin2) { plotXAxis2->setDataRange(xpmin2.value(), xpmax2.value()); }
+    if (xpmin2) { plotYAxis2->setDataRange(ypmin2.value(), ypmax2.value()); }
   }
 
   // TODO: can only reuse values if log status matches ?
-  if (! xmin1.isValid()) { xmin1 = -10; } if (! xmax1.isValid()) { xmax1 = 10; }
-  if (! ymin1.isValid()) { ymin1 = -10; } if (! ymax1.isValid()) { ymax1 = 10; }
+  if (! xmin1) { xmin1 = -10; } if (! xmax1) { xmax1 = 10; }
+  if (! ymin1) { ymin1 = -10; } if (! ymax1) { ymax1 = 10; }
 
-  if (! xmin2.isValid()) { xmin2 = xmin1; } if (! xmax2.isValid()) { xmax2 = xmax1; }
-  if (! ymin2.isValid()) { ymin2 = ymin1; } if (! ymax2.isValid()) { ymax2 = ymax1; }
+  if (! xmin2) { xmin2 = xmin1; } if (! xmax2) { xmax2 = xmax1; }
+  if (! ymin2) { ymin2 = ymin1; } if (! ymax2) { ymax2 = ymax1; }
 
   if (is3D()) {
-    if (! zmin1.isValid()) { zmin1 = -10; } if (! zmax1.isValid()) { zmax1 = 10; }
+    if (! zmin1) { zmin1 = -10; } if (! zmax1) { zmax1 = 10; }
   }
 
   //---
 
   if (isPolar()) {
-    if (! raxis().min().isValid() || ! raxis().max().isValid()) {
+    if (! raxis().min() || ! raxis().max()) {
       CGnuPlotAxis *plotRAxis = getPlotAxis(AxisType::R, 1, true);
 
-      double xmax = xmax1.getValue();
-      double ymax = ymax1.getValue();
+      double xmax = xmax1.value();
+      double ymax = ymax1.value();
 
       double r = plotRAxis->mapLogValue(std::max(xmax, ymax));
 
@@ -512,9 +512,9 @@ fit()
 
     updatePlotAxisRange(AxisType::R, 1);
 
-    double s = raxis().max().getValue(100) - raxis().min().getValue(0);
+    double s = raxis().max().value_or(100) - raxis().min().value_or(0);
 
-    if (raxis().logBase().isValid())
+    if (raxis().logBase())
       s = raxis().mapLogValue(s);
 
     xmin1 = -s; ymin1 = -s;
@@ -524,9 +524,9 @@ fit()
   //---
 
   // normalize axis ranges
-  if (! xaxis(1).min().isValid() || ! xaxis(1).max().isValid()) {
-    double xmin = xmin1.getValue();
-    double xmax = xmax1.getValue();
+  if (! xaxis(1).min() || ! xaxis(1).max()) {
+    double xmin = xmin1.value();
+    double xmax = xmax1.value();
 
     if (! xaxis(1).isAutoScaleFixMin())
       normalizeXRange(1, xmin, xmax, dx);
@@ -535,9 +535,9 @@ fit()
     xaxis(1).setMax(xmax);
   }
 
-  if (! yaxis(1).min().isValid() || ! yaxis(1).max().isValid()) {
-    double ymin = ymin1.getValue();
-    double ymax = ymax1.getValue();
+  if (! yaxis(1).min() || ! yaxis(1).max()) {
+    double ymin = ymin1.value();
+    double ymax = ymax1.value();
 
     if (! yaxis(1).isAutoScaleFixMin())
       normalizeYRange(1, ymin, ymax, dy);
@@ -547,9 +547,9 @@ fit()
   }
 
   if (is3D()) {
-    if (! zaxis(1).min().isValid() || ! zaxis(1).max().isValid()) {
-      double zmin = zmin1.getValue();
-      double zmax = zmax1.getValue();
+    if (! zaxis(1).min() || ! zaxis(1).max()) {
+      double zmin = zmin1.value();
+      double zmax = zmax1.value();
 
       if (! zaxis(1).isAutoScaleFixMin())
         normalizeZRange(1, zmin, zmax, dz);
@@ -570,9 +570,9 @@ fit()
 
   //---
 
-  if (! xaxis(2).min().isValid() || ! xaxis(2).max().isValid()) {
-    double xmin = xmin2.getValue();
-    double xmax = xmax2.getValue();
+  if (! xaxis(2).min() || ! xaxis(2).max()) {
+    double xmin = xmin2.value();
+    double xmax = xmax2.value();
 
     if (! xaxis(2).isAutoScaleFixMin())
       normalizeXRange(2, xmin, xmax, dx);
@@ -581,9 +581,9 @@ fit()
     xaxis(2).setMax(xmax);
   }
 
-  if (! yaxis(2).min().isValid() || ! yaxis(2).max().isValid()) {
-    double ymin = ymin2.getValue();
-    double ymax = ymax2.getValue();
+  if (! yaxis(2).min() || ! yaxis(2).max()) {
+    double ymin = ymin2.value();
+    double ymax = ymax2.value();
 
     if (! yaxis(2).isAutoScaleFixMin())
       normalizeYRange(2, ymin, ymax, dy);
@@ -661,7 +661,8 @@ fit()
 
 void
 CGnuPlotGroup::
-fitHistograms(COptReal &xmin1, COptReal &ymin1, COptReal &xmax1, COptReal &ymax1)
+fitHistograms(std::optional<double> &xmin1, std::optional<double> &ymin1,
+              std::optional<double> &xmax1, std::optional<double> &ymax1)
 {
   Plots plots;
 
@@ -677,7 +678,7 @@ fitHistograms(COptReal &xmin1, COptReal &ymin1, COptReal &xmax1, COptReal &ymax1
   CGnuPlotPlot::DrawHistogramData drawData;
 
   HistogramStyle hstyle = getHistogramData().style();
-  double         gap    = getHistogramData().gap().getValue(0);
+  double         gap    = getHistogramData().gap().value_or(0);
 
   double xp = 0;
 
@@ -743,10 +744,10 @@ fitHistograms(COptReal &xmin1, COptReal &ymin1, COptReal &xmax1, COptReal &ymax1
   }
 
   if (brenderer.bbox().isSet()) {
-    xmin1.updateMin(brenderer.bbox().getLeft  ());
-    ymin1.updateMin(brenderer.bbox().getBottom());
-    xmax1.updateMax(brenderer.bbox().getRight ());
-    ymax1.updateMax(brenderer.bbox().getTop   ());
+    CUtil::updateMin(xmin1, brenderer.bbox().getLeft  ());
+    CUtil::updateMin(ymin1, brenderer.bbox().getBottom());
+    CUtil::updateMax(xmax1, brenderer.bbox().getRight ());
+    CUtil::updateMax(ymax1, brenderer.bbox().getTop   ());
   }
 
   CGnuPlotAxis *plotXAxis1 = getPlotAxis(AxisType::X, 1, true);
@@ -760,8 +761,8 @@ fitHistograms(COptReal &xmin1, COptReal &ymin1, COptReal &xmax1, COptReal &ymax1
 
 void
 CGnuPlotGroup::
-fitSinglePlot(CGnuPlotPlot *singlePlot, COptReal &xmin1, COptReal &ymin1,
-              COptReal &xmax1, COptReal &ymax1)
+fitSinglePlot(CGnuPlotPlot *singlePlot, std::optional<double> &xmin1, std::optional<double> &ymin1,
+              std::optional<double> &xmax1, std::optional<double> &ymax1)
 {
   CGnuPlotStyleBase *singleStyle = app()->getPlotStyle(singlePlot->style());
 
@@ -784,13 +785,14 @@ fitSinglePlot(CGnuPlotPlot *singlePlot, COptReal &xmin1, COptReal &ymin1,
   CGnuPlotAxis *plotXAxis1 = getPlotAxis(AxisType::X, 1, true);
   CGnuPlotAxis *plotYAxis1 = getPlotAxis(AxisType::Y, 1, true);
 
-  plotXAxis1->setDataRange(xmin1.getValue(), xmax1.getValue());
-  plotYAxis1->setDataRange(ymin1.getValue(), ymax1.getValue());
+  plotXAxis1->setDataRange(xmin1.value(), xmax1.value());
+  plotYAxis1->setDataRange(ymin1.value(), ymax1.value());
 }
 
 void
 CGnuPlotGroup::
-fitParallelAxes(COptReal &xmin1, COptReal &ymin1, COptReal &xmax1, COptReal &ymax1)
+fitParallelAxes(std::optional<double> &xmin1, std::optional<double> &ymin1,
+                std::optional<double> &xmax1, std::optional<double> &ymax1)
 {
   int nc = 0;
 
@@ -802,7 +804,7 @@ fitParallelAxes(COptReal &xmin1, COptReal &ymin1, COptReal &xmax1, COptReal &yma
     for (const auto &p : plot->getPoints2D())
       nc1 = std::max(nc, p.getNumValues());
 
-    if (lineStyle.lineColor().isValid() && lineStyle.lineColor().getValue().isCalc())
+    if (lineStyle.lineColor() && lineStyle.lineColor().value().isCalc())
       --nc1;
 
     nc = std::max(nc, nc1);
@@ -814,8 +816,8 @@ fitParallelAxes(COptReal &xmin1, COptReal &ymin1, COptReal &xmax1, COptReal &yma
   CGnuPlotAxis *plotXAxis1 = getPlotAxis(AxisType::X, 1, true);
   CGnuPlotAxis *plotYAxis1 = getPlotAxis(AxisType::Y, 1, true);
 
-  plotXAxis1->setDataRange(xmin1.getValue(), xmax1.getValue());
-  plotYAxis1->setDataRange(ymin1.getValue(), ymax1.getValue());
+  plotXAxis1->setDataRange(xmin1.value(), xmax1.value());
+  plotYAxis1->setDataRange(ymin1.value(), ymax1.value());
 }
 
 void
@@ -831,24 +833,24 @@ updatePlotAxisRange(AxisType type, int ind)
   double start = defStart, end = defEnd;
 
   if      (type == AxisType::X || type == AxisType::Y || type == AxisType::Z) {
-    start = this->axis(type, ind).min().getValue(defStart);
-    end   = this->axis(type, ind).max().getValue(defEnd  );
+    start = this->axis(type, ind).min().value_or(defStart);
+    end   = this->axis(type, ind).max().value_or(defEnd  );
   }
   else if (type == AxisType::P) {
-    start = this->axis(type, ind).min().getValue(defStart);
-    end   = this->axis(type, ind).max().getValue(defEnd  );
+    start = this->axis(type, ind).min().value_or(defStart);
+    end   = this->axis(type, ind).max().value_or(defEnd  );
   }
   else if (type == AxisType::R) {
     assert(ind  == 1);
 
-    start = this->axis(type, ind).min().getValue(defStart);
-    end   = this->axis(type, ind).max().getValue(defEnd  );
+    start = this->axis(type, ind).min().value_or(defStart);
+    end   = this->axis(type, ind).max().value_or(defEnd  );
   }
   else if (type == AxisType::T) {
     assert(ind  == 1);
 
-    start = this->axis(type, ind).min().getValue(defStart);
-    end   = this->axis(type, ind).max().getValue(defEnd  );
+    start = this->axis(type, ind).min().value_or(defStart);
+    end   = this->axis(type, ind).max().value_or(defEnd  );
   }
   else
     assert(false);
@@ -979,7 +981,7 @@ normalizeXRange(int ind, double &xmin, double &xmax, double xi) const
 {
   CGnuPlotAxis *plotAxis = getPlotAxis(AxisType::X, ind, true);
 
-  if (plotAxis->logBase().isValid())
+  if (plotAxis->logBase())
     return;
 
   double xmin1, xmax1;
@@ -997,7 +999,7 @@ normalizeYRange(int ind, double &ymin, double &ymax, double yi) const
 {
   CGnuPlotAxis *plotAxis = getPlotAxis(AxisType::Y, ind, true);
 
-  if (! plotAxis->logBase().isValid()) {
+  if (! plotAxis->logBase()) {
     double ymin1, ymax1;
     int    numTicks1, numTicks2;
 
@@ -1027,7 +1029,7 @@ normalizeZRange(int ind, double &zmin, double &zmax, double zi) const
 {
   CGnuPlotAxis *plotAxis = getPlotAxis(AxisType::Z, ind, true);
 
-  if (plotAxis->logBase().isValid())
+  if (plotAxis->logBase())
     return;
 
   double zmin1, zmax1;
@@ -1235,12 +1237,12 @@ displayPixelCoordinates(const CPoint2D &pixel) const
   CPoint2D screen; renderer->windowToScreen(window, screen);
   CPoint2D chr   ; renderer->windowToChar  (window, chr   );
 
-  std::cerr << "Pixel:  " << pixel  << std::endl;
-  std::cerr << "First:  " << window << std::endl;
-  std::cerr << "Second: " << second << std::endl;
-  std::cerr << "Graph:  " << graph  << std::endl;
-  std::cerr << "Screen: " << screen << std::endl;
-  std::cerr << "Char:   " << chr    << std::endl;
+  std::cerr << "Pixel:  " << pixel  << "\n";
+  std::cerr << "First:  " << window << "\n";
+  std::cerr << "Second: " << second << "\n";
+  std::cerr << "Graph:  " << graph  << "\n";
+  std::cerr << "Screen: " << screen << "\n";
+  std::cerr << "Char:   " << chr    << "\n";
 }
 
 void
@@ -1264,12 +1266,12 @@ draw()
     double defYEnd   = (yaxis.isLogValue() ? 10 : 1);
     double defZEnd   = (zaxis.isLogValue() ? 10 : 1);
 
-    double xmin = xaxis.min().getValue(defXStart);
-    double ymin = yaxis.min().getValue(defYStart);
-    double zmin = zaxis.min().getValue(defZStart);
-    double xmax = xaxis.max().getValue(defXEnd  );
-    double ymax = yaxis.max().getValue(defYEnd  );
-    double zmax = zaxis.max().getValue(defZEnd  );
+    double xmin = xaxis.min().value_or(defXStart);
+    double ymin = yaxis.min().value_or(defYStart);
+    double zmin = zaxis.min().value_or(defZStart);
+    double xmax = xaxis.max().value_or(defXEnd  );
+    double ymax = yaxis.max().value_or(defYEnd  );
+    double zmax = zaxis.max().value_or(defZEnd  );
 
     CPoint3D p1 = this->mapLogPoint(1, 1, 1, CPoint3D(xmin, ymin, zmin));
     CPoint3D p2 = this->mapLogPoint(1, 1, 1, CPoint3D(xmax, ymax, zmax));
@@ -1309,8 +1311,8 @@ draw()
   renderer->setRegion(region());
   renderer->setMargin(margin());
 
-  if (plotSize().xratio.isValid())
-    renderer->setRatio(COptReal(plotSize().xratio.getValue()));
+  if (plotSize().xratio)
+    renderer->setRatio(std::optional<double>(plotSize().xratio.value()));
   else
     renderer->unsetRatio();
 
@@ -1413,9 +1415,9 @@ void
 CGnuPlotGroup::
 drawClearRect(CGnuPlotRenderer *renderer)
 {
-  if (! clearRect_.isValid()) return;
+  if (! clearRect_) return;
 
-  const CBBox2D &clearRect = clearRect_.getValue();
+  const CBBox2D &clearRect = clearRect_.value();
 
   CPoint2D p1, p2;
 
@@ -1520,8 +1522,8 @@ getPlotAxis(AxisType type, int ind, bool create) const
       axis->setParallel(true);
     }
 
-    if (axisData.ticIncr().isValid())
-      axis->setMajorIncrement(axisData.ticIncr().getValue());
+    if (axisData.ticIncr())
+      axis->setMajorIncrement(axisData.ticIncr().value());
 
     th->updatePlotAxisRange(type, ind);
   }
@@ -1619,7 +1621,7 @@ drawHistogram(CGnuPlotRenderer *renderer, const Plots &plots)
   CGnuPlotPlot::DrawHistogramData drawData;
 
   HistogramStyle hstyle = getHistogramData().style();
-  double         gap    = getHistogramData().gap().getValue(0);
+  double         gap    = getHistogramData().gap().value_or(0);
 
   double xp = 0;
 
@@ -2289,7 +2291,7 @@ void
 CGnuPlotGroup::
 calcRange(int xind, int yind, double &xmin, double &ymin, double &xmax, double &ymax) const
 {
-  COptReal xmin1, xmax1;
+  std::optional<double> xmin1, xmax1;
 
   for (auto plot : plots_) {
     if (plot->xind() != xind) continue;
@@ -2298,16 +2300,16 @@ calcRange(int xind, int yind, double &xmin, double &ymin, double &xmax, double &
 
     plot->calcXRange(&xmin2, &xmax2);
 
-    xmin1.updateMin(xmin2);
-    xmax1.updateMax(xmax2);
+    CUtil::updateMin(xmin1, xmin2);
+    CUtil::updateMax(xmax1, xmax2);
   }
 
-  xmin = xmin1.getValue(0);
-  xmax = xmax1.getValue(1);
+  xmin = xmin1.value_or(0);
+  xmax = xmax1.value_or(1);
 
   //---
 
-  COptReal ymin1, ymax1;
+  std::optional<double> ymin1, ymax1;
 
   for (auto plot : plots_) {
     if (plot->yind() != yind) continue;
@@ -2317,12 +2319,12 @@ calcRange(int xind, int yind, double &xmin, double &ymin, double &xmax, double &
     if (! plot->calcBoundedYRange(&ymin2, &ymax2))
       continue;
 
-    ymin1.updateMin(ymin2);
-    ymax1.updateMax(ymax2);
+    CUtil::updateMin(ymin1, ymin2);
+    CUtil::updateMax(ymax1, ymax2);
   }
 
-  ymin = ymin1.getValue(0);
-  ymax = ymax1.getValue(1);
+  ymin = ymin1.value_or(0);
+  ymax = ymax1.value_or(1);
 }
 
 CBBox3D
@@ -2332,9 +2334,9 @@ getPlotBorderBox(int xind, int yind, int zind) const
   double zmin = -10, zmax = 10;
 
   if (is3D()) {
-    if (! xaxis(xind).min().isValid() || ! xaxis(xind).max().isValid() ||
-        ! yaxis(yind).min().isValid() || ! yaxis(yind).max().isValid() ||
-        ! zaxis(zind).min().isValid() || ! zaxis(yind).max().isValid()) {
+    if (! xaxis(xind).min() || ! xaxis(xind).max() ||
+        ! yaxis(yind).min() || ! yaxis(yind).max() ||
+        ! zaxis(zind).min() || ! zaxis(yind).max()) {
       CGnuPlotGroup *th = const_cast<CGnuPlotGroup *>(this);
 
       th->fit();
@@ -2343,18 +2345,18 @@ getPlotBorderBox(int xind, int yind, int zind) const
     camera_->planeZRange(zmin, zmax);
   }
   else {
-    if (! xaxis(xind).min().isValid() || ! xaxis(xind).max().isValid() ||
-        ! yaxis(yind).min().isValid() || ! yaxis(yind).max().isValid()) {
+    if (! xaxis(xind).min() || ! xaxis(xind).max() ||
+        ! yaxis(yind).min() || ! yaxis(yind).max()) {
       CGnuPlotGroup *th = const_cast<CGnuPlotGroup *>(this);
 
       th->fit();
     }
   }
 
-  double xmin = xaxis(xind).min().getValue(-10);
-  double ymin = yaxis(yind).min().getValue(-10);
-  double xmax = xaxis(xind).max().getValue( 10);
-  double ymax = yaxis(yind).max().getValue( 10);
+  double xmin = xaxis(xind).min().value_or(-10);
+  double ymin = yaxis(yind).min().value_or(-10);
+  double xmax = xaxis(xind).max().value_or( 10);
+  double ymax = yaxis(yind).max().value_or( 10);
 
   CPoint3D p1 = mapLogPoint(xind, yind, zind, CPoint3D(xmin, ymin, zmin));
   CPoint3D p2 = mapLogPoint(xind, yind, zind, CPoint3D(xmax, ymax, zmax));
@@ -2391,17 +2393,17 @@ CBBox2D
 CGnuPlotGroup::
 getDisplayRange(int xind, int yind) const
 {
-  if (! xaxis(xind).min().isValid() || ! yaxis(yind).min().isValid() ||
-      ! xaxis(xind).max().isValid() || ! yaxis(yind).max().isValid()) {
+  if (! xaxis(xind).min() || ! yaxis(yind).min() ||
+      ! xaxis(xind).max() || ! yaxis(yind).max()) {
     CGnuPlotGroup *th = const_cast<CGnuPlotGroup *>(this);
 
     th->fit();
   }
 
-  double xmin = xaxis(xind).min().getValue(-10);
-  double xmax = xaxis(xind).max().getValue( 10);
-  double ymin = yaxis(yind).min().getValue(-10);
-  double ymax = yaxis(yind).max().getValue( 10);
+  double xmin = xaxis(xind).min().value_or(-10);
+  double xmax = xaxis(xind).max().value_or( 10);
+  double ymin = yaxis(yind).min().value_or(-10);
+  double ymax = yaxis(yind).max().value_or( 10);
 
   return CBBox2D(xmin, ymin, xmax, ymax);
 }
@@ -2414,12 +2416,12 @@ getMappedDisplayRange3D() const
   const CGnuPlotAxisData &yaxis = this->yaxis(1);
   const CGnuPlotAxisData &zaxis = this->zaxis(1);
 
-  double xmin = xaxis.min().getValue(0.0);
-  double ymin = yaxis.min().getValue(0.0);
-  double zmin = zaxis.min().getValue(0.0);
-  double xmax = xaxis.max().getValue(1.0);
-  double ymax = yaxis.max().getValue(1.0);
-  double zmax = zaxis.max().getValue(1.0);
+  double xmin = xaxis.min().value_or(0.0);
+  double ymin = yaxis.min().value_or(0.0);
+  double zmin = zaxis.min().value_or(0.0);
+  double xmax = xaxis.max().value_or(1.0);
+  double ymax = yaxis.max().value_or(1.0);
+  double zmax = zaxis.max().value_or(1.0);
 
   CPoint3D p1 = this->mapLogPoint(1, 1, 1, CPoint3D(xmin, ymin, zmin));
   CPoint3D p2 = this->mapLogPoint(1, 1, 1, CPoint3D(xmax, ymax, zmax));

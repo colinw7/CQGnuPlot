@@ -12,7 +12,6 @@
 #include <CSize2D.h>
 #include <CPoint2D.h>
 #include <CAlignType.h>
-#include <COptVal.h>
 #include <vector>
 #include <memory>
 

@@ -6,9 +6,9 @@ CGnuPlotBoxObject::
 CGnuPlotBoxObject(CGnuPlotPlot *plot) :
  CGnuPlotPlotObject(plot)
 {
-  stroke_      = plot->createStroke();
-  fill_        = plot->createFill  ();
-  outlierMark_ = plot->createMark  ();
+  stroke_      = CGnuPlotStrokeP(plot->createStroke());
+  fill_        = CGnuPlotFillP  (plot->createFill  ());
+  outlierMark_ = CGnuPlotMarkP  (plot->createMark  ());
 }
 
 CGnuPlotTipData
@@ -41,9 +41,9 @@ draw(CGnuPlotRenderer *renderer) const
   CGnuPlotMarkP   mark   = outlierMark_;
 
   if (highlighted) {
-    fill   = fill_       ->dup();
-    stroke = stroke_     ->dup();
-    mark   = outlierMark_->dup();
+    fill   = CGnuPlotFillP  (fill_       ->dup());
+    stroke = CGnuPlotStrokeP(stroke_     ->dup());
+    mark   = CGnuPlotMarkP  (outlierMark_->dup());
 
     fill->setColor(fill->color().getLightRGBA());
 

@@ -58,7 +58,7 @@ CGnuPlotWindow::
 addGroup(CGnuPlotGroupP &group)
 {
   if (plot_->isDebug())
-    std::cerr << "Add Group" << std::endl;
+    std::cerr << "Add Group\n";
 
   group->setInd(int(groups_.size() + 1));
 

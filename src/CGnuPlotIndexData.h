@@ -8,6 +8,7 @@ class CExpr;
 
 class CGnuPlotIndexData {
  public:
+  CGnuPlotIndexData(int start, int end, int step);
   CGnuPlotIndexData(CExpr *expr=nullptr, const std::string &str="");
 
   bool parse(CExpr *expr, const std::string &str);

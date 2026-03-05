@@ -91,8 +91,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
       as = plot->app()->arrowStyle(int(x));
 
-      if (as.lineColor().isValid())
-        lc1 = as.lineColor().getValue();
+      if (as.lineColor())
+        lc1 = as.lineColor().value();
     }
 
     if (to == from) continue;
